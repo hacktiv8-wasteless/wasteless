@@ -18,14 +18,18 @@ if (process.env.NODE_ENV) {
 const client = new MongoClient(uri, options);
 
 let db = null;
+let userCollection = null;
 
 const mongoConnect = async () => {
 	try {
 		await client.connect();
 
+
 		const database = client.db("Wasteless");
+		const users = database.collection("Users")
 
 		db = database;
+		userCollection = users
 	} catch (error) {
 		console.log(error);
 	}
@@ -35,4 +39,8 @@ const getDatabase = () => {
 	return db;
 };
 
-module.exports = { mongoConnect, client, getDatabase };
+const getUsers = () => {
+	return userCollection;
+};
+
+module.exports = { mongoConnect, client, getDatabase, getUsers };
