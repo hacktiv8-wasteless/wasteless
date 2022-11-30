@@ -1,13 +1,45 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
+const { mongoConnect } = require("./config/mongo");
+
+const typeDefs = `#graphql
+	type User {
+    _id:String
+    username:String
+    email:String!
+    password:String!
+    phoneNumber:String
+    address:String
+  }
+
+  type Query {
+	query1:User
+  }
+
+  type Mutation {
+	mutation1:User
+  }
+`;
+
+const resolvers = {
+	Query: {
+		query1: () => {},
+	},
+	Mutation: {
+		mutation1: () => {},
+	},
+};
 
 const server = new ApolloServer({
-	typeDefs: [],
-	resolvers: [],
+	typeDefs,
+	resolvers,
 });
 
-startStandaloneServer(server, {
-	listen: { port: process.env.PORT || 4000 },
-}).then(({ url }) => {
-	console.log(`🚀  Server ready at: ${url}`);
-});
+(async () => {
+	await mongoConnect();
+	startStandaloneServer(server, {
+		listen: { port: process.env.PORT || 4000 },
+	}).then(({ url }) => {
+		console.log(`🚀  Server ready at: ${url}`);
+	});
+})();
