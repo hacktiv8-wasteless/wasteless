@@ -1,7 +1,7 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { mongoConnect } = require("./config/mongo");
-const userSchema =require("./schemas/usersSchema")
+const userSchema = require("./schemas/usersSchema");
 const typeDefs = `#graphql
 	type User {
     _id:String
@@ -32,13 +32,18 @@ const resolvers = {
 
 const server = new ApolloServer({
 	typeDefs: [userSchema.typeDefs],
-	resolvers: [userSchema.resolvers]
+	resolvers: [userSchema.resolvers],
 });
 
 (async () => {
 	await mongoConnect();
 	startStandaloneServer(server, {
 		listen: { port: process.env.PORT || 4000 },
+		context: async ({ req }) => {
+			const token = req.headers.authorization || null;
+			const user = getUser(token);
+			return { user };
+		},
 	}).then(({ url }) => {
 		console.log(`🚀  Server ready at: ${url}`);
 	});

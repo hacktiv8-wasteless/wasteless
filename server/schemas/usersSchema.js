@@ -1,5 +1,7 @@
 const { ObjectId } = require("mongodb");
 const { getUsers } = require("../config/mongo");
+const { hashPassword, comparePassword } = require("../helper/bcrypt");
+const { signToken } = require("../helper/jwt");
 
 const typeDefs = `#graphql
 	type User {
@@ -12,8 +14,6 @@ const typeDefs = `#graphql
     pendingAppointment:[Appointment]
   }
 
-
-
   type Response {
     access_token:String
     message:String
@@ -24,11 +24,11 @@ const typeDefs = `#graphql
   }
 
   input RegisterForm {
-    username:String!
-    email:String!
-    password:String!
-    phoneNumber:String!
-    address:String!
+    username:String
+    email:String
+    password:String
+    phoneNumber:String
+    address:String
   }
 
   type Query {
@@ -46,32 +46,67 @@ const resolvers = {
 	Query: {
 		getUserById: async (_, { user_id }) => {
 			try {
-				console.log(user_id);
 				const users = await getUsers();
-				console.log(users);
 				const user = await users.findOne({ _id: ObjectId(user_id) });
-				console.log(user);
 
 				return user;
 			} catch (error) {
 				console.log(error);
 			}
 		},
+		loginUser: async (_, { payload }) => {
+			try {
+				const { username, email, password } = payload;
+
+				const users = await getUsers();
+				const user = await users.findOne({ email });
+
+				if (!user) {
+					throw {message: "Invalid email or password"}
+				}
+
+				if (!comparePassword(user.password, password)) {
+					throw {message: "Invalid email or password"}
+				}
+
+				const access_token = signToken({ _id: user._id });
+
+				return { message: "user found", access_token };
+			} catch (error) {
+				console.log(error);
+			}
+		},
 	},
 	Mutation: {
-		registerUser: async (_, {payload}) => {
+		registerUser: async (_, { payload }) => {
 			try {
-				const { username, email, password, phoneNumber, address } =
-					payload;
-                
+				let { username, email, password, phoneNumber, address } = payload;
+				password = hashPassword(password);
+
 				const users = await getUsers();
-                const result = await users.insertOne({username,email,password,phoneNumber,address})
-                return {message: "User Created successfully"}
+				const result = await users.insertOne({
+					username,
+					email,
+					password,
+					phoneNumber,
+					address,
+				});
+
+				return { message: "User Created successfully" };
 			} catch (error) {
-                console.log(error)
-            }
+				console.log(error);
+			}
 		},
-		deleteUser: (_, { user_id }) => {},
+		deleteUser: async (_, { user_id }) => {
+			try {
+				const users = await getUsers();
+				const user = await users.deleteOne({ _id: ObjectId(user_id) });
+
+				return { message: "user deleted" };
+			} catch (error) {
+				console.log(error);
+			}
+		},
 	},
 };
 
