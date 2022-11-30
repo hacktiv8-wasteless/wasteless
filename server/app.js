@@ -1,7 +1,7 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
 const { mongoConnect } = require("./config/mongo");
-
+const userSchema =require("./schemas/usersSchema")
 const typeDefs = `#graphql
 	type User {
     _id:String
@@ -31,8 +31,8 @@ const resolvers = {
 };
 
 const server = new ApolloServer({
-	typeDefs,
-	resolvers,
+	typeDefs: [userSchema.typeDefs],
+	resolvers: [userSchema.resolvers]
 });
 
 (async () => {
