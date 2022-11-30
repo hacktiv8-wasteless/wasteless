@@ -1,6 +1,7 @@
 const { ObjectId } = require("mongodb");
 const { getUsers } = require("../config/mongo");
-const { hashPassword } = require("../helper/bcrypt");
+const { hashPassword, comparePassword } = require("../helper/bcrypt");
+const { signToken } = require("../helper/jwt");
 
 const typeDefs = `#graphql
 	type User {
@@ -12,8 +13,6 @@ const typeDefs = `#graphql
     address:String!
     pendingAppointment:[Appointment]
   }
-
-
 
   type Response {
     access_token:String
@@ -62,9 +61,17 @@ const resolvers = {
 				const users = await getUsers();
 				const user = await users.findOne({ email });
 
-                
+				if (!user) {
+					throw {message: "Invalid email or password"}
+				}
 
-				return { message: "user found" };
+				if (!comparePassword(user.password, password)) {
+					throw {message: "Invalid email or password"}
+				}
+
+				const access_token = signToken({ _id: user._id });
+
+				return { message: "user found", access_token };
 			} catch (error) {
 				console.log(error);
 			}
@@ -84,7 +91,7 @@ const resolvers = {
 					phoneNumber,
 					address,
 				});
-                
+
 				return { message: "User Created successfully" };
 			} catch (error) {
 				console.log(error);

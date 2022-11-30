@@ -39,6 +39,11 @@ const server = new ApolloServer({
 	await mongoConnect();
 	startStandaloneServer(server, {
 		listen: { port: process.env.PORT || 4000 },
+		context: async ({req}) => {
+			const token = req.headers.authorization || null
+			const user = getUser(token)
+			return {user}
+		}
 	}).then(({ url }) => {
 		console.log(`🚀  Server ready at: ${url}`);
 	});
