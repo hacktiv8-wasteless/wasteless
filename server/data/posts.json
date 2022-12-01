@@ -1,0 +1,14 @@
+[
+    {   
+        "giver_id" : "",
+        "taker_id" : "",
+        "category_id" :  "",
+        "title" : "",
+        "description" : "",
+        "mainImages" : "",
+        "quantity" : "",
+        "lat" : "",
+        "long" : "",
+        "status" : ""
+    }
+]
