@@ -2,14 +2,12 @@ const { ObjectId } = require("mongodb");
 const { getUsers } = require("../config/mongo");
 const { hashPassword, comparePassword } = require("../helper/bcrypt");
 const { signToken } = require("../helper/jwt");
-// const { makeExecutableSchema } = require("@graphql-tools/schema");
-// const ConstraintDirective = require("graphql-constraint-directive");
 
 const typeDefs = `#graphql
 	type User {
     _id:String
     username:String!
-    email:String!
+    email:String! @constraint(format: "email", maxLength: 255)
     password:String!
     phoneNumber:String!
     address:String!
@@ -19,6 +17,7 @@ const typeDefs = `#graphql
   type Response {
     access_token:String
     message:String
+	error:Boolean
   }
 
   type Appointment {
@@ -34,24 +33,56 @@ const typeDefs = `#graphql
   }
 
   type Query {
+	getAllUsers:[User]
 	getUserById(user_id:ID):User
-    loginUser(payload:RegisterForm):Response
   }
 
   type Mutation {
     registerUser(payload:RegisterForm):Response
+	loginUser(payload:RegisterForm):Response
 	deleteUser(user_id:ID):Response
   }
 `;
 
 const resolvers = {
 	Query: {
+		getAllUsers: async () => {
+			try {
+				const usersCollection = await getUsers();
+				const users = await usersCollection.find().toArray();
+
+				return users;
+			} catch (error) {
+				console.log(error);
+			}
+		},
 		getUserById: async (_, { user_id }) => {
 			try {
 				const users = await getUsers();
 				const user = await users.findOne({ _id: ObjectId(user_id) });
 
 				return user;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
+	Mutation: {
+		registerUser: async (_, { payload }) => {
+			try {
+				let { username, email, password, phoneNumber, address } = payload;
+				password = hashPassword(password);
+
+				const users = await getUsers();
+				const result = await users.insertOne({
+					username,
+					email,
+					password,
+					phoneNumber,
+					address,
+				});
+
+				return { message: "User Created successfully" };
 			} catch (error) {
 				console.log(error);
 			}
@@ -74,27 +105,6 @@ const resolvers = {
 				const access_token = signToken({ _id: user._id });
 
 				return { message: "user found", access_token };
-			} catch (error) {
-				console.log(error);
-			}
-		},
-	},
-	Mutation: {
-		registerUser: async (_, { payload }) => {
-			try {
-				let { username, email, password, phoneNumber, address } = payload;
-				password = hashPassword(password);
-
-				const users = await getUsers();
-				const result = await users.insertOne({
-					username,
-					email,
-					password,
-					phoneNumber,
-					address,
-				});
-
-				return { message: "User Created successfully" };
 			} catch (error) {
 				console.log(error);
 			}
