@@ -1,12 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import FormUser from "../components/FormUser";
 
 export default function Login() {
   return (
     <View>
-      <Text>Login</Text>
+      <FormUser page={"Login"} />
     </View>
-  )
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
