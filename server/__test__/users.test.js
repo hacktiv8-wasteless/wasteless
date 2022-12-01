@@ -1,28 +1,40 @@
-const { MongoClient } = require("mongodb");
-const { signToken, verifyToken } = require("../helper/jwt");
-describe("insert", () => {
-  let connection;
-  let db;
+const { start, server } = require("../app");
 
-  beforeAll(async () => {
-    connection = await MongoClient.connect(global.__MONGO_URI__, {
-      useNewUrlParser: true,
-    });
-    db = await connection.db(global.__MONGO_DB_NAME__);
+start();
+it("login - should validate user info correctly", async () => {
+  const response = await server.executeOperation({
+    query: `query loginUser($payload: RegisterForm) {
+        loginUser(payload: $payload) 
+      }`,
+    variables: {
+      payload: {
+        email: "nama@gmail.com",
+        password: "nama123",
+        username: "nama",
+      },
+    },
   });
+  console.log(response, "<<<");
+  expect(response).toBeTruthy();
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
 
-  afterAll(async () => {
-    await connection.close();
-    await db.close();
+it("register - add new users", async () => {
+  const response = await server.executeOperation({
+    mutation: `mutation registerUser($payload: RegisterForm){
+      registerUser(payload: $payload)
+    }`,
+    variables: {
+      payload: {
+        username: "nama",
+        email: "nama@gmail.com",
+        password: "nama123",
+        phoneNumber: "08156156362",
+        address: "jakarta",
+      },
+    },
   });
-
-  it("should insert a doc into collection", async () => {
-    const users = db.collection("users");
-
-    const mockUser = { _id: "some-user-id", name: "John" };
-    await users.insertOne(mockUser);
-
-    const insertedUser = await users.findOne({ _id: "some-user-id" });
-    expect(insertedUser).toEqual(mockUser);
-  });
+  console.log(response.body, "<< register");
+  expect(response).toBeTruthy();
+  expect(response.body.singleResult.errors).toBeTruthy();
 });
