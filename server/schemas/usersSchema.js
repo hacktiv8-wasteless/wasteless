@@ -52,7 +52,9 @@ const resolvers = {
     loginUser: async (_, { payload }) => {
       try {
         const { email, password } = payload;
-
+        if (!email || !password) {
+          throw { message: "Invalid email or password" };
+        }
         const users = await getUsers();
         const user = await users.findOne({ email });
 
@@ -66,9 +68,13 @@ const resolvers = {
 
         const access_token = signToken({ _id: user._id });
 
-        return { message: "user found", access_token };
+        return {
+          message: "user found",
+          access_token,
+          _id: user.id,
+        };
       } catch (error) {
-        console.log(error);
+        console.log(error.message);
       }
     },
   },
