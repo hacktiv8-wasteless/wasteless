@@ -7,7 +7,7 @@ const typeDefs = `#graphql
 	type User {
     _id:String
     username:String!
-    email:String! @constraint(format: "email", maxLength: 255)
+    email:String!
     password:String!
     phoneNumber:String!
     address:String!
@@ -24,7 +24,7 @@ const typeDefs = `#graphql
     _id:String
   }
 
-  input RegisterForm {
+  input userPayload {
     username:String
     email:String
     password:String
@@ -38,8 +38,8 @@ const typeDefs = `#graphql
   }
 
   type Mutation {
-    registerUser(payload:RegisterForm):Response
-	loginUser(payload:RegisterForm):Response
+    registerUser(userPayload:userPayload):Response
+	loginUser(userPayload:userPayload):Response
 	deleteUser(user_id:ID):Response
   }
 `;
@@ -68,9 +68,9 @@ const resolvers = {
 		},
 	},
 	Mutation: {
-		registerUser: async (_, { payload }) => {
+		registerUser: async (_, { userPayload }) => {
 			try {
-				let { username, email, password, phoneNumber, address } = payload;
+				let { username, email, password, phoneNumber, address } = userPayload;
 				password = hashPassword(password);
 
 				const users = await getUsers();
@@ -87,9 +87,9 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-		loginUser: async (_, { payload }) => {
+		loginUser: async (_, { userPayload }) => {
 			try {
-				const { username, email, password } = payload;
+				const { username, email, password } = userPayload;
 
 				const users = await getUsers();
 				const user = await users.findOne({ email });
