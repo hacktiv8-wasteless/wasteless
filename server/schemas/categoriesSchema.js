@@ -3,7 +3,7 @@ const { getCategories } = require("../config/mongo");
 
 const typeDefs = `#graphql
 	type Category {
-    _id:String
+    _id:ID
     name:String!
     price:Int
   }
@@ -15,13 +15,13 @@ const typeDefs = `#graphql
 
   type Query {
     getAllCategories:[Category]
-    getCategoryById(category_id:String):Category
+    getCategoryById(category_id:ID):Category
   }
 
   type Mutation {
     addCategory(categoryPayload:categoryPayload):Response
-    editCategory(category_id:String,categoryPayload:categoryPayload):Response
-    deleteCategory(category_id:String):Response
+    editCategory(category_id:ID,categoryPayload:categoryPayload):Response
+    deleteCategory(category_id:ID):Response
    }
 `;
 

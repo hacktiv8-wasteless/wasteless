@@ -9,10 +9,11 @@ const { mongoConnect } = require("./config/mongo");
 const { verifyToken } = require("./helper/jwt");
 const userSchema = require("./schemas/usersSchema");
 const categorySchema = require("./schemas/categoriesSchema");
+const postSchema = require("./schemas/postsSchemas")
 
 let schema = makeExecutableSchema({
-	typeDefs: [constraintDirectiveTypeDefs, userSchema.typeDefs, categorySchema.typeDefs],
-	resolvers: [userSchema.resolvers, categorySchema.resolvers],
+	typeDefs: [constraintDirectiveTypeDefs, userSchema.typeDefs, categorySchema.typeDefs, postSchema.typeDefs],
+	resolvers: [userSchema.resolvers, categorySchema.resolvers, postSchema.resolvers],
 });
 
 const server = new ApolloServer({
