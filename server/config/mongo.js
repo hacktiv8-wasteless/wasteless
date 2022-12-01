@@ -16,14 +16,18 @@ if (process.env.NODE_ENV) {
 }
 
 const client = new MongoClient(uri, options);
+const testClient = new MongoClient("mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false")
 
 let db = null;
 let userCollection = null;
 
-const mongoConnect = async () => {
+const mongoConnect = async (env) => {
 	try {
-		await client.connect();
-
+		if(env === "test") {
+			await testClient.connect()
+		} else {
+			await client.connect();
+		}
 
 		const database = client.db("Wasteless");
 		const users = database.collection("Users")

@@ -2,6 +2,8 @@ const { ObjectId } = require("mongodb");
 const { getUsers } = require("../config/mongo");
 const { hashPassword, comparePassword } = require("../helper/bcrypt");
 const { signToken } = require("../helper/jwt");
+// const { makeExecutableSchema } = require("@graphql-tools/schema");
+// const ConstraintDirective = require("graphql-constraint-directive");
 
 const typeDefs = `#graphql
 	type User {
@@ -62,11 +64,11 @@ const resolvers = {
 				const user = await users.findOne({ email });
 
 				if (!user) {
-					throw {message: "Invalid email or password"}
+					throw { message: "Invalid email or password" };
 				}
 
 				if (!comparePassword(user.password, password)) {
-					throw {message: "Invalid email or password"}
+					throw { message: "Invalid email or password" };
 				}
 
 				const access_token = signToken({ _id: user._id });
