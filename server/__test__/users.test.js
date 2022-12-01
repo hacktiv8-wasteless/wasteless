@@ -1,28 +1,220 @@
-const { MongoClient } = require("mongodb");
-const { signToken, verifyToken } = require("../helper/jwt");
-describe("insert", () => {
-  let connection;
-  let db;
+const { start, server } = require("../app");
 
-  beforeAll(async () => {
-    connection = await MongoClient.connect(global.__MONGO_URI__, {
-      useNewUrlParser: true,
-    });
-    db = await connection.db(global.__MONGO_DB_NAME__);
+start();
+it("login - should validate user info correctly", async () => {
+  const response = await server.executeOperation({
+    query: `query loginUser($payload: RegisterForm) {
+        loginUser(payload: $payload) 
+      }`,
+    variables: {
+      payload: {
+        email: "nama@gmail.com",
+        password: "nama123",
+        username: "nama",
+      },
+    },
   });
+  // console.log(response, "<<<");
+  expect(response).toBeTruthy();
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
 
-  afterAll(async () => {
-    await connection.close();
-    await db.close();
+it("login - login without email", async () => {
+  const response = await server.executeOperation({
+    query: `query loginUser($payload: RegisterForm) {
+        loginUser(payload: $payload) 
+      }`,
+    variables: {
+      payload: {
+        email: null,
+        password: "nama123",
+        username: "nama",
+      },
+    },
   });
+  // console.log(response, "<<<");
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
 
-  it("should insert a doc into collection", async () => {
-    const users = db.collection("users");
-
-    const mockUser = { _id: "some-user-id", name: "John" };
-    await users.insertOne(mockUser);
-
-    const insertedUser = await users.findOne({ _id: "some-user-id" });
-    expect(insertedUser).toEqual(mockUser);
+it("login - login without password", async () => {
+  const response = await server.executeOperation({
+    query: `query loginUser($payload: RegisterForm) {
+        loginUser(payload: $payload) 
+      }`,
+    variables: {
+      payload: {
+        email: "nama@gmail.com",
+        password: null,
+        username: "nama",
+      },
+    },
   });
+  // console.log(response, "<<<");
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
+
+it("get user - get user id", async () => {
+  const response = await server.executeOperation({
+    query: `query getUserById($user_id: ID) {
+        getUserById(user_id: $user_id) 
+      }`,
+    variables: {
+      user_id: {
+        _id: 9138797392172764,
+      },
+    },
+  });
+  // console.log(response, "<<<");
+  expect(response).toBeTruthy();
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
+
+it("get user - get user without id", async () => {
+  const response = await server.executeOperation({
+    query: `query getUserById($user_id: ID) {
+        getUserById(user_id: $user_id) 
+      }`,
+    variables: {
+      user_id: {
+        _id: null,
+      },
+    },
+  });
+  // console.log(response, "<<<");
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
+
+it("register - add new users", async () => {
+  const response = await server.executeOperation({
+    mutation: `mutation registerUser($payload: RegisterForm){
+      registerUser(payload: $payload)
+    }`,
+    variables: {
+      payload: {
+        username: "nama",
+        email: "nama@gmail.com",
+        password: "nama123",
+        phoneNumber: "08156156362",
+        address: "jakarta",
+      },
+    },
+  });
+  // console.log(response.body, "<< register");
+  expect(response).toBeTruthy();
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
+
+it("register - add new users without username", async () => {
+  const response = await server.executeOperation({
+    mutation: `mutation registerUser($payload: RegisterForm){
+      registerUser(payload: $payload)
+    }`,
+    variables: {
+      payload: {
+        username: null,
+        email: "nama@gmail.com",
+        password: "nama123",
+        phoneNumber: "08156156362",
+        address: "jakarta",
+      },
+    },
+  });
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
+it("register - add new users without email", async () => {
+  const response = await server.executeOperation({
+    mutation: `mutation registerUser($payload: RegisterForm){
+      registerUser(payload: $payload)
+    }`,
+    variables: {
+      payload: {
+        username: "nama",
+        email: null,
+        password: "nama123",
+        phoneNumber: "08156156362",
+        address: "jakarta",
+      },
+    },
+  });
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
+it("register - add new users without password", async () => {
+  const response = await server.executeOperation({
+    mutation: `mutation registerUser($payload: RegisterForm){
+      registerUser(payload: $payload)
+    }`,
+    variables: {
+      payload: {
+        username: "nama",
+        email: "nama@gmail.com",
+        password: null,
+        phoneNumber: "08156156362",
+        address: "jakarta",
+      },
+    },
+  });
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
+it("register - add new users without phoneNumber", async () => {
+  const response = await server.executeOperation({
+    mutation: `mutation registerUser($payload: RegisterForm){
+      registerUser(payload: $payload)
+    }`,
+    variables: {
+      payload: {
+        username: "nama",
+        email: "nama@gmail.com",
+        password: "nama123",
+        phoneNumber: null,
+        address: "jakarta",
+      },
+    },
+  });
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
+it("register - add new users without address", async () => {
+  const response = await server.executeOperation({
+    mutation: `mutation registerUser($payload: RegisterForm){
+      registerUser(payload: $payload)
+    }`,
+    variables: {
+      payload: {
+        username: "nama",
+        email: "nama@gmail.com",
+        password: "nama123",
+        phoneNumber: "08156156362",
+        address: null,
+      },
+    },
+  });
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
+
+it("delete - delete user by id", async () => {
+  const response = await server.executeOperation({
+    mutation: `mutation deleteUser($user_id: ID){
+      deleteUser(user_id: $user_id)
+    }`,
+    variables: {
+      user_id: {
+        _id: 109839274824,
+      },
+    },
+  });
+  expect(response).toBeTruthy();
+  expect(response.body.singleResult.errors).toBeTruthy();
+});
+
+it("delete - delete user without id", async () => {
+  const response = await server.executeOperation({
+    mutation: `mutation deleteUser($user_id: ID){
+      deleteUser(user_id: $user_id)
+    }`,
+    variables: {
+      user_id: {
+        _id: null,
+      },
+    },
+  });
+  expect(response.body.singleResult.errors).toBeTruthy();
 });

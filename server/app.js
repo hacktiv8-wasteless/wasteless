@@ -39,4 +39,4 @@ async function start(env) {
 }
 
 start("dev");
-module.exports = start;
+module.exports = { start, server };

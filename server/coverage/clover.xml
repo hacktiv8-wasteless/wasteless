@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1669824425659" clover="3.2.0">
-  <project timestamp="1669824425659" name="All files">
-    <metrics statements="6" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0" elements="8" coveredelements="4" complexity="0" loc="6" ncloc="6" packages="1" files="1" classes="1"/>
-    <file name="jwt.js" path="C:\Users\User\wasteless\server\helper\jwt.js">
-      <metrics statements="6" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="2" coveredmethods="0"/>
-      <line num="1" count="1" type="stmt"/>
-      <line num="3" count="1" type="stmt"/>
-      <line num="4" count="0" type="stmt"/>
-      <line num="6" count="1" type="stmt"/>
-      <line num="7" count="0" type="stmt"/>
-      <line num="10" count="1" type="stmt"/>
-    </file>
+<coverage generated="1669895833521" clover="3.2.0">
+  <project timestamp="1669895833521" name="All files">
+    <metrics statements="0" coveredstatements="0" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0" elements="0" coveredelements="0" complexity="0" loc="0" ncloc="0" packages="0" files="0" classes="0"/>
   </project>
 </coverage>

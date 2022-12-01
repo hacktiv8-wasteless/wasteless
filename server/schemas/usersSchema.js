@@ -13,13 +13,11 @@ const typeDefs = `#graphql
     address:String!
     pendingAppointment:[Appointment]
   }
-
   type Response {
     access_token:String
     message:String
 	error:Boolean
   }
-
   type Appointment {
     _id:String
   }
@@ -31,12 +29,13 @@ const typeDefs = `#graphql
     phoneNumber:String
     address:String
   }
-
+  
   type Query {
 	getAllUsers:[User]
 	getUserById(user_id:ID):User
+  loginUser(payload:RegisterForm):Response
   }
-
+  
   type Mutation {
     registerUser(userPayload:userPayload):Response
 	loginUser(userPayload:userPayload):Response
