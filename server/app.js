@@ -22,29 +22,29 @@ const typeDefs = `#graphql
 `;
 
 const resolvers = {
-	Query: {
-		query1: () => {},
-	},
-	Mutation: {
-		mutation1: () => {},
-	},
+  Query: {
+    query1: () => {},
+  },
+  Mutation: {
+    mutation1: () => {},
+  },
 };
 
 const server = new ApolloServer({
-	typeDefs: [userSchema.typeDefs],
-	resolvers: [userSchema.resolvers],
+  typeDefs: [userSchema.typeDefs],
+  resolvers: [userSchema.resolvers],
 });
 
 (async () => {
-	await mongoConnect();
-	startStandaloneServer(server, {
-		listen: { port: process.env.PORT || 4000 },
-		context: async ({ req }) => {
-			const token = req.headers.authorization || null;
-			const user = getUser(token);
-			return { user };
-		},
-	}).then(({ url }) => {
-		console.log(`🚀  Server ready at: ${url}`);
-	});
+  await mongoConnect();
+  startStandaloneServer(server, {
+    listen: { port: process.env.PORT || 4000 },
+    context: async ({ req }) => {
+      const token = req.headers.authorization || null;
+      // const user = getUser(token);
+      return { token };
+    },
+  }).then(({ url }) => {
+    console.log(`🚀  Server ready at: ${url}`);
+  });
 })();
