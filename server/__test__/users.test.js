@@ -1,10 +1,15 @@
-const { start, server } = require("../app");
+const { ObjectId } = require("mongodb");
+const { server } = require("../app");
 
 // start();
+let user_id;
+
 it("login - should validate user info correctly", async () => {
   const response = await server.executeOperation({
     query: `query loginUser($payload: RegisterForm) {
-        loginUser(payload: $payload) 
+        loginUser(payload: $payload) :Response {
+          
+        }
       }`,
     variables: {
       payload: {
@@ -14,7 +19,7 @@ it("login - should validate user info correctly", async () => {
       },
     },
   });
-  // console.log(response, "<<<");
+  console.log(response.body.singleResult, "<<<");
   expect(response).toBeTruthy();
   expect(response.body.singleResult.errors).toBeTruthy();
 });
@@ -60,7 +65,7 @@ it("get user - get user id", async () => {
       }`,
     variables: {
       user_id: {
-        _id: 9138797392172764,
+        _id: ObjectId(user_id),
       },
     },
   });

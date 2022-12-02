@@ -1,4 +1,4 @@
-const { start, server } = require("../app");
+const { server } = require("../app");
 
 // start();
 
@@ -12,6 +12,7 @@ it("get all post - read all post", async () => {
         }`,
   });
   // console.log(response, "<<<");
+  // expect(body.kind === "single");
   expect(response).toBeTruthy();
   expect(response.body.singleResult.errors).toBeTruthy();
 });

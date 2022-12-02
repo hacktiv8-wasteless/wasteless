@@ -1,4 +1,4 @@
-const { start, server } = require("../app");
+const { server } = require("../app");
 
 // start();
 
