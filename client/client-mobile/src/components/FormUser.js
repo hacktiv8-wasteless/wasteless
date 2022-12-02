@@ -1,9 +1,10 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, FormControl, Icon, Input, Pressable, Stack, WarningOutlineIcon, Button, Center, Heading, VStack, Link, HStack } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useMutation } from "@apollo/client";
 import { POST_REGISTER, POST_LOGIN } from "../query/Users";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // -------------------------------------------------------------------
 
 export default function FormUser({ page, navigation }) {
@@ -22,36 +23,44 @@ export default function FormUser({ page, navigation }) {
   const handleAddressChange = (val) => setAddress(val);
 
   const [register, { data, loading, error }] = useMutation(POST_REGISTER);
-  // const [login, { loginData, loginLoading, loginError }] = useMutation(POST_LOGIN);
+  const [login, { data: loginData, loginLoading, loginError }] = useMutation(POST_LOGIN);
 
-  if (loading) return <Text>Loading....</Text>;
-  if (error) return <Text>Error: {error}</Text>;
-  // if (loading || loginLoading) return <Text>Loading....</Text>;
-  // if (error || loginError) return <Text>Error: {error}</Text>;
+  if (loading || loginLoading) return <Text>Loading....</Text>;
+  if (error || loginError) return <Text>Error: {error}</Text>;
 
-  const handleSubmitLogin = () => {
-    const payload = {
+  const handleSubmitLogin = async () => {
+    const userPayload = {
       email,
       password,
     };
-    // login({
-    //   variables: { payload },
-    // });
-    console.log(payload);
+    // console.log(userPayload);
+    await login({
+      variables: { userPayload },
+    });
+    // console.log(loginData, "<<<<<<");
+    const access_token = loginData?.loginUser?.access_token;
+    console.log(access_token);
+    await AsyncStorage.setItem("access_token", access_token);
+    navigation.navigate("Home");
+    //! navigate ke halaman home
+    // setEmail("");
+    // setPassword("");
   };
 
-  const handleSubmitRegister = () => {
-    const payload = {
+  const handleSubmitRegister = async () => {
+    const userPayload = {
       email,
       password,
       username,
       phoneNumber,
       address,
     };
-    console.log(payload);
-    register({
-      variables: { payload },
+    await register({
+      variables: { userPayload },
     });
+    console.log(data);
+    //! navigate ke halaman login atau langsung ke home (kalo ada access_token)
+    // console.log(userPayload);
     setEmail("");
     setPassword("");
     setUsername("");
@@ -71,8 +80,8 @@ export default function FormUser({ page, navigation }) {
           <Box safeArea p="2" py="8" w="90%" maxW="290">
             <Heading>Welcome</Heading>
             <Heading>Sign in to continue!</Heading>
-            <Input type="email" placeholder="email" onChangeText={handleEmailChange} />
-            <Input type="password" placeholder="password" onChangeText={handlePasswordChange} />
+            <Input type="email" placeholder="email" onChangeText={handleEmailChange} value={email} />
+            <Input type="password" placeholder="password" onChangeText={handlePasswordChange} value={password} />
             <Button mt="2" colorScheme="indigo" onPress={handleSubmitLogin}>
               Sign in
             </Button>

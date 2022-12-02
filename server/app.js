@@ -1,50 +1,52 @@
 const { ApolloServer } = require("@apollo/server");
 const { startStandaloneServer } = require("@apollo/server/standalone");
+const { makeExecutableSchema } = require("@graphql-tools/schema");
+const {
+	constraintDirectiveTypeDefs,
+	constraintDirective,
+} = require("graphql-constraint-directive");
 const { mongoConnect } = require("./config/mongo");
+const { verifyToken } = require("./helper/jwt");
 const userSchema = require("./schemas/usersSchema");
-const typeDefs = `#graphql
-	type User {
-    _id:String
-    username:String
-    email:String!
-    password:String!
-    phoneNumber:String
-    address:String
-  }
+const categorySchema = require("./schemas/categoriesSchema");
+const postSchema = require("./schemas/postsSchemas");
 
-  type Query {
-	query1:User
-  }
-
-  type Mutation {
-	mutation1:User
-  }
-`;
-
-const resolvers = {
-  Query: {
-    query1: () => {},
-  },
-  Mutation: {
-    mutation1: () => {},
-  },
-};
-
-const server = new ApolloServer({
-  typeDefs: [userSchema.typeDefs],
-  resolvers: [userSchema.resolvers],
+let schema = makeExecutableSchema({
+	typeDefs: [
+		constraintDirectiveTypeDefs,
+		userSchema.typeDefs,
+		categorySchema.typeDefs,
+		postSchema.typeDefs,
+	],
+	resolvers: [
+		userSchema.resolvers,
+		categorySchema.resolvers,
+		postSchema.resolvers,
+	],
 });
 
-(async () => {
-  await mongoConnect();
-  startStandaloneServer(server, {
-    listen: { port: process.env.PORT || 4000 },
-    context: async ({ req }) => {
-      const token = req.headers.authorization || null;
-      // const user = getUser(token);
-      return { token };
-    },
-  }).then(({ url }) => {
-    console.log(`🚀  Server ready at: ${url}`);
-  });
-})();
+schema = constraintDirective()(schema);
+
+const server = new ApolloServer({
+	schema,
+});
+
+async function start(env) {
+	await mongoConnect(env);
+	startStandaloneServer(server, {
+		listen: { port: process.env.PORT || 4000 },
+		context: async ({ req }) => {
+			const token = req.headers.authorization || "";
+			let user = "";
+			if (token) {
+				user = verifyToken(token);
+			}
+			return { token, user };
+		},
+	}).then(({ url }) => {
+		console.log(`🚀  Server ready at: ${url}`);
+	});
+}
+
+start("dev");
+module.exports = { start, server };
