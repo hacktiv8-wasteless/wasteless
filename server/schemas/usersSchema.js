@@ -16,99 +16,109 @@ const typeDefs = `#graphql
   type Response {
     access_token:String
     message:String
+	error:Boolean
   }
   type Appointment {
     _id:String
   }
-  input RegisterForm {
+
+  input userPayload {
     username:String
     email:String
     password:String
     phoneNumber:String
     address:String
   }
+  
   type Query {
+	getAllUsers:[User]
 	getUserById(user_id:ID):User
   loginUser(payload:RegisterForm):Response
   }
+  
   type Mutation {
-    registerUser(payload:RegisterForm):Response
+    registerUser(userPayload:userPayload):Response
+	loginUser(userPayload:userPayload):Response
 	deleteUser(user_id:ID):Response
   }
 `;
 
 const resolvers = {
-  Query: {
-    getUserById: async (_, { user_id }) => {
-      try {
-        const users = await getUsers();
-        const user = await users.findOne({ _id: ObjectId(user_id) });
+	Query: {
+		getAllUsers: async () => {
+			try {
+				const usersCollection = await getUsers();
+				const users = await usersCollection.find().toArray();
 
-        return user;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    loginUser: async (_, { payload }) => {
-      try {
-        const { email, password } = payload;
-        if (!email || !password) {
-          throw { message: "Invalid email or password" };
-        }
-        const users = await getUsers();
-        const user = await users.findOne({ email });
+				return users;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		getUserById: async (_, { user_id }) => {
+			try {
+				const users = await getUsers();
+				const user = await users.findOne({ _id: ObjectId(user_id) });
 
-        if (!user) {
-          throw { message: "Invalid email or password" };
-        }
+				return user;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
+	Mutation: {
+		registerUser: async (_, { userPayload }) => {
+			try {
+				let { username, email, password, phoneNumber, address } = userPayload;
+				password = hashPassword(password);
 
-        if (!comparePassword(user.password, password)) {
-          throw { message: "Invalid email or password" };
-        }
+				const users = await getUsers();
+				const result = await users.insertOne({
+					username,
+					email,
+					password,
+					phoneNumber,
+					address,
+				});
 
-        const access_token = signToken({ _id: user._id });
+				return { message: "User Created successfully" };
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		loginUser: async (_, { userPayload }) => {
+			try {
+				const { username, email, password } = userPayload;
 
-        return {
-          message: "user found",
-          access_token,
-          _id: user.id,
-        };
-      } catch (error) {
-        console.log(error.message);
-      }
-    },
-  },
-  Mutation: {
-    registerUser: async (_, { payload }) => {
-      try {
-        let { username, email, password, phoneNumber, address } = payload;
-        password = hashPassword(password);
+				const users = await getUsers();
+				const user = await users.findOne({ email });
 
-        const users = await getUsers();
-        const result = await users.insertOne({
-          username,
-          email,
-          password,
-          phoneNumber,
-          address,
-        });
+				if (!user) {
+					throw { message: "Invalid email or password" };
+				}
 
-        return { message: "User Created successfully" };
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    deleteUser: async (_, { user_id }) => {
-      try {
-        const users = await getUsers();
-        const user = await users.deleteOne({ _id: ObjectId(user_id) });
+				if (!comparePassword(user.password, password)) {
+					throw { message: "Invalid email or password" };
+				}
 
-        return { message: "user deleted" };
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
+				const access_token = signToken({ _id: user._id });
+
+				return { message: "user found", access_token };
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		deleteUser: async (_, { user_id }) => {
+			try {
+				const users = await getUsers();
+				const user = await users.deleteOne({ _id: ObjectId(user_id) });
+
+				return { message: "user deleted" };
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
 };
 
 module.exports = { typeDefs, resolvers };
