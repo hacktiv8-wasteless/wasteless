@@ -1,6 +1,6 @@
 const { start, server } = require("../app");
 
-start();
+// start();
 it("login - should validate user info correctly", async () => {
   const response = await server.executeOperation({
     query: `query loginUser($payload: RegisterForm) {

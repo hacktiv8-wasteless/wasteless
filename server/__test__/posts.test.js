@@ -1,6 +1,6 @@
 const { start, server } = require("../app");
 
-start();
+// start();
 
 it("get all post - read all post", async () => {
   const response = await server.executeOperation({

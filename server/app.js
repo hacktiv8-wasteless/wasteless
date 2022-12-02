@@ -27,7 +27,7 @@ let schema = makeExecutableSchema({
 
 const server = new ApolloServer({
   schema,
-  plugin: [createApolloQueryValidationPlugin({ schema })],
+  // plugin: [createApolloQueryValidationPlugin({ schema })],
 });
 
 async function start(env) {
@@ -47,5 +47,5 @@ async function start(env) {
   });
 }
 
-start("dev");
+// start("dev");
 module.exports = { start, server };
