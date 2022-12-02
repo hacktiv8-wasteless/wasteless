@@ -1,9 +1,22 @@
 import React from "react";
-import { Text, Link, HStack, Center, Heading, Switch, useColorMode, NativeBaseProvider, extendTheme, VStack, Box } from "native-base";
+import {
+  Text,
+  Link,
+  HStack,
+  Center,
+  Heading,
+  Switch,
+  useColorMode,
+  NativeBaseProvider,
+  extendTheme,
+  VStack,
+  Box,
+} from "native-base";
 import { NavigationContainer } from "@react-navigation/native";
 import NativeBaseIcon from "./src/components/NativeBaseIcon";
 import { Platform } from "react-native";
 import { ApolloProvider } from "@apollo/client";
+import TabNavigator from "./src/Navigators/TabNavigator";
 
 import StackNavigator from "./src/Navigators/StackNavigator";
 import client from "./src/configs/apollo";
@@ -22,7 +35,8 @@ export default function App() {
     <ApolloProvider client={client}>
       <NavigationContainer>
         <NativeBaseProvider>
-          <StackNavigator />
+          <TabNavigator />
+          {/* <StackNavigator /> */}
           {/* <Center _dark={{ bg: "blueGray.900" }} _light={{ bg: "blueGray.50" }} px={4} flex={1}>
           <VStack space={5} alignItems="center">
           <NativeBaseIcon />
@@ -65,7 +79,13 @@ function ToggleDarkMode() {
   return (
     <HStack space={2} alignItems="center">
       <Text>Dark</Text>
-      <Switch isChecked={colorMode === "light"} onToggle={toggleColorMode} aria-label={colorMode === "light" ? "switch to dark mode" : "switch to light mode"} />
+      <Switch
+        isChecked={colorMode === "light"}
+        onToggle={toggleColorMode}
+        aria-label={
+          colorMode === "light" ? "switch to dark mode" : "switch to light mode"
+        }
+      />
       <Text>Light</Text>
     </HStack>
   );

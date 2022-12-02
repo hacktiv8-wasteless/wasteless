@@ -1,12 +1,50 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Home from "../screens/Home";
+import Search from "../screens/Search";
+import PostItem from "../screens/PostItem";
+import Chat from "../screens/Chat";
+import StackNavigator from "./StackNavigator";
 
-export default function TabNavigator() {
+const Tab = createBottomTabNavigator();
+
+const TabNavigator = () => {
   return (
-    <View>
-      <Text>TabNavigator</Text>
-    </View>
-  )
-}
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Post"
+        component={PostItem}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Tab.Screen
+        name="Chat"
+        component={Chat}
+        options={{
+          headerShown: false,
+        }}
+      />
+      {/* <Tab.Screen name="Profile" component={ProfileScreen} /> */}
+    </Tab.Navigator>
+  );
+};
 
-const styles = StyleSheet.create({})
+export default TabNavigator;
