@@ -2,13 +2,15 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Login from "../screens/Login";
+import Register from "../screens/Register";
 
 const Stack = createNativeStackNavigator();
 
 export default function StackNavigator() {
   return (
-    <Stack.Navigator initialRouteName="Login">
+    <Stack.Navigator initialRouteName="Register">
       <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register} />
     </Stack.Navigator>
   );
 }
