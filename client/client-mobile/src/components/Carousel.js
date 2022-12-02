@@ -9,7 +9,7 @@ import {
 } from "react-native";
 
 const { width } = Dimensions.get("window");
-const height = width * 0.6;
+const height = width * 0.5;
 
 const images = [
   "https://www.heritage-enviro.com/wp-content/uploads/2022/04/Recycling-Graphic.png",
@@ -67,7 +67,15 @@ export default function Carousel() {
 const style = StyleSheet.create({
   container: { width, height },
   scroll: { width, height },
-  image: { width, height, resizeMode: "cover" },
+  image: {
+    width,
+    height,
+    resizeMode: "cover",
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
   pagination: {
     flexDirection: "row",
     position: "absolute",
