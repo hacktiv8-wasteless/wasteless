@@ -1,7 +1,4 @@
-const { ObjectId } = require("mongodb");
-const { getUsers } = require("../../app/config/mongo");
-const { hashPassword, comparePassword } = require("../helper/bcrypt");
-const { signToken } = require("../helper/jwt");
+const Users = require("../services/users");
 
 const typeDefs = `#graphql
 	type User {
@@ -11,7 +8,6 @@ const typeDefs = `#graphql
     password:String!
     phoneNumber:String!
     address:String!
-    pendingAppointment:[Appointment]
   }
   type Response {
     access_token:String
@@ -43,81 +39,66 @@ const typeDefs = `#graphql
 `;
 
 const resolvers = {
-  Query: {
-    getAllUsers: async () => {
-      try {
-        const usersCollection = await getUsers();
-        const users = await usersCollection.find().toArray();
+	Query: {
+		getAllUsers: async () => {
+			try {
+				const { data } = await Users.get(`/users`);
 
-        return users;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    getUserById: async (_, { user_id }) => {
-      try {
-        const users = await getUsers();
-        const user = await users.findOne({ _id: ObjectId(user_id) });
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		getUserById: async (_, { user_id }) => {
+			try {
+				const { data } = await Users.findOne(`/users/${user_id}`);
 
-        return user;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
-  Mutation: {
-    registerUser: async (_, { userPayload }) => {
-      try {
-        let { username, email, password, phoneNumber, address } = userPayload;
-        password = hashPassword(password);
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
+	Mutation: {
+		registerUser: async (_, { userPayload }) => {
+			try {
+				let { username, email, password, phoneNumber, address } = userPayload;
 
-        const users = await getUsers();
-        const result = await users.insertOne({
-          username,
-          email,
-          password,
-          phoneNumber,
-          address,
-        });
+				const { data } = await Users.post(`/users/register`, {
+					username,
+					email,
+					password,
+					phoneNumber,
+					address,
+				});
 
-        return { message: "User Created successfully" };
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    loginUser: async (_, { userPayload }) => {
-      try {
-        const { username, email, password } = userPayload;
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		loginUser: async (_, { userPayload }) => {
+			try {
+				const { email, password } = userPayload;
 
-        const users = await getUsers();
-        const user = await users.findOne({ email });
+				const data = await Users.post(`/users/login`, { email, password });
 
-        if (!user) {
-          throw { message: "Invalid email or password" };
-        }
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		deleteUser: async (_, { user_id }) => {
+			try {
+				const { data } = await Users.delete(`/users/${user_id}`);
+				console.log(data);
 
-        if (!comparePassword(user.password, password)) {
-          throw { message: "Invalid email or password" };
-        }
-
-        const access_token = signToken({ _id: user._id });
-
-        return { message: "user found", access_token };
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    deleteUser: async (_, { user_id }) => {
-      try {
-        const users = await getUsers();
-        const user = await users.deleteOne({ _id: ObjectId(user_id) });
-
-        return { message: "user deleted" };
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
+				return { message: "User Deleted successfully" };
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
 };
 
 module.exports = { typeDefs, resolvers };
