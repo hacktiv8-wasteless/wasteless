@@ -3,22 +3,32 @@ const { startStandaloneServer } = require("@apollo/server/standalone");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
 const {
 	constraintDirectiveTypeDefs,
-	createApolloQueryValidationPlugin,
+	constraintDirective,
 } = require("graphql-constraint-directive");
 const { mongoConnect } = require("./config/mongo");
 const { verifyToken } = require("./helper/jwt");
 const userSchema = require("./schemas/usersSchema");
 const categorySchema = require("./schemas/categoriesSchema");
-const postSchema = require("./schemas/postsSchemas")
+const postSchema = require("./schemas/postsSchemas");
 
 let schema = makeExecutableSchema({
-	typeDefs: [constraintDirectiveTypeDefs, userSchema.typeDefs, categorySchema.typeDefs, postSchema.typeDefs],
-	resolvers: [userSchema.resolvers, categorySchema.resolvers, postSchema.resolvers],
+	typeDefs: [
+		constraintDirectiveTypeDefs,
+		userSchema.typeDefs,
+		categorySchema.typeDefs,
+		postSchema.typeDefs,
+	],
+	resolvers: [
+		userSchema.resolvers,
+		categorySchema.resolvers,
+		postSchema.resolvers,
+	],
 });
+
+schema = constraintDirective()(schema);
 
 const server = new ApolloServer({
 	schema,
-	plugin: [createApolloQueryValidationPlugin({ schema })],
 });
 
 async function start(env) {
