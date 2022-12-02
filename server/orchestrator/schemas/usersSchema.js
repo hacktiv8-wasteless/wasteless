@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongodb");
-const { getUsers } = require("../config/mongo");
+const { getUsers } = require("../../app/config/mongo");
 const { hashPassword, comparePassword } = require("../helper/bcrypt");
 const { signToken } = require("../helper/jwt");
 

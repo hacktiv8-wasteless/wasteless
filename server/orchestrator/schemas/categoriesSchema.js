@@ -1,5 +1,5 @@
 const { ObjectId } = require("mongodb");
-const { getCategories } = require("../config/mongo");
+const { getCategories } = require("../../app/config/mongo");
 
 const typeDefs = `#graphql
 	type Category {

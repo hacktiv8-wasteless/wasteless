@@ -21,7 +21,6 @@ const testClient = new MongoClient(
 );
 
 let db = null;
-let userCollection = null;
 let postCollection = null;
 let categoryCollection = null;
 
@@ -34,12 +33,10 @@ const mongoConnect = async (env) => {
     }
 
     const database = client.db("Wasteless");
-    const users = database.collection("Users");
     const posts = database.collection("Posts");
-    const categories = database.collection("Categoty");
+    const categories = database.collection("Category");
 
     db = database;
-    userCollection = users;
     postCollection = posts;
     categoryCollection = categories;
   } catch (error) {
@@ -49,10 +46,6 @@ const mongoConnect = async (env) => {
 
 const getDatabase = () => {
   return db;
-};
-
-const getUsers = () => {
-  return userCollection;
 };
 
 const getPosts = () => {
@@ -65,9 +58,7 @@ const getCategories = () => {
 
 module.exports = {
   mongoConnect,
-  client,
   getDatabase,
-  getUsers,
   getPosts,
   getCategories,
 };

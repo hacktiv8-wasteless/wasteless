@@ -5,7 +5,7 @@ const {
   constraintDirectiveTypeDefs,
   constraintDirective,
 } = require("graphql-constraint-directive");
-const { mongoConnect } = require("./config/mongo");
+const { mongoConnect } = require("../app/config/mongo");
 const { verifyToken } = require("./helper/jwt");
 const userSchema = require("./schemas/usersSchema");
 const categorySchema = require("./schemas/categoriesSchema");
