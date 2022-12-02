@@ -39,8 +39,9 @@ export default function FormUser({ page, navigation }) {
     });
     // console.log(loginData, "<<<<<<");
     const access_token = loginData?.loginUser?.access_token;
-    console.log(access_token);
+    // console.log(access_token);
     await AsyncStorage.setItem("access_token", access_token);
+    //! pindah ke helpers ntar
     navigation.navigate("Home");
     //! navigate ke halaman home
     // setEmail("");
@@ -117,6 +118,9 @@ export default function FormUser({ page, navigation }) {
               Sign up
             </Button>
           </Box>
+          <Stack>
+            <Button onPress={() => navigation.navigate("Login")}>ke login</Button>
+          </Stack>
           <Stack>
             <Button onPress={() => navigation.navigate("Login")}>ke login</Button>
           </Stack>
