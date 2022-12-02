@@ -6,16 +6,16 @@ let user_id;
 
 it("login - should validate user info correctly", async () => {
   const response = await server.executeOperation({
-    query: `query loginUser($payload: RegisterForm) {
+    mutation: `mutation loginUser($payload: RegisterForm) {
         loginUser(payload: $payload) :Response {
-          
+
         }
       }`,
     variables: {
       payload: {
-        email: "nama@gmail.com",
+        email: "nana@gmail.com",
         password: "nama123",
-        username: "nama",
+        username: "nana",
       },
     },
   });
