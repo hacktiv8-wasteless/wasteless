@@ -1,7 +1,7 @@
 const express = require(`express`);
 const Controller = require("../controllers/controller");
 const router = express.Router();
-// const { errorHandler } = require("../middlewares/errorHandler")
+const errorHandler = require("../middlewares/errorHandler");
 
 router.get(`/users`, Controller.getAllUsers);
 router.get(`/users/:id`, Controller.getUserById);
@@ -12,6 +12,6 @@ router.post(`/users/register`, Controller.userRegister);
 // router.put(`/users/:id`)
 // router.patch(`/users/:id`)
 
-// router.use(errorHandler)
+router.use(errorHandler);
 
 module.exports = router;
