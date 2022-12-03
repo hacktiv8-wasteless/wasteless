@@ -2,14 +2,15 @@ import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import FormUser from "../components/FormUser";
 import { Button } from "native-base";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Login({ navigation }) {
   return (
-    <View>
+    <SafeAreaView>
       <Text>form login</Text>
       <FormUser page={"Login"} navigation={navigation} />
-      <Button onPress={() => navigation.navigate("Home")}>ke home</Button>
-    </View>
+      <Button onPress={() => navigation.navigate("Tab")}>ke home</Button>
+    </SafeAreaView>
   );
 }
 

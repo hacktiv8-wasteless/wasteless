@@ -3,6 +3,7 @@ import Carousel from "../components/Carousel";
 import CardMenu from "../components/ItemCardSmall";
 import SearchBar from "../components/SearchBar";
 import AllCategory from "../components/CategoryCard";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CategoryScreen() {
   return (

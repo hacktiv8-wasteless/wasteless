@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Text, Link, HStack, Center, Heading, Switch, useColorMode, NativeBaseProvider, extendTheme, VStack, Box } from "native-base";
 import { NavigationContainer } from "@react-navigation/native";
-import NativeBaseIcon from "./src/components/NativeBaseIcon";
-import { Platform } from "react-native";
 import { ApolloProvider } from "@apollo/client";
-import TabNavigator from "./src/Navigators/TabNavigator";
 
 import StackNavigator from "./src/Navigators/StackNavigator";
 import client from "./src/configs/apollo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import Login from "./src/screens/Login";
-import Onboarding from "react-native-onboarding-swiper";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Define the config
 const config = {
@@ -34,6 +30,7 @@ export default function App() {
         setFirstLaunch(false);
       }
     }
+    console.log(firstLaunch);
     setData();
   }, []);
 
