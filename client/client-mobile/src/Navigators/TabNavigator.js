@@ -1,8 +1,6 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
-import Search from "../screens/Search";
 import SearchAllCategory from "../screens/SearchAllCategory";
-import Categories from "../screens/SearchByCategory";
 import PostItem from "../screens/PostItem";
 import Chat from "../screens/Chat";
 import MyProfile from "../screens/Profile";
@@ -41,7 +39,7 @@ const TabNavigator = () => {
     >
       <Tab.Screen
         name="Home"
-        component={Home}
+        component={StackNavigator}
         options={{
           headerShown: false,
         }}

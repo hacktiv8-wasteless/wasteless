@@ -7,9 +7,11 @@ import AllCategory from "../components/CategoryCard";
 export default function CategoryScreen() {
   return (
     <Box style={{ flex: 1 }} safeArea>
-      <SearchBar />
-      {/* <Text>INI HOME!</Text> */}
-      <AllCategory />
+      <View>
+        <SearchBar />
+        {/* <Text>INI HOME!</Text> */}
+        <AllCategory />
+      </View>
     </Box>
   );
 }

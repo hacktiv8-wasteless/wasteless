@@ -4,11 +4,11 @@ import CategorySearch from "../components/ItemCardLarge";
 
 export default function Categories() {
   return (
-    <Box style={{ flex: 1 }} safeArea>
+    <View>
       <SearchBar />
 
       {/* <Text>INI HOME!</Text> */}
       <CategorySearch />
-    </Box>
+    </View>
   );
 }

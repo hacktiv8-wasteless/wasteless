@@ -6,13 +6,13 @@ import CategoryList from "../components/CategoryHome";
 
 export default function HomeScreen() {
   return (
-    <Box style={{ flex: 1 }} safeArea>
+    <View>
       <SearchBar />
       <Carousel />
       {/* <Text>INI HOME!</Text> */}
       <CategoryList />
 
       <CardMenu />
-    </Box>
+    </View>
   );
 }

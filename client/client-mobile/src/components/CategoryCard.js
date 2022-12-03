@@ -22,9 +22,7 @@ const AllCategory = () => {
   return (
     <ScrollView>
       <View>
-        <TouchableOpacity
-        // onPress={() => navigation.navigate("Detail", { id: menu.id })}
-        >
+        <TouchableOpacity onPress={() => navigation.navigate("Categories")}>
           <Box px="4" pt="4">
             <HStack justifyContent="center" space="5" marginTop="3">
               <Avatar
