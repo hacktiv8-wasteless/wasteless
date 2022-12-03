@@ -6,7 +6,6 @@ import Chat from "../screens/Chat";
 import MyProfile from "../screens/Profile";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import StackNavigator from "./StackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,7 +38,7 @@ const TabNavigator = () => {
     >
       <Tab.Screen
         name="Home"
-        component={StackNavigator}
+        component={Home}
         options={{
           headerShown: false,
         }}

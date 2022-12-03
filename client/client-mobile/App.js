@@ -1,17 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Text,
-  Link,
-  HStack,
-  Center,
-  Heading,
-  Switch,
-  useColorMode,
-  NativeBaseProvider,
-  extendTheme,
-  VStack,
-  Box,
-} from "native-base";
+import { Text, Link, HStack, Center, Heading, Switch, useColorMode, NativeBaseProvider, extendTheme, VStack, Box } from "native-base";
 import { NavigationContainer } from "@react-navigation/native";
 import NativeBaseIcon from "./src/components/NativeBaseIcon";
 import { Platform } from "react-native";
@@ -71,7 +59,6 @@ export default function App() {
       <ApolloProvider client={client}>
         <NativeBaseProvider>
           <NavigationContainer>
-          <TabNavigator />
             <StackNavigator firstLaunch={firstLaunch} />
           </NavigationContainer>
         </NativeBaseProvider>
@@ -86,13 +73,7 @@ function ToggleDarkMode() {
   return (
     <HStack space={2} alignItems="center">
       <Text>Dark</Text>
-      <Switch
-        isChecked={colorMode === "light"}
-        onToggle={toggleColorMode}
-        aria-label={
-          colorMode === "light" ? "switch to dark mode" : "switch to light mode"
-        }
-      />
+      <Switch isChecked={colorMode === "light"} onToggle={toggleColorMode} aria-label={colorMode === "light" ? "switch to dark mode" : "switch to light mode"} />
       <Text>Light</Text>
     </HStack>
   );
