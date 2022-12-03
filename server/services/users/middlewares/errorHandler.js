@@ -12,7 +12,6 @@ const errorHandler = (err, req, res, next) => {
 		case `BAD_PATCH_REQUEST`:
 		case `BAD_LOGIN_REQUEST`:
 		case `BAD_PATCH_REQUEST`:
-		case `BAD_FAVORITE_REQUEST`:
 			code = 400;
 			message = err.message;
 			break;
