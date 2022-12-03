@@ -89,7 +89,6 @@ const resolvers = {
 		deleteUser: async (_, { user_id }) => {
 			try {
 				const { data } = await Users.delete(`/users/${user_id}`);
-				console.log(data);
 
 				return { message: "User Deleted successfully" };
 			} catch (error) {
