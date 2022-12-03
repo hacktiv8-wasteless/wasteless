@@ -6,22 +6,24 @@ class CategoryController {
       const result = await Category.find();
       res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ msg: error.message });
+      res.status(500).json(error.message);
     }
   }
   static async addCategory(req, res) {
     try {
       const { name, price } = req.body;
-
+      if (!name || !price) {
+        return res.status(400).json({ message: "Invalid input" });
+      }
       const newCategory = {
         name,
         price,
       };
-      await Category.created(newCategory);
+      await Category.create(newCategory);
 
-      res.status(201).json(Category);
+      res.status(201).json({ message: "Success create category" });
     } catch (error) {
-      res.status(500).json({ msg: error.message });
+      res.status(500).json(error.message);
     }
   }
   static async getCategoryById(req, res) {
@@ -33,36 +35,36 @@ class CategoryController {
       }
       res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ msg: error.message });
+      res.status(500).json(error.message);
     }
   }
   static async updateCategory(req, res) {
     try {
       const { id } = req.params;
       const { name, price } = req.body;
-
-      if (!mongoose.Types.ObjectId.isValid(id))
-        return res.status(404).send(`No category with id: ${id}`);
-
-      const updatedCategory = {
+      const category = await Category.findById(id);
+      const updatedPost = {
         name,
         price,
       };
-      await Category.findByIdAndUpdate(id, updatedCategory, { new: true });
-      res.status(200).json({ msg: "update success" });
+      const updateCategory = await Category.findByIdAndUpdate(id, updatedPost, {
+        new: true,
+      });
+      res.status(200).json({ message: "update success" });
     } catch (error) {
-      res.status(500).json({ msg: error.message });
+      res.status(500).json(error.message);
     }
   }
   static async deleteCategory(req, res) {
     try {
       const { id } = req.params;
-      if (!mongoose.Types.ObjectId.isValid(id))
-        return res.status(404).send(`No post with id: ${id}`);
-      await Post.findByIdAndRemove(id);
-      res.status(200).json({ msg: "Post deleted successfully." });
+      const category = await Category.findById(id);
+      const deletedCategory = await Category.findByIdAndRemove(id, {
+        returnOriginal: true,
+      });
+      res.status(200).json({ message: "success delete" });
     } catch (error) {
-      res.status(500).json({ msg: error.message });
+      res.status(500).json(error.message);
     }
   }
 }

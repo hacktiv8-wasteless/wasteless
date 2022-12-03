@@ -6,70 +6,65 @@ class PostController {
       const result = await Post.find();
       res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ msg: error.message });
+      res.status(500).json(error.message);
     }
   }
   static async getPostById(req, res) {
+    const { postId } = req.params;
     try {
-      const { id } = req.params;
-      const result = await Post.findById(id);
+      const result = await Post.findById(postId);
+      // console.log(result, "ini result");
       if (!result) {
         return res.status(404).json({ message: "Post Not Found" });
       }
       res.status(200).json(result);
     } catch (error) {
-      res.status(500).json({ msg: error.message });
+      res.status(500).json(error.message);
     }
   }
   static async createPost(req, res) {
     try {
-      const { title, decription, mainImage, quantity, string } = req.body;
-
-      const newPost = {
-        title,
-        decription,
-        mainImage,
-        quantity,
-        string,
-      };
-      await Post.created(newPost);
-
-      res.status(201).json(Post);
+      const { title, description, mainImage, quantity, status } = req.body;
+      if (!title || !mainImage || !description || !quantity || !status) {
+        return res.status(404).json({ message: "Invalid input" });
+      }
+      const postInput = { title, description, mainImage, quantity, status };
+      await Post.create(postInput);
+      res.status(201).json({ message: "Success create post" });
     } catch (error) {
-      res.status(500).json({ msg: error.message });
+      res.status(500).json(error.message);
     }
   }
   static async updatePost(req, res) {
     try {
-      const { id } = req.params;
+      const { postId } = req.params;
       const { title, decription, mainImage, quantity, string } = req.body;
-
-      if (!mongoose.Types.ObjectId.isValid(id))
-        return res.status(404).send(`No post with id: ${id}`);
-
+      const post = await Post.findById(postId);
       const updatedPost = {
         title,
         decription,
         mainImage,
         quantity,
         string,
-        _id: id,
       };
-      await Post.findByIdAndUpdate(id, updatedPost, { new: true });
-      res.status(200).json({ msg: "update success" });
+      const updatePost = await Post.findByIdAndUpdate(postId, updatedPost, {
+        new: true,
+      });
+      res.status(200).json({ message: "update success" });
     } catch (error) {
-      res.status(500).json({ msg: error.message });
+      res.status(500).json(error.message);
     }
   }
   static async deletePost(req, res) {
     try {
-      const { id } = req.params;
-      if (!mongoose.Types.ObjectId.isValid(id))
-        return res.status(404).send(`No post with id: ${id}`);
-      await Post.findByIdAndRemove(id);
-      res.status(200).json({ msg: "Post deleted successfully." });
+      const { postId } = req.params;
+      const post = await Post.findById(postId);
+      const deletedPost = await Post.findByIdAndRemove(postId, {
+        returnOriginal: true,
+      });
+      res.status(200).json({ message: "success delete" });
     } catch (error) {
-      res.status(500).json({ msg: error.message });
+      res.status(500).json(error.message);
     }
   }
 }

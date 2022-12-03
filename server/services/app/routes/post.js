@@ -3,9 +3,9 @@ const router = require("express").Router();
 
 router.get("/", PostController.getAllPost);
 router.post("/", PostController.createPost);
-router.get("/:id", PostController.getPostById);
-router.patch("/:id", PostController.updatePost);
-router.delete("/:id", PostController.deletePost);
+router.get("/:postId", PostController.getPostById);
+router.patch("/:postId", PostController.updatePost);
+router.delete("/:postId", PostController.deletePost);
 PostController;
 
 module.exports = router;
