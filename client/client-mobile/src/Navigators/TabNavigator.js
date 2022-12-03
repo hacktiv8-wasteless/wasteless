@@ -6,6 +6,7 @@ import Chat from "../screens/Chat";
 import MyProfile from "../screens/Profile";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import PostCategory from "../screens/PostCategory";
 
 const Tab = createBottomTabNavigator();
 
@@ -36,41 +37,11 @@ const TabNavigator = () => {
         };
       }}
     >
-      <Tab.Screen
-        name="Home"
-        component={Home}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="Search"
-        component={SearchAllCategory}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="Post"
-        component={PostItem}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="Chat"
-        component={Chat}
-        options={{
-          headerShown: false,
-        }}
-      />
-      <Tab.Screen
-        name="MyProfile"
-        component={MyProfile}
-        options={{
-          headerShown: false,
-        }}
-      />
+      <Tab.Screen name="Home" component={Home} />
+      <Tab.Screen name="Search" component={SearchAllCategory} />
+      <Tab.Screen name="Post" component={PostCategory} />
+      <Tab.Screen name="Chat" component={Chat} />
+      <Tab.Screen name="MyProfile" component={MyProfile} />
       {/* <Tab.Screen
         name="Categories"
         component={Categories}

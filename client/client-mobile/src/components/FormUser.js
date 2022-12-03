@@ -121,9 +121,6 @@ export default function FormUser({ page, navigation }) {
           <Stack>
             <Button onPress={() => navigation.navigate("Login")}>ke login</Button>
           </Stack>
-          <Stack>
-            <Button onPress={() => navigation.navigate("Login")}>ke login</Button>
-          </Stack>
         </Center>
       )}
     </>
