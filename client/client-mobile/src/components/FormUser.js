@@ -1,11 +1,15 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, TextInput, View, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Box, FormControl, Icon, Input, Pressable, Stack, WarningOutlineIcon, Button, Center, Heading, VStack, Link, HStack } from "native-base";
+import { Box, FormControl, Icon, Input, Pressable, Stack, WarningOutlineIcon, Button, Center, Heading, VStack, Link, HStack, Text, TextArea } from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useMutation } from "@apollo/client";
 import { POST_REGISTER, POST_LOGIN } from "../query/Users";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { COLORS } from "../constants";
+import { SafeAreaView } from "react-native-safe-area-context";
 // -------------------------------------------------------------------
+
+const { height, width } = Dimensions.get("screen");
 
 export default function FormUser({ page, navigation }) {
   const [show, setShow] = React.useState(false);
@@ -77,52 +81,122 @@ export default function FormUser({ page, navigation }) {
     <>
       {/* Login Form */}
       {page === "Login" && (
-        <Center w="100%">
-          <Box safeArea p="2" py="8" w="90%" maxW="290">
-            <Heading>Welcome</Heading>
-            <Heading>Sign in to continue!</Heading>
-            <Input type="email" placeholder="email" onChangeText={handleEmailChange} value={email} />
-            <Input type="password" placeholder="password" onChangeText={handlePasswordChange} value={password} />
-            <Button mt="2" colorScheme="indigo" onPress={handleSubmitLogin}>
-              Sign in
-            </Button>
+        <View>
+          <Box style={styles.card}>
+            <Stack space={10} w={width * 0.7} maxW="500px" mx="auto" style={{ alignItems: "center" }}>
+              <Text bold fontSize="lg">
+                Enter your login details to continue
+              </Text>
+
+              <Input type="email" placeholder="Enter your email here" onChangeText={handleEmailChange} value={email} size="lg" borderRadius={12} height={75} variant="filled" InputRightElement={<Icon as={<MaterialIcons name="email" />} size={8} mr="3" color={COLORS.primaryShade[100]} />} />
+
+              <Input
+                type={show ? "text" : "password"}
+                placeholder="Enter your password here"
+                onChangeText={handlePasswordChange}
+                value={password}
+                size="lg"
+                borderRadius={12}
+                height={75}
+                borderColor={COLORS.lightGrey}
+                background={"white"}
+                backgroundColor={COLORS.lightGrey}
+                InputRightElement={
+                  <Pressable onPress={handlerShowPassword}>
+                    <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={8} mr="3" color={COLORS.primaryShade[100]} />
+                  </Pressable>
+                }
+              />
+              <Button colorScheme="indigo" onPress={handleSubmitLogin} style={styles.button}>
+                Sign in
+              </Button>
+            </Stack>
           </Box>
-          <Stack>
-            <Button onPress={() => navigation.navigate("Register")}>ke register</Button>
-          </Stack>
-        </Center>
+        </View>
       )}
 
       {/* Register Form */}
       {page === "Register" && (
-        <Center w="100%">
-          <Box safeArea p="2" py="8" w="90%" maxW="290">
-            <Heading>Welcome</Heading>
-            <Heading>Sign in to continue!</Heading>
-            <Input type="text" placeholder="username" onChangeText={handleUsernameChange} value={username} />
-            <Input type="email" placeholder="email" onChangeText={handleEmailChange} value={email} />
-            <Input
-              type={show ? "text" : "password"}
-              InputRightElement={
-                <Pressable onPress={handlerShowPassword}>
-                  <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={5} mr="3" color="muted.400" />
-                </Pressable>
-              }
-              placeholder="Password"
-              onChangeText={handlePasswordChange}
-              value={password}
-            />
-            <Input type="phoneNumber" placeholder="text" onChangeText={handlePhoneNumberChange} value={phoneNumber} />
-            <Input type="address" placeholder="text" onChangeText={handleAddressChange} value={address} />
-            <Button mt="2" colorScheme="indigo" onPress={handleSubmitRegister}>
-              Sign up
-            </Button>
+        <View>
+          <Box style={styles.card2}>
+            <Stack space={10} w={width * 0.7} maxW="500px" mx="auto" style={{ alignItems: "center", paddingVertical: 25 }}>
+              <Input type="text" placeholder="Enter your username here" onChangeText={handleUsernameChange} value={username} size="lg" borderRadius={12} height={75} variant="filled" InputRightElement={<Icon as={<MaterialIcons name="person" />} size={8} mr="3" color={COLORS.primaryShade[100]} />} />
+
+              <Input type="email" placeholder="Enter your email here" onChangeText={handleEmailChange} value={email} size="lg" borderRadius={12} height={75} variant="filled" InputRightElement={<Icon as={<MaterialIcons name="email" />} size={8} mr="3" color={COLORS.primaryShade[100]} />} />
+
+              <Input
+                type={show ? "text" : "password"}
+                placeholder="Enter your password here"
+                onChangeText={handlePasswordChange}
+                value={password}
+                size="lg"
+                borderRadius={12}
+                height={75}
+                borderColor={COLORS.lightGrey}
+                background={"white"}
+                backgroundColor={COLORS.lightGrey}
+                InputRightElement={
+                  <Pressable onPress={handlerShowPassword}>
+                    <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={8} mr="3" color={COLORS.primaryShade[100]} />
+                  </Pressable>
+                }
+              />
+
+              <Input type="text" placeholder="Enter your phoneNumber here" onChangeText={handlePhoneNumberChange} value={phoneNumber} size="lg" borderRadius={12} height={75} variant="filled" InputRightElement={<Icon as={<MaterialIcons name="phone" />} size={8} mr="3" color={COLORS.primaryShade[100]} />} />
+
+              <TextArea type="text" placeholder="Enter your address here" onChangeText={handleAddressChange} value={address} size="lg" borderRadius={12} variant="filled" InputRightElement={<Icon as={<MaterialIcons name="location-pin" />} size={8} mr="3" color={COLORS.primaryShade[100]} />} />
+
+              <Button colorScheme="indigo" onPress={handleSubmitLogin} style={styles.button}>
+                Sign up
+              </Button>
+            </Stack>
           </Box>
-          <Stack>
-            <Button onPress={() => navigation.navigate("Login")}>ke login</Button>
-          </Stack>
-        </Center>
+        </View>
       )}
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  // container: {
+  //   // alignItems: "center",
+  //   // justifyContent: "center",
+  //   // flex: 1,
+  // },
+  card: {
+    marginTop: 40,
+    height: width * 0.8,
+    width: width * 0.8,
+    backgroundColor: "white",
+    borderRadius: 15,
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  card2: {
+    marginTop: 40,
+    // height: width * 0.9,
+    width: width * 0.8,
+    backgroundColor: "white",
+    borderRadius: 15,
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  button: {
+    marginTop: 20,
+    height: 75,
+    borderRadius: 50,
+    width: 200,
+    backgroundColor: COLORS.primary,
+
+    shadowColor: COLORS.primaryShade[400],
+    shadowOffset: {
+      width: 0,
+      height: 10,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 20.0,
+    elevation: 10,
+  },
+});
