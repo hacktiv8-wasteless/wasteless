@@ -9,6 +9,7 @@ import { Entypo } from "@expo/vector-icons";
 import PostCategory from "../screens/PostCategory";
 import { Button, useDisclose, Actionsheet, Box, Center, Text } from "native-base";
 import Notifications from "../screens/Notifications";
+import TopTabNavigator from "./TopTabNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -52,7 +53,8 @@ const TabNavigator = ({ navigation }) => {
         <Tab.Screen name="Search" component={SearchAllCategory} />
         <Tab.Screen name="PostItem" component={PostItem} options={{ tabBarButton: () => <Button onPress={onOpen}>Test</Button> }} />
         <Tab.Screen name="Notifications" component={Notifications} />
-        <Tab.Screen name="MyProfile" component={MyProfile} />
+        {/* <Tab.Screen name="MyProfile" component={MyProfile} /> */}
+        <Tab.Screen name="MyListing" component={TopTabNavigator} />
         {/* <Tab.Screen
         name="Categories"
         component={Categories}

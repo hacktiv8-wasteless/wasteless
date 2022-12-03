@@ -14,7 +14,7 @@ export default function StackNavigator({ firstLaunch }) {
   return (
     // <Stack.Navigator initialRouteName={firstLaunch ? "Onboarding" : "Login"} screenOptions={{ headerShown: false }}>
     <Stack.Navigator
-      initialRouteName="Onboarding"
+      initialRouteName="Tab"
       screenOptions={{
         headerStyle: {
           backgroundColor: COLORS.primary,
@@ -28,7 +28,7 @@ export default function StackNavigator({ firstLaunch }) {
       <Stack.Screen name="Onboarding" component={OnboardingScreenr} options={{ headerShown: false }} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Tab" component={TabNavigator} />
+      <Stack.Screen name="Tab" component={TabNavigator} options={{ headerShown: false }} />
       <Stack.Screen name="PostDetail" component={PostDetail} options={{ headerShown: true }} />
     </Stack.Navigator>
   );
