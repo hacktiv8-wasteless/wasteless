@@ -1,5 +1,6 @@
 const { ObjectId } = require("mongodb");
 const { getPosts } = require("../../app/config/mongo");
+const App = require("../services/app");
 
 const typeDefs = `#graphql
 	type Post {
@@ -15,6 +16,7 @@ const typeDefs = `#graphql
     long:Int
     status:String
     }
+
   input postPayload {
     category_id:ID
     title:String
@@ -25,11 +27,13 @@ const typeDefs = `#graphql
     long:Int
     status:String
   }
+
   type Query {
     getAllPosts:[Post]
     getPostByCategory(category_id:ID):[Post]
     getPostById(post_id:ID):Post
   }
+
   type Mutation {
     addPost(postPayload:postPayload):Response
     editPost(postPayload:postPayload,post_id:ID):Response
@@ -50,6 +54,7 @@ const resolvers = {
         console.log(error);
       }
     },
+
     getPostByCategory: async (_, { category_id }) => {
       try {
         if (!context.user || !context.token) throw { error: "Invalid access" };
@@ -63,6 +68,7 @@ const resolvers = {
         console.log(error);
       }
     },
+
     getPostById: async (_, { post_id }) => {
       try {
         if (!context.user || !context.token) throw { error: "Invalid access" };
@@ -75,6 +81,7 @@ const resolvers = {
       }
     },
   },
+
   Mutation: {
     addPost: async () => {
       try {
@@ -84,6 +91,7 @@ const resolvers = {
         console.log(error);
       }
     },
+
     editPost: async () => {
       try {
         if (!context.user || !context.token) throw { error: "Invalid access" };
@@ -92,6 +100,7 @@ const resolvers = {
         console.log(error);
       }
     },
+
     deletePost: async () => {
       try {
         if (!context.user || !context.token) throw { error: "Invalid access" };
