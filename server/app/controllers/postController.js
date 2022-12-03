@@ -32,9 +32,9 @@ class PostController {
         quantity,
         string,
       };
-      await newPostMessage.created(newPost);
+      await Post.created(newPost);
 
-      res.status(201).json(newPostMessage);
+      res.status(201).json(Post);
     } catch (error) {
       res.status(500).json({ msg: error.message });
     }
