@@ -13,10 +13,10 @@ export default function StackNavigator({ firstLaunch }) {
     // <Stack.Navigator initialRouteName={firstLaunch ? "Onboarding" : "Login"} screenOptions={{ headerShown: false }}>
     <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
       {/* // <Stack.Navigator initialRouteName="Tab"> */}
+      <Stack.Screen name="Tab" component={TabNavigator} />
       <Stack.Screen name="Onboarding" component={OnboardingScreenr} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
-      <Stack.Screen name="Tab" component={TabNavigator} />
       {/* Fadil */}
       {/* commented dr sana */}
       {/* <Stack.Screen name="Login" component={Login} /> */}

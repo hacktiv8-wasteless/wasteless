@@ -30,8 +30,9 @@ export default function App() {
         setFirstLaunch(false);
       }
     }
-    console.log(firstLaunch);
+    console.log("before onboard", firstLaunch);
     setData();
+    console.log("after onboard", firstLaunch);
   }, []);
 
   // if (isFirstLaunch === null) {
