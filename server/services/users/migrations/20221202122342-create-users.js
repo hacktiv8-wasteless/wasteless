@@ -32,6 +32,9 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      balance:{
+        type: Sequelize.INTEGER
+      },
       points: {
         type: Sequelize.INTEGER
       },

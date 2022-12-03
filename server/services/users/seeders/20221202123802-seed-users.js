@@ -14,12 +14,13 @@ module.exports = {
 		 * }], {});
 		 */
 		let insertData = require("./users.json").map((el) => {
-      el.password = hashPassword(el.password);
+			el.password = hashPassword(el.password);
 			el.createdAt = el.updatedAt = new Date();
-      el.points = 0
-      return el
+			el.balance = 0;
+			el.points = 0;
+			return el;
 		});
-    console.log(insertData)
+		console.log(insertData);
 		await queryInterface.bulkInsert("Users", insertData, {});
 	},
 

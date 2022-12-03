@@ -10,15 +10,19 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       payerId: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       payeeId: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       amount: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       status: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       createdAt: {

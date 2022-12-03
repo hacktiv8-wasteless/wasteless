@@ -66,13 +66,15 @@ module.exports = (sequelize, DataTypes) => {
 					notNull: { msg: "Address cannot be empty" },
 				},
 			},
-      points: DataTypes.INTEGER
+			balance: DataTypes.INTEGER,
+			points: DataTypes.INTEGER,
 		},
 		{
 			hooks: {
 				beforeCreate: (instance) => {
 					instance.password = hashPassword(instance.password);
-          instance.points = 0
+					instance.balance = 0;
+					instance.points = 0;
 				},
 			},
 			sequelize,
