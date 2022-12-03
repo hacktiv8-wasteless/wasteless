@@ -1,7 +1,12 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React, { useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Button } from "native-base";
+import { Box, FlatList, Text, View } from "native-base";
+import Carousel from "../components/Carousel";
+import CardMenu from "../components/ItemCardSmall";
+import SearchBar from "../components/SearchBar";
+import CategoryList from "../components/CategoryHome";
 
 export default function Home({ navigation }) {
   const clearAsyncStorage = async () => {
@@ -24,25 +29,16 @@ export default function Home({ navigation }) {
   }, []);
   return (
     <View>
-      <Text>Home</Text>
-      <Button onPress={() => navigation.navigate("PostItem")} style={styles.buttonTest}>
-        ke post
-      </Button>
-      <Button onPress={check} style={styles.buttonTest}>
-        Check
-      </Button>
-      <Button onPress={logout} style={styles.buttonTest}>
-        Logout
-      </Button>
-      <Button onPress={clearAsyncStorage} style={styles.buttonTest}>
-        Clear all storage
-      </Button>
+      <SearchBar />
+      <Carousel />
+      {/* <Text>INI HOME!</Text> */}
+      <CategoryList />
+
+      <CardMenu />
+      <Button onPress={() => navigation.navigate("PostItem")}>ke post</Button>
+      <Button onPress={check}>Check</Button>
+      <Button onPress={logout}>Logout</Button>
+      <Button onPress={clearAsyncStorage}>Clear all storage</Button>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  buttonTest: {
-    marginVertical: 50,
-  },
-});

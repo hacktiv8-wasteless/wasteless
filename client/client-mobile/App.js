@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import NativeBaseIcon from "./src/components/NativeBaseIcon";
 import { Platform } from "react-native";
 import { ApolloProvider } from "@apollo/client";
+import TabNavigator from "./src/Navigators/TabNavigator";
 
 import StackNavigator from "./src/Navigators/StackNavigator";
 import client from "./src/configs/apollo";
