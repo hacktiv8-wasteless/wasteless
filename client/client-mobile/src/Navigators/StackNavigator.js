@@ -11,11 +11,13 @@ const Stack = createNativeStackNavigator();
 
 export default function StackNavigator({ firstLaunch }) {
   return (
-    <Stack.Navigator initialRouteName={firstLaunch ? "Onboarding" : "Login"}>
+    // <Stack.Navigator initialRouteName={firstLaunch ? "Onboarding" : "Login"}>
+    <Stack.Navigator initialRouteName="Home">
       <Stack.Screen name="Onboarding" component={OnboardingScreenr} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="PostItem" component={PostItem} />
     </Stack.Navigator>
   );
 }
