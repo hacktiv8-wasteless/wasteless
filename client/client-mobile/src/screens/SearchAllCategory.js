@@ -1,12 +1,17 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Box, FlatList, Text, View } from "native-base";
+import Carousel from "../components/Carousel";
+import CardMenu from "../components/ItemCardSmall";
+import SearchBar from "../components/SearchBar";
+import AllCategory from "../components/CategoryCard";
 
-export default function SearchAllCategory() {
+export default function CategoryScreen() {
   return (
-    <View>
-      <Text>SearchAllCategory</Text>
-    </View>
-  )
+    <Box style={{ flex: 1 }} safeArea>
+      <View>
+        <SearchBar />
+        {/* <Text>INI HOME!</Text> */}
+        <AllCategory />
+      </View>
+    </Box>
+  );
 }
-
-const styles = StyleSheet.create({})
