@@ -1,12 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Box, FlatList, Text, View } from "native-base";
+import SearchBar from "../components/SearchBar";
+import CategorySearch from "../components/ItemCardLarge";
 
-export default function SearchByCategory() {
+export default function Categories() {
   return (
-    <View>
-      <Text>SearchByCategory</Text>
-    </View>
-  )
-}
+    <Box style={{ flex: 1 }} safeArea>
+      <SearchBar />
 
-const styles = StyleSheet.create({})
+      {/* <Text>INI HOME!</Text> */}
+      <CategorySearch />
+    </Box>
+  );
+}

@@ -7,6 +7,7 @@ import {
   Text,
   Center,
   HStack,
+  VStack,
   Stack,
   Badge,
   ScrollView,
@@ -20,48 +21,48 @@ const CategoryList = () => {
   return (
     <ScrollView>
       <View>
-        <HStack justifyContent="center" space={2} marginTop="3">
+        <HStack justifyContent="center" space="3" marginTop="3">
           <Avatar
             bg="green.500"
             size="lg"
             source={{
-              uri: "https://w7.pngwing.com/pngs/722/969/png-transparent-soft-drink-water-bottle-mineral-water-mineral-water-cartoon-water-glass-water-drops.png",
+              uri: "https://img.freepik.com/premium-vector/garbage-bin-with-metal-waste-recycling-garbage-vector-illustration_263366-48.jpg?w=2000",
             }}
           >
             AJ
           </Avatar>
           <Avatar
-            bg="cyan.500"
+            bg="gren.500"
             size="lg"
             source={{
-              uri: "https://w7.pngwing.com/pngs/722/969/png-transparent-soft-drink-water-bottle-mineral-water-mineral-water-cartoon-water-glass-water-drops.png",
+              uri: "https://img.freepik.com/premium-vector/garbage-bin-with-metal-waste-recycling-garbage-vector-illustration_263366-48.jpg?w=2000",
             }}
           >
             TE
           </Avatar>
           <Avatar
-            bg="indigo.500"
+            bg="green.500"
             size="lg"
             source={{
-              uri: "https://w7.pngwing.com/pngs/722/969/png-transparent-soft-drink-water-bottle-mineral-water-mineral-water-cartoon-water-glass-water-drops.png",
+              uri: "https://img.freepik.com/premium-vector/garbage-bin-with-metal-waste-recycling-garbage-vector-illustration_263366-48.jpg?w=2000",
             }}
           >
             JB
           </Avatar>
           <Avatar
-            bg="amber.500"
+            bg="green.500"
             size="lg"
             source={{
-              uri: "https://w7.pngwing.com/pngs/722/969/png-transparent-soft-drink-water-bottle-mineral-water-mineral-water-cartoon-water-glass-water-drops.png",
+              uri: "https://img.freepik.com/premium-vector/garbage-bin-with-metal-waste-recycling-garbage-vector-illustration_263366-48.jpg?w=2000",
             }}
           >
             TS
           </Avatar>
           <Avatar
-            bg="amber.500"
+            bg="green.500"
             size="lg"
             source={{
-              uri: "https://w7.pngwing.com/pngs/722/969/png-transparent-soft-drink-water-bottle-mineral-water-mineral-water-cartoon-water-glass-water-drops.png",
+              uri: "https://img.freepik.com/premium-vector/garbage-bin-with-metal-waste-recycling-garbage-vector-illustration_263366-48.jpg?w=2000",
             }}
           >
             TS

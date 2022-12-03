@@ -5,6 +5,7 @@ import Home from "../screens/Home";
 import Search from "../screens/Search";
 import PostItem from "../screens/PostItem";
 import Chat from "../screens/Chat";
+import Categories from "../screens/SearchByCategory";
 // import Login from "../screens/Login";
 
 const Stack = createNativeStackNavigator();
@@ -17,6 +18,7 @@ export default function StackNavigator() {
       <Stack.Screen name="PostItem" component={PostItem} />
       <Stack.Screen name="Search" component={Search} />
       <Stack.Screen name="Chat" component={Chat} />
+      <Stack.Screen name="Categories" component={Categories} />
     </Stack.Navigator>
   );
 }

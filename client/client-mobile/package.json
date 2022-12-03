@@ -54,10 +54,7 @@
     "watcher": "^2.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.19.3",
-    "autoprefixer": "^10.4.13",
-    "postcss": "^8.4.19",
-    "tailwindcss": "^3.2.4"
+    "@babel/core": "^7.19.3"
   },
   "bugs": {
     "url": "https://github.com/GeekyAnts/nativebase-templates/issues"

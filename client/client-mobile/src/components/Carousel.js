@@ -12,9 +12,9 @@ const { width } = Dimensions.get("window");
 const height = width * 0.5;
 
 const images = [
-  "https://www.heritage-enviro.com/wp-content/uploads/2022/04/Recycling-Graphic.png",
+  "https://news.miami.edu/life/_assets/images/images-stories/2019/11/recycling-greenu-940x529.jpg",
   "https://api.watsons.co.id/api/v2/wtcid/blog/wp-content/uploads/0533-Main-Banner-3.png",
-  "https://static.vecteezy.com/system/resources/previews/004/927/478/non_2x/recycle-process-with-trash-organic-paper-or-plastic-to-protect-the-ecology-environment-suitable-for-banner-background-and-web-in-flat-illustration-vector.jpg",
+  "https://bessemercity.com/wp-content/uploads/2020/05/GlobalRecyclingDay-2019.jpg",
 ];
 
 export default function Carousel() {
