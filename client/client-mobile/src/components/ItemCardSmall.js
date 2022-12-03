@@ -1,17 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Heading,
-  AspectRatio,
-  Image,
-  Text,
-  Center,
-  HStack,
-  Stack,
-  Badge,
-  ScrollView,
-  View,
-} from "native-base";
+import { Box, Heading, AspectRatio, Image, Text, Center, HStack, Stack, Badge, ScrollView, View } from "native-base";
 import { TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // import { currencyFormat } from "simple-currency-format";
@@ -21,9 +9,7 @@ const CardMenu = ({ item }) => {
   return (
     <ScrollView>
       <View>
-        <TouchableOpacity
-        // onPress={() => navigation.navigate("Detail", { id: menu.id })}
-        >
+        <TouchableOpacity onPress={() => navigation.navigate("PostDetail", { id: 1 })}>
           <Box alignItems="center">
             <Box
               marginTop="3"
@@ -92,11 +78,7 @@ const CardMenu = ({ item }) => {
                   </Text>
                 </Stack>
                 <Text fontWeight="400">Description here!</Text>
-                <HStack
-                  alignItems="center"
-                  space={4}
-                  justifyContent="space-between"
-                >
+                <HStack alignItems="center" space={4} justifyContent="space-between">
                   <HStack alignItems="center">
                     <Text
                       color="coolGray.600"
