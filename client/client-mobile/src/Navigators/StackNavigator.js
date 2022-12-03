@@ -5,6 +5,7 @@ import Register from "../screens/Register";
 import OnboardingScreenr from "../screens/OnboardingScreen";
 import Login from "../screens/Login";
 import TabNavigator from "./TabNavigator";
+import PostDetail from "../screens/PostDetail";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,16 +18,7 @@ export default function StackNavigator({ firstLaunch }) {
       <Stack.Screen name="Onboarding" component={OnboardingScreenr} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
-      {/* Fadil */}
-      {/* commented dr sana */}
-      {/* <Stack.Screen name="Login" component={Login} /> */}
-      {/* <Stack.Screen name="CategoryScreen" component={CategoryScreen} /> */}
-
-      {/* ga dikomen dr sana */}
-      {/* <Stack.Screen name="HomeScreen" component={Home} />
-      <Stack.Screen name="PostItem" component={PostItem} />
-      <Stack.Screen name="Chat" component={Chat} />
-      <Stack.Screen name="Categories" component={Categories} /> */}
+      <Stack.Screen name="PostDetail" component={PostDetail} options={{ headerShown: true }} />
     </Stack.Navigator>
   );
 }

@@ -36,11 +36,25 @@ export default function Home({ navigation }) {
         <CategoryList />
 
         <CardMenu />
-        <Button onPress={() => navigation.navigate("PostItem")}>ke post</Button>
-        <Button onPress={check}>Check</Button>
-        <Button onPress={logout}>Logout</Button>
-        <Button onPress={clearAsyncStorage}>Clear all storage</Button>
+        <View style={{ alignItems: "center", flexDirection: "row", justifyContent: "center" }}>
+          <Button onPress={check} style={styles.test}>
+            Check
+          </Button>
+          <Button onPress={logout} style={styles.test}>
+            Logout
+          </Button>
+          <Button onPress={clearAsyncStorage} style={styles.test}>
+            Clear all storage
+          </Button>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  test: {
+    marginVertical: 30,
+    marginHorizontal: 10,
+  },
+});
