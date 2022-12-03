@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Text, Link, HStack, Center, Heading, Switch, useColorMode, NativeBaseProvider, extendTheme, VStack, Box } from "native-base";
 import { NavigationContainer } from "@react-navigation/native";
-import NativeBaseIcon from "./src/components/NativeBaseIcon";
-import { Platform } from "react-native";
 import { ApolloProvider } from "@apollo/client";
 
 import StackNavigator from "./src/Navigators/StackNavigator";
 import client from "./src/configs/apollo";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 // Define the config
 const config = {
@@ -18,44 +18,49 @@ const config = {
 export const theme = extendTheme({ config });
 
 export default function App() {
+  const [firstLaunch, setFirstLaunch] = useState(null);
+
+  useEffect(() => {
+    async function setData() {
+      const appData = await AsyncStorage.getItem("appLaunched");
+      if (appData == null) {
+        setFirstLaunch(true);
+        AsyncStorage.setItem("appLaunched", "false");
+      } else {
+        setFirstLaunch(false);
+      }
+    }
+    console.log(firstLaunch);
+    setData();
+  }, []);
+
+  // if (isFirstLaunch === null) {
+  //   console.log(isFirstLaunch, "dari kondisi if");
+  //   return null;
+  // } else if (isFirstLaunch) {
+  //   return (
+  //     <ApolloProvider client={client}>
+  //       <NavigationContainer>
+  //         <NativeBaseProvider>
+  //           <StackNavigator />
+  //         </NativeBaseProvider>
+  //       </NavigationContainer>
+  //     </ApolloProvider>
+  //   );
+  // } else {
+  //   return <Login />;
+  // }
+
   return (
-    <ApolloProvider client={client}>
-      <NavigationContainer>
+    firstLaunch != null && (
+      <ApolloProvider client={client}>
         <NativeBaseProvider>
-          <StackNavigator />
-          {/* <Center _dark={{ bg: "blueGray.900" }} _light={{ bg: "blueGray.50" }} px={4} flex={1}>
-          <VStack space={5} alignItems="center">
-          <NativeBaseIcon />
-            <Heading size="lg">Welcome to NativeBase</Heading>
-            <HStack space={2} alignItems="center">
-            <Text>Edit</Text>
-            <Box
-            _web={{
-              _text: {
-                fontFamily: "monospace",
-                fontSize: "sm",
-              },
-            }}
-            px={2}
-            py={1}
-            _dark={{ bg: "blueGray.800" }}
-            _light={{ bg: "blueGray.200" }}
-            >
-            App.js
-            </Box>
-            <Text>and save to reload.</Text>
-            </HStack>
-            <Link href="https://docs.nativebase.io" isExternal>
-            <Text color="primary.500" underline fontSize={"xl"}>
-                Learn NativeBase
-                </Text>
-                </Link>
-                <ToggleDarkMode />
-                </VStack>
-              </Center> */}
+          <NavigationContainer>
+            <StackNavigator firstLaunch={firstLaunch} />
+          </NavigationContainer>
         </NativeBaseProvider>
-      </NavigationContainer>
-    </ApolloProvider>
+      </ApolloProvider>
+    )
   );
 }
 

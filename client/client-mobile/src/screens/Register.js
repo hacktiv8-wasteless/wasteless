@@ -1,12 +1,15 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import FormUser from "../components/FormUser";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function Register() {
+export default function Register({ navigation }) {
   return (
-    <View>
-      <Text>Register</Text>
-    </View>
-  )
+    <SafeAreaView>
+      <Text>form register</Text>
+      <FormUser page={"Register"} navigation={navigation} />
+    </SafeAreaView>
+  );
 }
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
