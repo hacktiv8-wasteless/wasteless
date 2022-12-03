@@ -1,4 +1,4 @@
-const { server } = require("../app");
+const { server } = require("../../orchestrator/app");
 
 // start();
 
