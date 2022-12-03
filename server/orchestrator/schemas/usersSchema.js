@@ -9,13 +9,11 @@ const typeDefs = `#graphql
     phoneNumber:String!
     address:String!
   }
+  
   type Response {
     access_token:String
     message:String
 	error:Boolean
-  }
-  type Appointment {
-    _id:String
   }
 
   input userPayload {
