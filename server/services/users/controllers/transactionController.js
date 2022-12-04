@@ -26,7 +26,8 @@ class Controller {
 					}
 				);
 
-				console.log(payingUser);
+				if (payingUser.balance < 0)
+					throw { name: "BAD_REQUEST", message: "Not enough balance" };
 
 				await User.update(
 					{
@@ -47,9 +48,60 @@ class Controller {
 			await History.create({ payerId, payeeId, amount: totalPrice, status });
 		}
 	}
-	static async get(req, res, next) {
+
+	static async getIncoming(req, res, next) {
 		const { id } = req.params;
 		try {
+			const incomingPayment = await Transaction.findAll({
+				where: { payeeId: id },
+				include: [
+					{
+						model: User,
+						as: "Payee",
+						attributes: {
+							exclude: ["password"],
+						},
+					},
+					{
+						model: User,
+						as: "Payer",
+						attributes: {
+							exclude: ["password"],
+						},
+					},
+				],
+			});
+
+			res.status(200).json({ incomingPayment });
+		} catch (error) {
+			next(error);
+		}
+	}
+
+	static async getOutgoing(req, res, next) {
+		const { id } = req.params;
+		try {
+			const outgoingPayment = await Transaction.findAll({
+				where: { payerId: id },
+				include: [
+					{
+						model: User,
+						as: "Payee",
+						attributes: {
+							exclude: ["password"],
+						},
+					},
+					{
+						model: User,
+						as: "Payer",
+						attributes: {
+							exclude: ["password"],
+						},
+					},
+				],
+			});
+
+			res.status(200).json({ outgoingPayment });
 		} catch (error) {
 			next(error);
 		}
