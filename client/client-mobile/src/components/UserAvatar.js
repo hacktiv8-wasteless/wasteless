@@ -1,18 +1,16 @@
-import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Box, Button } from "native-base";
-import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
-export default function QR() {
-  // const {id} = // dari props flatlist
-
+export default function UserAvatar() {
   const handleQrRoute = (id) => {
     // console.log(id);
   };
   return (
     <Box style={styles.qrContainer}>
       <Button style={styles.button}>
-        <Ionicons name="qr-code" size={24} color="black" />
+        <Feather name="user" size={24} color="black" />
       </Button>
     </Box>
   );

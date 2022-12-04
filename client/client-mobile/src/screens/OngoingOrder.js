@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { FlatList } from "native-base";
 import ListingCard from "../components/ListingCard";
-import { FlatList, HStack, ScrollView, Stack, VStack } from "native-base";
 import QR from "../components/QR";
+import UserAvatar from "../components/UserAvatar";
 
-export default function MyListing() {
+export default function OngoingOrder() {
   const dummy = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
 
   const [data, setData] = useState(dummy);
@@ -17,6 +17,7 @@ export default function MyListing() {
         renderItem={({ item }) => {
           return (
             <View style={styles.viewContainer}>
+              <UserAvatar />
               <ListingCard />
               <QR />
             </View>

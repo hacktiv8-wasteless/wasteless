@@ -1,4 +1,4 @@
-import { StyleSheet, View, Image, TouchableHighlight } from "react-native";
+import { StyleSheet, View, Image, TouchableHighlight, StatusBar } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { VStack, Text, FormControl, Input, Button, TextArea, Slider, Box, Center, WarningOutlineIcon, Pressable } from "native-base";
@@ -47,75 +47,81 @@ export default function PostItem({ navigation, route }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {/* <Text>{category}</Text> */}
-      <View style={styles.imageContainer}>
-        <Text>Add Image here</Text>
-        <Pressable>
-          <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.imagePlaceholder} resizeMode="cover" />
-        </Pressable>
-      </View>
-      <VStack style={styles.formContainer}>
-        <FormControl isRequired marginBottom={3}>
-          <Text style={styles.label}>Title</Text>
-          <Input placeholder="Title" w="100%" variant="rounded" backgroundColor="white" value={title} onChangeText={handleTitleChange} />
-        </FormControl>
+    <>
+      {/* Status Bar */}
+      <StatusBar barStyle="light-content" backgroundColor="#339966" />
 
-        <FormControl isRequired marginBottom={3}>
-          <Text style={styles.label}>Description</Text>
-          <TextArea h={20} placeholder="e.g. 2kg plastic bottles" backgroundColor="white" borderRadius={15} value={description} onChangeText={handleDescriptionChange} />
-        </FormControl>
+      <SafeAreaView style={styles.container}>
+        {/* <Text>{category}</Text> */}
 
-        <FormControl isRequired>
-          <View style={{ flexDirection: "row" }}>
-            <Text style={styles.label}>Quantity: </Text>
-            <Text>{quantity}kg</Text>
-          </View>
-          <Slider onChange={handleQuantityChange} defaultValue={1} minValue={0.5} maxValue={5} step={0.5} colorScheme="green">
-            <Slider.Track>
-              <Slider.FilledTrack />
-            </Slider.Track>
-            <Slider.Thumb />
-          </Slider>
-        </FormControl>
-      </VStack>
+        <View style={styles.imageContainer}>
+          <Text>Add Image here</Text>
+          <Pressable>
+            <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.imagePlaceholder} resizeMode="cover" />
+          </Pressable>
+        </View>
+        <VStack style={styles.formContainer}>
+          <FormControl isRequired marginBottom={3}>
+            <Text style={styles.label}>Title</Text>
+            <Input placeholder="Title" w="100%" variant="rounded" backgroundColor="white" value={title} onChangeText={handleTitleChange} />
+          </FormControl>
 
-      <VStack style={styles.mapsContainer}>
-        <Pressable>
-          {({ isHovered, isFocused, isPressed }) => {
-            return (
-              <Box
-                bg={isPressed ? "coolGray.200" : isHovered ? "coolGray.200" : "white"}
-                // p="5"
-                height="full"
-                borderWidth="1"
-                borderColor="coolGray.300"
-                maxHeight={70}
-              >
-                <View style={{ padding: 20, flexDirection: "row", justifyContent: "space-between" }}>
-                  <Text style={styles.label}>Your location (approx)</Text>
-                  <Text style={styles.label}>Next</Text>
-                </View>
-              </Box>
-            );
-          }}
-        </Pressable>
-      </VStack>
+          <FormControl isRequired marginBottom={3}>
+            <Text style={styles.label}>Description</Text>
+            <TextArea h={20} placeholder="e.g. 2kg plastic bottles" backgroundColor="white" borderRadius={15} value={description} onChangeText={handleDescriptionChange} />
+          </FormControl>
 
-      <VStack style={styles.footer}>
-        <Button onPress={onSubmit} bgColor={"#339966"} width={"full"} height={75} borderRadius={0}>
-          Submit
-        </Button>
-        {/* Kalo udah sambung server bisa tambah ini buat loading mutation */}
-        {/* <Button isLoading>Button</Button> */}
+          <FormControl isRequired>
+            <View style={{ flexDirection: "row" }}>
+              <Text style={styles.label}>Quantity: </Text>
+              <Text>{quantity}kg</Text>
+            </View>
+            <Slider onChange={handleQuantityChange} defaultValue={1} minValue={0.5} maxValue={5} step={0.5} colorScheme="green">
+              <Slider.Track>
+                <Slider.FilledTrack />
+              </Slider.Track>
+              <Slider.Thumb />
+            </Slider>
+          </FormControl>
+        </VStack>
 
-        {/* <TouchableHighlight onPress={onSubmit}>
+        <VStack style={styles.mapsContainer}>
+          <Pressable>
+            {({ isHovered, isFocused, isPressed }) => {
+              return (
+                <Box
+                  bg={isPressed ? "coolGray.200" : isHovered ? "coolGray.200" : "white"}
+                  // p="5"
+                  height="full"
+                  borderWidth="1"
+                  borderColor="coolGray.300"
+                  maxHeight={70}
+                >
+                  <View style={{ padding: 20, flexDirection: "row", justifyContent: "space-between" }}>
+                    <Text style={styles.label}>Your location (approx)</Text>
+                    <Text style={styles.label}>Next</Text>
+                  </View>
+                </Box>
+              );
+            }}
+          </Pressable>
+        </VStack>
+
+        <VStack style={styles.footer}>
+          <Button onPress={onSubmit} bgColor={"#339966"} width={"full"} height={75} borderRadius={0}>
+            Submit
+          </Button>
+          {/* Kalo udah sambung server bisa tambah ini buat loading mutation */}
+          {/* <Button isLoading>Button</Button> */}
+
+          {/* <TouchableHighlight onPress={onSubmit}>
           <View style={{ alignItems: "center", backgroundColor: "#339966", height: 100 }}>
-            <Text style={{ color: "white" }}>Submit</Text>
+          <Text style={{ color: "white" }}>Submit</Text>
           </View>
         </TouchableHighlight> */}
-      </VStack>
-    </SafeAreaView>
+        </VStack>
+      </SafeAreaView>
+    </>
   );
 }
 
