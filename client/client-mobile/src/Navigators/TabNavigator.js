@@ -1,12 +1,14 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
 import SearchAllCategory from "../screens/SearchAllCategory";
+import Categories from "../screens/SearchByCategory";
 import PostItem from "../screens/PostItem";
 import Chat from "../screens/Chat";
 import MyProfile from "../screens/Profile";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import PostCategory from "../screens/PostCategory";
+import StackNavigator from "./StackNavigator";
 
 const Tab = createBottomTabNavigator();
 
