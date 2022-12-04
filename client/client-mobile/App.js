@@ -2,20 +2,10 @@ import React, { useEffect, useState } from "react";
 import { Text, Link, HStack, Center, Heading, Switch, useColorMode, NativeBaseProvider, extendTheme, VStack, Box } from "native-base";
 import { NavigationContainer } from "@react-navigation/native";
 import { ApolloProvider } from "@apollo/client";
-
 import StackNavigator from "./src/Navigators/StackNavigator";
 import client from "./src/configs/apollo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-// Define the config
-const config = {
-  useSystemColorMode: false,
-  initialColorMode: "dark",
-};
-
-// extend the theme
-export const theme = extendTheme({ config });
 
 export default function App() {
   const [firstLaunch, setFirstLaunch] = useState(null);
