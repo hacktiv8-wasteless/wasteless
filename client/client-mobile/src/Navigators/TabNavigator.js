@@ -8,6 +8,7 @@ import Notifications from "../screens/Notifications";
 import TopTabNavigator from "./TopTabNavigator";
 import { COLORS } from "../constants";
 import { StyleSheet } from "react-native";
+import NewHome from "../screens/NewHome";
 
 const Tab = createBottomTabNavigator();
 
@@ -17,7 +18,7 @@ const TabNavigator = ({ navigation }) => {
   return (
     <>
       <Tab.Navigator
-        initialRouteName="MyListing"
+        initialRouteName="Home"
         screenOptions={({ route }) => {
           return {
             tabBarIcon: ({ focused, color, size }) => {
@@ -62,8 +63,9 @@ const TabNavigator = ({ navigation }) => {
       >
         <Tab.Screen
           name="Home"
-          component={Home}
+          component={NewHome}
           options={{
+            headerShown: false,
             headerRight: () => (
               <View style={[styles.buttonContainer, styles.headerButton]}>
                 <Button onPress={() => navigation.navigate("MyProfile")} variant="unstyled">

@@ -12,6 +12,7 @@ import PostDetail from "../screens/PostDetail";
 import { COLORS } from "../constants";
 import PostItem from "../screens/PostItem";
 import Profile from "../screens/Profile";
+import NewHome from "../screens/NewHome";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +40,8 @@ export default function StackNavigator({ firstLaunch }) {
         // headerShadowVisible: false,
       }}
     >
+      {/* <Stack.Screen name="NewHome" component={NewHome} options={{ headerShown: false }} /> */}
+
       <Stack.Screen name="Onboarding" component={OnboardingScreenr} options={{ headerShown: false }} />
       <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
