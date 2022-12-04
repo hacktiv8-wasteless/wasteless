@@ -1,10 +1,13 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StyleSheet, Text, View } from "react-native";
 // import Login from "../screens/Login";
+import Home from "../screens/Home";
 import Register from "../screens/Register";
 import OnboardingScreenr from "../screens/OnboardingScreen";
 import Login from "../screens/Login";
 import TabNavigator from "./TabNavigator";
+import Categories from "../screens/SearchByCategory";
+
 import PostDetail from "../screens/PostDetail";
 
 const Stack = createNativeStackNavigator();
@@ -19,6 +22,10 @@ export default function StackNavigator({ firstLaunch }) {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="PostDetail" component={PostDetail} options={{ headerShown: true }} />
+
+      {/* Fadil conflict */}
+      {/* <Stack.Screen name="Tab" component={TabNavigator} />
+      <Stack.Screen name="Categories" component={Categories} /> */}
     </Stack.Navigator>
   );
 }

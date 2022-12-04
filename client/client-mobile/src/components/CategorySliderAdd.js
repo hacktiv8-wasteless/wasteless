@@ -41,4 +41,4 @@ export default function CategorySliderAdd({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({});
+// const styles = StyleSheet.create({});
