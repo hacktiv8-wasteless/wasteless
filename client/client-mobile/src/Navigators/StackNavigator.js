@@ -40,8 +40,8 @@ export default function StackNavigator({ firstLaunch }) {
       }}
     >
       <Stack.Screen name="Onboarding" component={OnboardingScreenr} options={{ headerShown: false }} />
-      <Stack.Screen name="Register" component={Register} />
-      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
       <Stack.Screen name="Tab" component={TabNavigator} options={{ headerShown: false }} />
 
       {/* Post, nanti mungkin pindah file stack baru */}

@@ -17,6 +17,7 @@ const TabNavigator = ({ navigation }) => {
   return (
     <>
       <Tab.Navigator
+        initialRouteName="MyListing"
         screenOptions={({ route }) => {
           return {
             tabBarIcon: ({ focused, color, size }) => {
@@ -89,7 +90,7 @@ const TabNavigator = ({ navigation }) => {
         />
         <Tab.Screen name="Notifications" component={Notifications} />
         {/* <Tab.Screen name="MyProfile" component={MyProfile} /> */}
-        <Tab.Screen name="MyListing" component={TopTabNavigator} />
+        <Tab.Screen name="MyListing" component={TopTabNavigator} options={{ title: "My Listing" }} />
         {/* <Tab.Screen
         name="Categories"
         component={Categories}
