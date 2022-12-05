@@ -13,6 +13,7 @@ import { COLORS } from "../constants";
 import PostItem from "../screens/PostItem";
 import Profile from "../screens/Profile";
 import NewHome from "../screens/NewHome";
+import Chat from "../screens/Chat";
 
 const Stack = createNativeStackNavigator();
 
@@ -44,14 +45,43 @@ export default function StackNavigator({ firstLaunch }) {
     >
       {/* <Stack.Screen name="NewHome" component={NewHome} options={{ headerShown: false }} /> */}
 
-      <Stack.Screen name="Onboarding" component={OnboardingScreenr} options={{ headerShown: false }} />
-      <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
-      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-      <Stack.Screen name="Tab" component={TabNavigator} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="Onboarding"
+        component={OnboardingScreenr}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Register"
+        component={Register}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Login"
+        component={Login}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Tab"
+        component={TabNavigator}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Chat"
+        component={Chat}
+        options={{ headerShown: false }}
+      />
 
       {/* Post, nanti mungkin pindah file stack baru */}
-      <Stack.Screen name="PostDetail" component={PostDetail} options={{ headerShown: true }} />
-      <Stack.Screen name="Post" component={PostItem} options={({ route }) => ({ title: route.params.category })} />
+      <Stack.Screen
+        name="PostDetail"
+        component={PostDetail}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="Post"
+        component={PostItem}
+        options={({ route }) => ({ title: route.params.category })}
+      />
 
       <Stack.Screen name="MyProfile" component={Profile} />
     </Stack.Navigator>
