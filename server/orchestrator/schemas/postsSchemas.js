@@ -1,5 +1,3 @@
-// const { ObjectId } = require("mongodb");
-// const { getPosts } = require("../../app/config/mongo");
 const App = require("../services/app");
 
 const typeDefs = `#graphql
@@ -42,74 +40,73 @@ const typeDefs = `#graphql
 `;
 
 const resolvers = {
-  Query: {
-    getAllPosts: async () => {
-      try {
-        if (!context.user || !context.token) throw { error: "Invalid access" };
-        const postCollection = await getPosts();
-        const posts = await postCollection.find().toArray();
+	Query: {
+		getAllPosts: async () => {
+			try {
+				if (!context.user || !context.token) throw { error: "Invalid access" };
+				const { data } = App.get("/posts");
 
-        return posts;
-      } catch (error) {
-        console.log(error);
-      }
-    },
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
 
-    getPostByCategory: async (_, { category_id }) => {
-      try {
-        if (!context.user || !context.token) throw { error: "Invalid access" };
-        const postCollection = await getPosts();
-        const posts = await postCollection
-          .find({ category_id: ObjectId(category_id) })
-          .toArray();
+		getPostByCategory: async (_, { category_id }) => {
+			try {
+				if (!context.user || !context.token) throw { error: "Invalid access" };
+				const { data } = App.get(`/posts?category=${category_id}`);
 
-        return posts;
-      } catch (error) {
-        console.log(error);
-      }
-    },
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
 
-    getPostById: async (_, { post_id }) => {
-      try {
-        if (!context.user || !context.token) throw { error: "Invalid access" };
-        const postCollection = await getPosts();
-        const post = await postCollection.findOne({ _id: ObjectId(post_id) });
+		getPostById: async (_, { post_id }) => {
+			try {
+				if (!context.user || !context.token) throw { error: "Invalid access" };
+				const { data } = App.get(`/posts/${post_id}`);
 
-        return posts;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
 
-  Mutation: {
-    addPost: async () => {
-      try {
-        if (!context.user || !context.token) throw { error: "Invalid access" };
-        const postCollection = await getPosts();
-      } catch (error) {
-        console.log(error);
-      }
-    },
+	Mutation: {
+		addPost: async (_, { postPayload }) => {
+			try {
+				if (!context.user || !context.token) throw { error: "Invalid access" };
+				const { data } = App.get(`/posts`, { postPayload });
 
-    editPost: async () => {
-      try {
-        if (!context.user || !context.token) throw { error: "Invalid access" };
-        const postCollection = await getPosts();
-      } catch (error) {
-        console.log(error);
-      }
-    },
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
 
-    deletePost: async () => {
-      try {
-        if (!context.user || !context.token) throw { error: "Invalid access" };
-        const postCollection = await getPosts();
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
+		editPost: async (_, { post_id, postPayload }) => {
+			try {
+				if (!context.user || !context.token) throw { error: "Invalid access" };
+				const { data } = App.put(`/posts/${post_id}`, { postPayload });
+
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+
+		deletePost: async (_, { post_id }) => {
+			try {
+				if (!context.user || !context.token) throw { error: "Invalid access" };
+				const { data } = App.delete(`/posts/${post_id}`);
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
 };
 
 module.exports = { typeDefs, resolvers };
