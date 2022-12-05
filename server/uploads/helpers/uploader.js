@@ -1,6 +1,6 @@
 const cloudinary = require("../../services/app/config/cloudinary")
 
-const streamUpload = (buffer) => {
+const streamUpload = (path) => {
 	return new Promise((resolve, reject) => {
 		let stream = cloudinary.uploader.upload_stream((error, result) => {
 			if (result) {
@@ -10,8 +10,8 @@ const streamUpload = (buffer) => {
 			}
 		});
 
-		const newBuffer = Buffer.from(JSON.parse(buffer))
-        const imgStream = Readable.from(newBuffer)
+		// const newBuffer = Buffer.from(JSON.parse(buffer))
+        const imgStream = Readable.from(path)
 		imgStream.pipe(stream);
 	});
 };
