@@ -41,7 +41,7 @@ const typeDefs = `#graphql
 
 const resolvers = {
 	Query: {
-		getAllPosts: async () => {
+		getAllPosts: async (_, __, context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = App.get("/posts");
@@ -52,7 +52,7 @@ const resolvers = {
 			}
 		},
 
-		getPostByCategory: async (_, { category_id }) => {
+		getPostByCategory: async (_, { category_id }, context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = App.get(`/posts?category=${category_id}`);
@@ -63,7 +63,7 @@ const resolvers = {
 			}
 		},
 
-		getPostById: async (_, { post_id }) => {
+		getPostById: async (_, { post_id }, context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = App.get(`/posts/${post_id}`);
@@ -76,7 +76,7 @@ const resolvers = {
 	},
 
 	Mutation: {
-		addPost: async (_, { postPayload }) => {
+		addPost: async (_, { postPayload }, context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = App.get(`/posts`, { postPayload });
@@ -87,7 +87,7 @@ const resolvers = {
 			}
 		},
 
-		editPost: async (_, { post_id, postPayload }) => {
+		editPost: async (_, { post_id, postPayload }, context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = App.put(`/posts/${post_id}`, { postPayload });
@@ -98,7 +98,7 @@ const resolvers = {
 			}
 		},
 
-		deletePost: async (_, { post_id }) => {
+		deletePost: async (_, { post_id }, context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = App.delete(`/posts/${post_id}`);
