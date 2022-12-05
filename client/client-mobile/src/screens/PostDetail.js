@@ -10,7 +10,7 @@ const MAP_PLACEHOLDER = Image.resolveAssetSource(mapPlaceHolder).uri;
 export default function PostDetail({ navigation, route }) {
   // const { id } = route.params;
 
-  useEffect(() => console.log(id), []);
+  // useEffect(() => console.log(id), []);
 
   return (
     <SafeAreaView style={styles.container}>
