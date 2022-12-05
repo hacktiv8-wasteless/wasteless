@@ -7,7 +7,6 @@ const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-const port = process.env.PORT || 4004;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -31,6 +30,4 @@ app.post("/", upload.single("image"), async (req, res) => {
 	}
 });
 
-app.listen(port, (req, res) => {
-	console.log(`Uploader listening on port: ${port}`);
-});
+module.exports = app;

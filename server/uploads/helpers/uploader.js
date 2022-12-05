@@ -11,7 +11,6 @@ const streamUpload = (buffer) => {
 			}
 		});
 
-		// const newBuffer = Buffer.from(JSON.parse(buffer))
 		const imgStream = Readable.from(buffer);
 		imgStream.pipe(stream);
 	});
