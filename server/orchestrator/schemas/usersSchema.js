@@ -25,6 +25,7 @@ const typeDefs = `#graphql
 	input InvoicePayload {
 		external_id:String
    		totalPrice:Int
+		status:String
 	}
 
   input userPayload {
@@ -88,7 +89,7 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-		loginUser: async (_, { userPayload }) => {
+		loginUser: async (_, { userPayload },{}) => {
 			try {
 				const { email, password } = userPayload;
 
