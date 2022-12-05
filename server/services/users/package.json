@@ -13,7 +13,8 @@
   "main": "app.js",
   "scripts": {
     "start": "node bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "seed-test": "npx sequelize-cli db:drop --env test && npx sequelize-cli db:create --env test && npx sequelize-cli db:migrate --env test && npx sequelize-cli db:seed:all --env test",
+    "test": "set NODE_ENV=test && npx jest --coverage --verbose --runInBand --forceExit"
   },
   "keywords": [],
   "author": "",
