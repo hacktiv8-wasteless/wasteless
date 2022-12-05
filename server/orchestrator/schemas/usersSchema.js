@@ -1,4 +1,4 @@
-const Users = require("../services/users");
+const Users = require("../services/users")
 
 const typeDefs = `#graphql
 	type User {
@@ -49,7 +49,7 @@ const resolvers = {
 		},
 		getUserById: async (_, { user_id }) => {
 			try {
-				const { data } = await Users.findOne(`/users/${user_id}`);
+				const { data } = await Users.get(`/users/${user_id}`);
 
 				return data;
 			} catch (error) {
