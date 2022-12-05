@@ -6,7 +6,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.12.1",
     "pg": "^8.8.0",
-    "sequelize": "^6.26.0"
+    "sequelize": "^6.26.0",
+    "xendit-node": "^1.21.10"
   },
   "name": "users",
   "version": "1.0.0",

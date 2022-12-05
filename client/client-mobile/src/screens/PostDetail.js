@@ -3,11 +3,12 @@ import React, { useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, ScrollView } from "native-base";
 import mapPlaceHolder from "../../assets/placeHolder/mapPlaceHolder.png";
+import { Feather } from "@expo/vector-icons";
 
 const MAP_PLACEHOLDER = Image.resolveAssetSource(mapPlaceHolder).uri;
 
 export default function PostDetail({ navigation, route }) {
-  const { id } = route.params;
+  // const { id } = route.params;
 
   useEffect(() => console.log(id), []);
 
@@ -20,7 +21,12 @@ export default function PostDetail({ navigation, route }) {
         <Image source={{ uri: "http://placekitten.com/700/800" }} style={styles.image} />
       </View>
       <View style={styles.postDetail}>
-        <Text style={styles.title}>Plastic bottles</Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <Text style={styles.title}>Plastic bottles</Text>
+          <Button onPress={() => console.log("jalan delete")} variant="unstyled">
+            <Feather name="trash-2" size={24} color="red" />
+          </Button>
+        </View>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.category}>Category</Text>
         </View>
@@ -63,7 +69,8 @@ const styles = StyleSheet.create({
   postDetail: {
     flex: 2,
     padding: 20,
-    backgroundColor: "tomato",
+    // backgroundColor: "tomato",
+    backgroundColor: "white",
     borderTopColor: "gray",
   },
   // imageContainer: {

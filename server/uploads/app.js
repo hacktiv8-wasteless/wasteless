@@ -17,30 +17,30 @@ app.get("/", (req, res) => {
 	});
 });
 
-app.post('/upload', multer({storage: multer.memoryStorage()}).single("file"), async (req, res, next) => {
-    if (req.file) {
-      var originalname = req.file.originalname.split(' ');
-      const fileName = originalname.join('_');
-      try {
-        await minioClient.putObject('test-bucket', fileName, req.file.buffer);
+// app.post('/upload', multer({storage: multer.memoryStorage()}).single("file"), async (req, res, next) => {
+//     if (req.file) {
+//       var originalname = req.file.originalname.split(' ');
+//       const fileName = originalname.join('_');
+//       try {
+//         await minioClient.putObject('test-bucket', fileName, req.file.buffer);
   
-        // get url
-        const url = await minioClient.presignedGetObject('test-bucket', fileName);
+//         // get url
+//         const url = await minioClient.presignedGetObject('test-bucket', fileName);
   
-        var id = uuid();
-        // link valid for 3 minutes (180 seconds)
-        // save link to redis
-        redisClient.setex(id, 180, url, (err, reply) => {
-          if (err) {
-            return res.json({'success': false, 'message': err});
-          }
-          return res.json({'success': true, 'message': id});
-        });
-      } catch(err) {
-        return res.json({'success': false, 'message': err});
-      }
-    }
-  });
+//         var id = uuid();
+//         // link valid for 3 minutes (180 seconds)
+//         // save link to redis
+//         redisClient.setex(id, 180, url, (err, reply) => {
+//           if (err) {
+//             return res.json({'success': false, 'message': err});
+//           }
+//           return res.json({'success': true, 'message': id});
+//         });
+//       } catch(err) {
+//         return res.json({'success': false, 'message': err});
+//       }
+//     }
+//   });
 
 app.post("/", async (req, res) => {
 	try {

@@ -13,9 +13,9 @@ class Controller {
           { transaction: t }
         );
 
-        const payingUser = await User.update(
+        const [_,payingUser] = await User.update(
           {
-            balance: sequelize.literal(`balance - ${totalPrice - commission}`),
+            balance: sequelize.literal(`balance - ${totalPrice}`),
             points: sequelize.literal(`points + ${commission}`),
           },
           {
@@ -27,7 +27,7 @@ class Controller {
         );
 
         if (payingUser.balance < 0)
-          throw { name: "BAD_REQUEST", message: "Not enough balance" };
+          throw { name: "BAD_TRANSACTION_REQUEST", message: "Not enough balance" };
 
         await User.update(
           {
