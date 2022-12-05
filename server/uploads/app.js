@@ -1,14 +1,16 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const bodyParser = require("body-parser");
+const uploader = require("./helpers/uploader");
+
 const multer = require("multer");
-const fs = require("fs");
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 const port = process.env.PORT || 4004;
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
 	res.status(200).json({
@@ -16,10 +18,10 @@ app.get("/", (req, res) => {
 	});
 });
 
-app.post("/", async (req, res) => {
-	const { file } = req.body;
+app.post("/", upload.single("image"), async (req, res) => {
+	const { file } = req;
 	try {
-		const { url } = await uploader(file.path);
+		const { url } = await uploader(file.buffer);
 
 		res.status(200).json({
 			url,

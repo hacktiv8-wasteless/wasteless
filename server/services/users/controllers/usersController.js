@@ -27,7 +27,7 @@ class Controller {
   static async userRegister(req, res, next) {
     const { username, email, password, phoneNumber, address } = req.body;
     try {
-      const newUser = User.create({
+      const newUser = await User.create({
         username,
         email,
         password,
