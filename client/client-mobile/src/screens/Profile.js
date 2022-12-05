@@ -7,12 +7,14 @@ import {
   Text,
   TouchableRipple,
 } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Profile = () => {
+  const navigation = useNavigation();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
@@ -103,6 +105,12 @@ const Profile = () => {
           <View style={styles.menuItem}>
             <AntDesign name="logout" color="#FF6347" size={25} />
             <Text style={styles.menuItemText}>logout</Text>
+          </View>
+        </TouchableRipple>
+        <TouchableRipple onPress={() => navigation.navigate("ScanQR")}>
+          <View style={styles.menuItem}>
+            <AntDesign name="scan1" color="#FF6347" size={25} />
+            <Text style={styles.menuItemText}>Scan Here</Text>
           </View>
         </TouchableRipple>
       </View>
