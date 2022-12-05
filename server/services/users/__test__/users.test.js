@@ -25,6 +25,8 @@ afterAll(async () => {
   });
 });
 
+const user_access_token = "";
+
 describe("User Routes Test", () => {
   describe("POST /register - create new user", () => {
     test("201 success - create new user", (done) => {

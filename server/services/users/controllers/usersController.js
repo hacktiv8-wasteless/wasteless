@@ -26,6 +26,7 @@ class Controller {
 
   static async userRegister(req, res, next) {
     const { username, email, password, phoneNumber, address } = req.body;
+    console.log(req.body, " ini harusnya masuk");
     try {
       const newUser = User.create({
         username,
@@ -34,7 +35,7 @@ class Controller {
         phoneNumber,
         address,
       });
-
+      console.log(newUser, "ini user");
       res.status(201).json({
         newUser,
         message: "Create user successfully",
