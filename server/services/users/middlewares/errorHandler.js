@@ -1,36 +1,43 @@
-const errorHandler = async (err, req, res, next) => {
-  let code = 500;
-  let message = "Internal server error";
-  console.log(err);
+const errorHandler = (error, req, res, next) => {
+  console.log(error);
+  let code;
+  let message;
 
-  if (
-    err.name === "SequelizeValidationError" ||
-    err.name === "SequelizeUniqueConstraintError"
-  ) {
-    code = 400;
-    message = err.errors[0].message;
-  } else if (err.name === "JsonWebTokenError") {
-    code = 401;
-    message = "Invalid token";
-  } else if (err.name === "Login failed") {
-    code = 401;
-    message = "Invalid email or password";
-  } else if (err.name === "Email cannot be empty") {
-    code = 401;
-    message = "Email cannot be empty";
-  } else if (err.name === "Password cannot be empty") {
-    code = 401;
-    message = "Password cannot be empty";
-  } else if (err.name === "Forbidden") {
-    code = 403;
-    message = "You have no access";
-  } else if (err.name === "Not found") {
-    code = 404;
-    message = "Id or data not found";
+  switch (error.name) {
+    case `SequelizeValidationError`:
+    case `SequelizeUniqueConstraintError`:
+      code = 400;
+      message = error.errors.map((el) => el.message);
+      break;
+    case `BAD_TRANSACTION_REQUEST`:
+    case `BAD_PATCH_REQUEST`:
+      code = 400;
+      message = error.message;
+      break;
+    case `JsonWebTokenError`:
+    case `Unauthorized`:
+      code = 401;
+      message = "Invalid token";
+      break;
+    case `INVALID_CREDENTIALS`:
+      code = 401;
+      message = "Invalid Email or password!";
+      break;
+    case `FORBIDDEN`:
+      code = 403;
+      message = "Invalid access!";
+      break;
+    case `USER_NOT_FOUND`:
+      code = 404;
+      message = `Users with id ${err.id} not Found!`;
+      break;
+
+    default:
+      code = 500;
+      message = "Internal Server Error!";
+      break;
   }
-  res.status(code).json({
-    message: message,
-  });
+  res.status(code).json({ message });
 };
 
 module.exports = errorHandler;

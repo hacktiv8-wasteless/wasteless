@@ -15,6 +15,7 @@
   "scripts": {
     "start-dev": "nodemon bin/www",
     "start": "node bin/www",
+    "dev-test": "npx sequelize-cli db:migrate --env test && npx sequelize-cli db:seed:all --env test",
     "seed-dev": "npx sequelize db:drop  && npx sequelize db:create  && npx sequelize db:migrate  && npx sequelize db:seed:all ",
     "seed-test": "npx sequelize-cli db:drop  && npx sequelize-cli db:create --env test && npx sequelize-cli db:migrate --env test && npx sequelize-cli db:seed:all --env test",
     "test": "npx jest --coverage --verbose --runInBand --forceExit"

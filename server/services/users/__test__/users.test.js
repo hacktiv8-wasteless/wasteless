@@ -6,6 +6,40 @@ const { queryInterface } = sequelize;
 
 jest.setTimeout(1000);
 
+beforeAll(async () => {
+  try {
+    const user = await User.create({
+      username: "Budiman99",
+      email: "budiman@gmail.com",
+      password: "Budi1234",
+    });
+
+    await queryInterface.bulkInsert(
+      "Users",
+      [
+        {
+          username: "Budiman99",
+          email: "budiman@gmail.com",
+          password: "Budi1234",
+          address: "jakarta",
+          phoneNumber: "081234567891",
+        },
+      ],
+      {}
+    );
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+afterAll(async () => {
+  await User.destroy({
+    truncate: true,
+    cascade: true,
+    restartIdentity: true,
+  });
+});
+
 const user1 = {
   username: "Budiman99",
   email: "budiman@gmail.com",
@@ -15,7 +49,7 @@ const user1 = {
 };
 
 const user_access_token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjcwMjEyNjQzfQ.VIB6UMNxxKXmWrnt48qogBu36Hqt-c8jHDxOigvJWDU";
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNjcwMjMwOTQ4fQ.WEdfdAmahIRDoYwt5BoMnTqO1C-8fkVoKcFNHPrbGXs";
 
 describe("User Routes Test", () => {
   describe("POST /register - create new user", () => {
@@ -23,19 +57,18 @@ describe("User Routes Test", () => {
       request(app)
         .post("/users/register")
         .send({
-          username: "testUser",
-          email: "abc@gmail.com",
-          password: "123456",
+          username: "kareenwijaya",
+          email: "karen_wijaya@gmail.com",
+          password: "karin123",
           address: "jakarta",
-          phoneNumber: "081234567891",
+          phoneNumber: "081234832132",
         })
         .end((error, res) => {
           if (error) return done(error);
           const { body, status } = res;
-
+          // console.log(res.body, "<<< ini res body");
           expect(status).toBe(201);
-          expect(body).toHaveProperty(expect.any(Object));
-          expect(body).toHaveProperty("message", "Create user successfully");
+          expect(body).toHaveProperty("message", expect.any(String));
           return done();
         });
     });
@@ -51,9 +84,9 @@ describe("User Routes Test", () => {
         .end((err, res) => {
           if (err) return done(err);
           const { body, status } = res;
-
+          // console.log(res.body, "<<<");
           expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Username cannot be empty");
+          expect(res.body.message[0]).toEqual("User.username cannot be null");
           return done();
         });
     });
@@ -70,31 +103,11 @@ describe("User Routes Test", () => {
         .end((err, res) => {
           if (err) return done(err);
           const { body, status } = res;
-
+          // console.log(res.body, "<<<<<");
           expect(status).toBe(400);
-          expect(body).toHaveProperty(
-            "message",
-            "Username must be 6 characters or longer"
+          expect(res.body.message[0]).toEqual(
+            "Validation len on username failed"
           );
-          return done();
-        });
-    });
-    test("400 Failed register - should return error using user registered", (done) => {
-      request(app)
-        .post("/users/register")
-        .send({
-          username: "testUser",
-          email: "abc@gmail.com",
-          password: "123456",
-          address: "jakarta",
-          phoneNumber: "081234567891",
-        })
-        .end((err, res) => {
-          if (err) return done(err);
-          const { body, status } = res;
-
-          expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Username is already in use");
           return done();
         });
     });
@@ -110,9 +123,9 @@ describe("User Routes Test", () => {
         .end((err, res) => {
           if (err) return done(err);
           const { body, status } = res;
-
+          // console.log(res.body.message, "<<<");
           expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Email cannot be empty");
+          expect(res.body.message[0]).toEqual("User.email cannot be null");
           return done();
         });
     });
@@ -129,9 +142,11 @@ describe("User Routes Test", () => {
         .end((err, res) => {
           if (err) return done(err);
           const { body, status } = res;
-
+          // console.log(res.body.message[0], "<<<");
           expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Must be in email format");
+          expect(res.body.message[0]).toEqual(
+            "Validation isEmail on email failed"
+          );
           return done();
         });
     });
@@ -139,18 +154,18 @@ describe("User Routes Test", () => {
       request(app)
         .post("/users/register")
         .send({
-          username: "testUser",
-          email: "abc@gmail.com",
-          password: "123456",
+          username: "kareenwijaya",
+          email: "karen_wijaya@gmail.com",
+          password: "karin123",
           address: "jakarta",
-          phoneNumber: "081234567891",
+          phoneNumber: "081234832132",
         })
         .end((err, res) => {
           if (err) return done(err);
           const { body, status } = res;
-
+          // console.log(res.body, "<<<");
           expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Email is already in use");
+          expect(res.body.message[0]).toEqual("username must be unique");
           return done();
         });
     });
@@ -166,9 +181,9 @@ describe("User Routes Test", () => {
         .end((err, res) => {
           if (err) return done(err);
           const { body, status } = res;
-
+          // console.log(res.body.message, "<<<");
           expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Password cannot be empty");
+          expect(res.body.message[0]).toEqual("User.password cannot be null");
           return done();
         });
     });
@@ -185,11 +200,10 @@ describe("User Routes Test", () => {
         .end((err, res) => {
           if (err) return done(err);
           const { body, status } = res;
-
+          // console.log(res.body.message[0], "<<<");
           expect(status).toBe(400);
-          expect(body).toHaveProperty(
-            "message",
-            "Password must be 6 characters or longer"
+          expect(res.body.message[0]).toEqual(
+            "Validation len on username failed"
           );
           return done();
         });
@@ -198,21 +212,18 @@ describe("User Routes Test", () => {
       request(app)
         .post("/users/register")
         .send({
-          username: "testUser",
-          email: "abc@gmail.com",
-          password: "123456",
+          username: "kareenwijaya",
+          email: "karen_wijaya@gmail.com",
+          password: "karin123",
           address: "jakarta",
-          phoneNumber: "081234567891",
+          phoneNumber: "081234832132",
         })
         .end((err, res) => {
           if (err) return done(err);
           const { body, status } = res;
-
+          // console.log(res.body.message, "<<<");
           expect(status).toBe(400);
-          expect(body).toHaveProperty(
-            "message",
-            "Phone Number is already in use"
-          );
+          expect(res.body.message[0]).toEqual("username must be unique");
           return done();
         });
     });
@@ -228,11 +239,10 @@ describe("User Routes Test", () => {
         .end((err, res) => {
           if (err) return done(err);
           const { body, status } = res;
-
+          // console.log(res.body.message[0], "<<<");
           expect(status).toBe(400);
-          expect(body).toHaveProperty(
-            "message",
-            "Phone Number cannot be empty"
+          expect(res.body.message[0]).toEqual(
+            "User.phoneNumber cannot be null"
           );
           return done();
         });
@@ -249,129 +259,194 @@ describe("User Routes Test", () => {
         .end((err, res) => {
           if (err) return done(err);
           const { body, status } = res;
-
+          // console.log(res.body, "<<< ini errornya");
           expect(status).toBe(400);
-          expect(body).toHaveProperty("message", "Address cannot be empty");
+          expect(res.body.message[0]).toEqual("User.address cannot be null");
           return done();
         });
     });
-  });
-  describe("POST /login - user login", () => {
-    test("200 Success login - should return access_token", (done) => {
-      request(app)
-        .post("/users/login")
-        .send({
-          email: "abc@gmail.com",
-          password: "123456",
-        })
-        .end((err, res) => {
-          if (err) return done(err);
-          const { body, status } = res;
+    describe("POST /login - user login", () => {
+      test("200 Success login - should return access_token", (done) => {
+        request(app)
+          .post("/users/login")
+          .send({
+            email: "karen_wijaya@gmail.com",
+            password: "karin123",
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            const { body, status } = res;
+            console.log(res.body.message, "<<<");
+            expect(status).toBe(200);
+            expect(body).toHaveProperty("access_token", expect.any(String));
+            return done();
+          });
+      });
+      test("401 Failed login wrong password - should return error", (done) => {
+        request(app)
+          .post("/users/login")
+          .send({
+            email: "karen_wijaya@gmail.com",
+            password: "abcdef",
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            const { body, status } = res;
+            // console.log(res.body, "<<< coba error");
+            expect(status).toBe(401);
+            expect(body).toHaveProperty("message", "Invalid Email or Password");
+            return done();
+          });
+      });
+      test("401 Failed login wrong email - should return error", (done) => {
+        request(app)
+          .post("/users/login")
+          .send({
+            email: "apaajah@gmail.com",
+            password: "karin123",
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            const { body, status } = res;
 
-          expect(status).toBe(200);
-          expect(body).toHaveProperty("access_token", expect.any(String));
-          return done();
-        });
+            expect(status).toBe(401);
+            expect(body).toHaveProperty("message", "Invalid Email or Password");
+            return done();
+          });
+      });
+
+      test("401 Failed login wrong password - should return error", (done) => {
+        request(app)
+          .post("/users/login")
+          .send({
+            email: "kareen.anna2@gmail.com",
+            password: "123456",
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            const { body, status } = res;
+
+            expect(status).toBe(401);
+            expect(body).toHaveProperty("message", "Invalid Email or Password");
+            return done();
+          });
+      });
+
+      test("400 Failed login when email is null - should return error", (done) => {
+        request(app)
+          .post("/users/login")
+          .send({
+            password: "123456",
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            const { body, status } = res;
+            // console.log(res.body, "<<<");
+            expect(status).toBe(500);
+            expect(body).toHaveProperty("message", "Internal Server Error!");
+            return done();
+          });
+      });
+
+      test("400 Failed login when password is null - should return error", (done) => {
+        request(app)
+          .post("/users/login")
+          .send({
+            email: "hello@mail.com",
+          })
+          .end((err, res) => {
+            if (err) return done(err);
+            const { body, status } = res;
+
+            expect(status).toBe(401);
+            expect(body).toHaveProperty("message", "Invalid Email or Password");
+            return done();
+          });
+      });
     });
-    test("401 Failed login wrong password - should return error", (done) => {
-      request(app)
-        .post("/users/login")
-        .send({
-          email: "abc@gmail.com",
-          password: "abcdef",
-        })
-        .end((err, res) => {
-          if (err) return done(err);
-          const { body, status } = res;
+    describe("GET / - return data all user", () => {
+      test("200 Success get user, return array", (done) => {
+        request(app)
+          .get("/users")
+          .then((response) => {
+            const { body, status } = response;
+            // console.log(response.body[0], "<<< liat ini");
+            expect(status).toBe(200);
 
-          expect(status).toBe(401);
-          expect(body).toHaveProperty("message", "Invalid Email or Password");
-          return done();
-        });
+            expect(response.body[0]).toBeInstanceOf(Object);
+            expect(response.body[0]).toHaveProperty("id", expect.any(Number));
+            expect(response.body[0]).toHaveProperty(
+              "username",
+              expect.any(String)
+            );
+            expect(response.body[0]).toHaveProperty(
+              "email",
+              expect.any(String)
+            );
+            expect(response.body[0]).toHaveProperty(
+              "password",
+              expect.any(String)
+            );
+            expect(response.body[0]).toHaveProperty(
+              "address",
+              expect.any(String)
+            );
+            expect(response.body[0]).toHaveProperty(
+              "balance",
+              expect.any(Number)
+            );
+            expect(response.body[0]).toHaveProperty(
+              "points",
+              expect.any(Number)
+            );
+            done();
+          })
+          .catch((err) => {
+            done(err);
+          });
+      });
     });
-    test("401 Failed login wrong email - should return error", (done) => {
-      request(app)
-        .post("/users/login")
-        .send({
-          email: "apaajah@gmail.com",
-          password: "123456",
-        })
-        .end((err, res) => {
-          if (err) return done(err);
-          const { body, status } = res;
-
-          expect(status).toBe(401);
-          expect(body).toHaveProperty("message", "Invalid Email or Password");
-          return done();
-        });
+    describe("GET / - return data user by id", () => {
+      test("200 Success get user, return array", (done) => {
+        request(app)
+          .get("/users/1")
+          .then((response) => {
+            const { body, status } = response;
+            // console.log(response.body, "<<<");
+            expect(response.body).toBeInstanceOf(Object);
+            expect(response.body).toHaveProperty("id", expect.any(Number));
+            expect(response.body).toHaveProperty(
+              "username",
+              expect.any(String)
+            );
+            expect(response.body).toHaveProperty("email", expect.any(String));
+            expect(response.body).toHaveProperty(
+              "password",
+              expect.any(String)
+            );
+            expect(response.body).toHaveProperty("address", expect.any(String));
+            expect(response.body).toHaveProperty("balance", expect.any(Number));
+            expect(response.body).toHaveProperty("points", expect.any(Number));
+            done();
+          })
+          .catch((err) => {
+            done(err);
+          });
+      });
     });
-
-    test("400 Failed login when email is null - should return error", (done) => {
-      request(app)
-        .post("/users/login")
-        .send({
-          password: "123456",
-        })
-        .end((err, res) => {
-          if (err) return done(err);
-          const { body, status } = res;
-
-          expect(status).toBe(401);
-          expect(body).toHaveProperty("message", "Email cannot be empty");
-          return done();
-        });
-    });
-
-    test("400 Failed login when password is null - should return error", (done) => {
-      request(app)
-        .post("/users/login")
-        .send({
-          email: "hello@mail.com",
-        })
-        .end((err, res) => {
-          if (err) return done(err);
-          const { body, status } = res;
-
-          expect(status).toBe(401);
-          expect(body).toHaveProperty("message", "Password cannot be empty");
-          return done();
-        });
-    });
-  });
-  describe("GET / - return data all user", () => {
-    test("200 Success get user, return array", (done) => {
-      request(app)
-        .get("/users")
-        .set({ access_token: user_access_token })
-        .then((response) => {
-          const { body, status } = response;
-          expect(status).toBe(200);
-          expect(body).toBeInstanceOf(Object);
-          expect(body).toHaveProperty("id", expect.any(Number));
-          expect(body).toHaveProperty("email", expect.any(String));
-          done();
-        })
-        .catch((err) => {
-          done(err);
-        });
-    });
-  });
-  describe("GET / - return data user by id", () => {
-    test("200 Success get user, return array", (done) => {
-      request(app)
-        .get("/users/:id")
-        .set({ access_token: user_access_token })
-        .then((response) => {
-          const { body, status } = response;
-          expect(status).toBe(200);
-          expect(body).toBeInstanceOf(Object);
-          expect(body).toHaveProperty("id", expect.any(Number));
-          expect(body).toHaveProperty("email", expect.any(String));
-          done();
-        })
-        .catch((err) => {
-          done(err);
-        });
+    describe("POST / balance top up by user", () => {
+      test("200 success top up, return array", (done) => {
+        request(app)
+          .post("/users/topup")
+          .send({ balance: 500000 })
+          .set("access_token", user_access_token)
+          .then((response) => {
+            const { body, status } = response;
+            console.log(response, "<< ini response");
+            expect(status).toBe(201);
+            expect(body).toBeInstanceOf(Object);
+          });
+      });
     });
   });
 });
