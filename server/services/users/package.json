@@ -17,7 +17,7 @@
     "start": "node bin/www",
     "seed-dev": "npx sequelize db:drop  && npx sequelize db:create  && npx sequelize db:migrate  && npx sequelize db:seed:all ",
     "seed-test": "npx sequelize-cli db:drop  && npx sequelize-cli db:create --env test && npx sequelize-cli db:migrate --env test && npx sequelize-cli db:seed:all --env test",
-    "test": "set NODE_ENV=test && npx jest --coverage --verbose --runInBand --forceExit"
+    "test": "npx jest --coverage --verbose --runInBand --forceExit"
   },
   "keywords": [],
   "author": "",

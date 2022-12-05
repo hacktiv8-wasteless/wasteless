@@ -1,31 +1,21 @@
 const app = require("../app");
 const request = require("supertest");
-const { sequelize } = require("../models");
+const { sequelize, User } = require("../models");
 const { hashPassword } = require("../helpers/jwt");
 const { queryInterface } = sequelize;
 
 jest.setTimeout(1000);
 
-let user = require("../seeders/users.json");
-user.forEach((el) => {
-  el.password = hashPassword(el.password);
-  el.createdAt = new Date();
-  el.updatedAt = new Date();
-});
+const user1 = {
+  username: "Budiman99",
+  email: "budiman@gmail.com",
+  password: "Budi1234",
+  address: "jakarta",
+  phoneNumber: "081234567891",
+};
 
-beforeAll(async () => {
-  await queryInterface.bulkInsert("Users", user, null);
-});
-
-afterAll(async () => {
-  await queryInterface.bulkDelete("Users", null, {
-    truncate: true,
-    restartIdentity: true,
-    cascade: true,
-  });
-});
-
-const user_access_token = "";
+const user_access_token =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNjcwMjEyNjQzfQ.VIB6UMNxxKXmWrnt48qogBu36Hqt-c8jHDxOigvJWDU";
 
 describe("User Routes Test", () => {
   describe("POST /register - create new user", () => {

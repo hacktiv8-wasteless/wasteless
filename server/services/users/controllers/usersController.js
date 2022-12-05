@@ -26,7 +26,6 @@ class Controller {
 
   static async userRegister(req, res, next) {
     const { username, email, password, phoneNumber, address } = req.body;
-    console.log(req.body, " ini harusnya masuk");
     try {
       const newUser = User.create({
         username,
@@ -35,7 +34,6 @@ class Controller {
         phoneNumber,
         address,
       });
-      console.log(newUser, "ini user");
       res.status(201).json({
         newUser,
         message: "Create user successfully",
@@ -56,69 +54,69 @@ class Controller {
 
       const access_token = signToken({ id: foundUser.id });
 
-			return res.status(200).json({ access_token });
-		} catch (error) {
-			next(error);
-		}
-	}
-
-	static async balanceTopUp(req, res, next) {
-		const { balance } = req.body;
-		const { id } = req.user;
-		try {
-			const result = await sequelize.transaction(async (t) => {
-				const foundUser = await User.findByPk(id, { transaction: t });
-
-				const xenditInvoice = await XenditInvoice.createInvoice(
-					`${foundUser.id}-${new Date().getTime()}`,
-					+balance,
-					foundUser
-				);
-
-				return xenditInvoice;
-			});
-
-			res.status(200).json({
-				code: 200,
-				status: "success",
-				message: "please pay to continue",
-				data: result.invoice_url,
-			});
-		} catch (error) {
-			next(error);
-		}
-	}
-	static async successTopUp(req, res, next) {
-		try {
-			const { external_id, amount, status } = req.body;
-			if (status == "PAID") {
-				const findWallet = await Balance.findOne({
-					where: {
-						UserId: external_id,
-					},
-				});
-				await Balance.update(
-					{
-						balance: +findWallet.balance + +amount,
-					},
-					{
-						where: {
-							UserId: external_id,
-						},
-					}
-				);
-				res.status(201).json({ message: "topup success" });
-			}
-		} catch (error) {
-			next(error);
-		}
-	}
-  
-	static async template() {
-      return res.status(200).json(access_token);
+      return res.status(200).json({ access_token });
     } catch (error) {
       next(error);
     }
+  }
+
+  static async balanceTopUp(req, res, next) {
+    const { balance } = req.body;
+    const { id } = req.user;
+    try {
+      const result = await sequelize.transaction(async (t) => {
+        const foundUser = await User.findByPk(id, { transaction: t });
+
+        const xenditInvoice = await XenditInvoice.createInvoice(
+          `${foundUser.id}-${new Date().getTime()}`,
+          +balance,
+          foundUser
+        );
+
+        return xenditInvoice;
+      });
+
+      res.status(200).json({
+        code: 200,
+        status: "success",
+        message: "please pay to continue",
+        data: result.invoice_url,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async successTopUp(req, res, next) {
+    try {
+      const { external_id, amount, status } = req.body;
+      if (status == "PAID") {
+        const findWallet = await Balance.findOne({
+          where: {
+            UserId: external_id,
+          },
+        });
+        await Balance.update(
+          {
+            balance: +findWallet.balance + +amount,
+          },
+          {
+            where: {
+              UserId: external_id,
+            },
+          }
+        );
+        res.status(201).json({ message: "topup success" });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async template() {
+    return res.status(200).json(access_token);
+  }
+  catch(error) {
+    next(error);
   }
 }
 
