@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
 const client = new ApolloClient({
-  uri: "https://5b0f-118-136-185-211.ap.ngrok.io/",
+  uri: "https://wasteless-orchestrator.up.railway.app/",
   cache: new InMemoryCache(),
 });
 
