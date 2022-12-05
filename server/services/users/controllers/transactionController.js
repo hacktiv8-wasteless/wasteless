@@ -101,7 +101,7 @@ class Controller {
         ],
       });
 
-      res.status(200).json({ outgoingPayment });
+      res.status(200).json(outgoingPayment);
     } catch (error) {
       next(error);
     }
