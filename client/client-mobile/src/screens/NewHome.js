@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, ScrollView, Image, StatusBar } from "react-native";
+import { StyleSheet, Text, View, TextInput, ScrollView, Image, StatusBar, TouchableOpacity } from "react-native";
 import React from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { FlatList, Button, Center } from "native-base";
@@ -102,16 +102,18 @@ export default function NewHome({ navigation }) {
                 numColumns={2}
                 renderItem={({ item }) => (
                   <View style={{ marginVertical: 2.5, flex: 1 }}>
-                    <View style={{ width: 150, height: 150, overflow: "hidden", borderRadius: 20 }}>
-                      <Image source={{ uri: "http://placekitten.com/200/200" }} style={{ width: 150, height: 150 }} />
-                    </View>
-                    <View style={{ marginVertical: 10 }}>
-                      <Text style={{ fontSize: 16, fontWeight: "700" }}>Post Title</Text>
-                      <View style={{ flexDirection: "row" }}>
-                        <Ionicons name="location" size={24} color="gray" />
-                        <Text>6.5 km</Text>
+                    <TouchableOpacity onPress={() => navigation.navigate("PostDetail")}>
+                      <View style={{ width: 150, height: 150, overflow: "hidden", borderRadius: 20 }}>
+                        <Image source={{ uri: "http://placekitten.com/200/200" }} style={{ width: 150, height: 150 }} />
                       </View>
-                    </View>
+                      <View style={{ marginVertical: 10 }}>
+                        <Text style={{ fontSize: 16, fontWeight: "700" }}>Post Title</Text>
+                        <View style={{ flexDirection: "row" }}>
+                          <Ionicons name="location" size={24} color="gray" />
+                          <Text>6.5 km</Text>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
                   </View>
                 )}
               />
