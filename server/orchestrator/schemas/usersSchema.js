@@ -22,6 +22,11 @@ const typeDefs = `#graphql
     invoice_url:String
 	}
 
+	input InvoicePayload {
+		external_id:String
+   		totalPrice:Int
+	}
+
   input userPayload {
     username:String
     email:String
@@ -39,6 +44,8 @@ const typeDefs = `#graphql
     registerUser(userPayload:userPayload):Response
 	loginUser(userPayload:userPayload):Response
 	deleteUser(userId:ID):Response
+	createInvoice(balance:Int):Invoice
+	payInvoice(InvoicePayload:InvoicePayload):Response
   }
 `;
 
@@ -105,7 +112,7 @@ const resolvers = {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = await Users.post(
-					"/topup",
+					"/users/topup",
 					{ balance },
 					{
 						headers: {
@@ -119,12 +126,12 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-		payInvoice: async (_, { transactionPayload }) => {
+		payInvoice: async (_, { invocePayload }) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = await Users.post(
-					"/topup",
-					{ balance },
+					"/users/topup",
+					{ invocePayload },
 					{
 						headers: {
 							access_token: context.token,
