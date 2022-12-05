@@ -39,6 +39,7 @@ const typeDefs = `#graphql
   type Query {
 	getAllUsers:[User]
 	getUserById(userId:ID):User
+	getProfile:User
   }
   
   type Mutation {
@@ -63,6 +64,16 @@ const resolvers = {
 		},
 		getUserById: async (_, { userId }) => {
 			try {
+				const { data } = await Users.get(`/users/${userId}`);
+
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		getProfile: async (_,__,context) => {
+			try {
+				const {userId} = context.user
 				const { data } = await Users.get(`/users/${userId}`);
 
 				return data;

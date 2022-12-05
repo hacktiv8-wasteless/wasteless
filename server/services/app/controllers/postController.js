@@ -1,8 +1,16 @@
+const { ObjectId } = require("mongodb");
 const Post = require("../models/post");
 
 class PostController {
   static async getAllPost(req, res) {
+    const {category_id} = req.query
+    const options = {}
     try {
+      if(category_id) {
+        options = {
+          category_id : ObjectId(category_id)
+        }
+      }
       console.log("masuk sini")
       const result = await Post.find();
       console.log(result)
@@ -26,7 +34,8 @@ class PostController {
   }
   static async createPost(req, res) {
     try {
-      const { title, description, mainImage, quantity, status } = req.body.postPayload;
+      const { title, description, mainImage, quantity, status } = req.body;
+      console.log(req.body)
       if (!title || !mainImage || !description || !quantity || !status) {
         return res.status(404).json({ message: "Invalid input" });
       }
@@ -41,14 +50,10 @@ class PostController {
   static async updatePost(req, res) {
     try {
       const { postId } = req.params;
-      const { title, decription, mainImage, quantity, string } = req.body;
+      // const { title, decription, mainImage, quantity, string } = req.body;
       const post = await Post.findById(postId);
       const updatedPost = {
-        title,
-        decription,
-        mainImage,
-        quantity,
-        string,
+        ...req.body
       };
       const updatePost = await Post.findByIdAndUpdate(postId, updatedPost, {
         new: true,
