@@ -58,13 +58,13 @@ export default function FormUser({ page, navigation }) {
 
       const access_token = loginData?.loginUser?.access_token;
       // console.log(access_token);
-      // await AsyncStorage.setItem("access_token", access_token);
+      await AsyncStorage.setItem("access_token", access_token);
 
       //! pindah ke helpers ntar
-      navigation.navigate("Home");
+      navigation.navigate("Tab");
       //! navigate ke halaman home
-      // setEmail("");
-      // setPassword("");
+      setEmail("");
+      setPassword("");
     } catch (error) {
       console.log(error);
     }
