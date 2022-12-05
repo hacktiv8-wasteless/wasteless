@@ -1,5 +1,5 @@
-const { ObjectId } = require("mongodb");
-const { getCategories } = require("../../app/config/mongo");
+// const { ObjectId } = require("mongodb");
+// const { getCategories } = require("../../app/config/mongo");
 
 const typeDefs = `#graphql
 	type Category {
@@ -26,7 +26,7 @@ const resolvers = {
   Query: {
     getAllCategories: async () => {
       try {
-        const categoryCollection = await getCategories();
+        // const categoryCollection = await getCategories();
         const categories = await categoryCollection.find().toArray();
 
         return categories;
@@ -36,7 +36,7 @@ const resolvers = {
     },
     getCategoryById: async (_, { category_id }) => {
       try {
-        const categoryCollection = await getCategories();
+        // const categoryCollection = await getCategories();
         const category = await categoryCollection.findOne({
           _id: ObjectId(category_id),
         });
