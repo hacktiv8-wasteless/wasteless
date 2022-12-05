@@ -22,7 +22,12 @@ export default function ScannerQR() {
   // What happens when we scan the bar code
   const handleBarCodeScanned = ({ type, data }) => {
     setScanned(true);
-    setText(data);
+    alert(
+      `Barcode with Type ${type} and data ${Linking.openURL(
+        `${data}`
+      )} has been scanned`
+    );
+    // setText(data);
     console.log("Type: " + type + "\nData: " + data);
   };
 
