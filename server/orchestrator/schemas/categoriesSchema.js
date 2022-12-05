@@ -1,5 +1,4 @@
-// const { ObjectId } = require("mongodb");
-// const { getCategories } = require("../../app/config/mongo");
+const App = require("../services/app");
 
 const typeDefs = `#graphql
 	type Category {
@@ -23,65 +22,57 @@ const typeDefs = `#graphql
 `;
 
 const resolvers = {
-  Query: {
-    getAllCategories: async () => {
-      try {
-        // const categoryCollection = await getCategories();
-        const categories = await categoryCollection.find().toArray();
+	Query: {
+		getAllCategories: async () => {
+			try {
+				const { data } = App.get("/categories");
 
-        return categories;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    getCategoryById: async (_, { category_id }) => {
-      try {
-        // const categoryCollection = await getCategories();
-        const category = await categoryCollection.findOne({
-          _id: ObjectId(category_id),
-        });
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		getCategoryById: async (_, { category_id }) => {
+			try {
+				const { data } = App.get(`/categories/${category_id}`);
 
-        return category;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
-  Mutation: {
-    addCategory: async (_, { categoryPayload }) => {
-      try {
-        const { name, price } = categoryPayload;
-        const categoryCollection = await getCategories();
-        await categoryCollection.insertOne({ name, price });
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
+	Mutation: {
+		addCategory: async (_, { categoryPayload }) => {
+			const { name, price } = categoryPayload;
+			try {
+				const { data } = App.post(`/categories`, { name, price });
 
-        return { message: "Category added succesfully!" };
-      } catch (error) {}
-    },
-    editCategory: async (_, { category_id, categoryPayload }) => {
-      try {
-        const { name, price } = categoryPayload;
-        const categoryCollection = await getCategories();
-        await categoryCollection.updateOne(
-          { _id: ObjectId(category_id) },
-          { name, price }
-        );
+				return { message: "Category added succesfully!" };
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		editCategory: async (_, { category_id, categoryPayload }) => {
+      const { name, price } = categoryPayload;
+			try {
+        const { data } = App.put(`/categories/${category_id}`, { name, price });
 
-        return { message: "Category edited succesfully!" };
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    deleteCategory: async (_, { category_id }) => {
-      try {
-        const categoryCollection = await getCategories();
-        await categoryCollection.destroy({ _id: ObjectId(category_id) });
+				return { message: "Category edited succesfully!" };
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		deleteCategory: async (_, { category_id }) => {
+			try {
+        const { data } = App.delete(`/categories/${category_id}`);
 
-        return { message: "Category deleted succesfully!" };
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
+				return { message: "Category deleted succesfully!" };
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
 };
 
 module.exports = { typeDefs, resolvers };
