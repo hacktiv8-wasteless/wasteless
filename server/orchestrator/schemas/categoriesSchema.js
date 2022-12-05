@@ -1,4 +1,5 @@
 const App = require("../services/app");
+const redis = require("../config/redis");
 
 const typeDefs = `#graphql
 	type Category {
@@ -25,7 +26,17 @@ const resolvers = {
 	Query: {
 		getAllCategories: async () => {
 			try {
-				const { data } = App.get("/categories");
+				// redis.del("Categories")
+				// const cacheData = await redis.get("Categories");
+
+				// if (cacheData) {
+				// 	return JSON.parse(cacheData);
+				// }
+
+				const { data } = await App.get("/categories");
+				await redis.set("Categories", JSON.stringify(data));
+
+				// console.log(data)
 
 				return data;
 			} catch (error) {
@@ -34,7 +45,7 @@ const resolvers = {
 		},
 		getCategoryById: async (_, { category_id }) => {
 			try {
-				const { data } = App.get(`/categories/${category_id}`);
+				const { data } = await App.get(`/categories/${category_id}`);
 
 				return data;
 			} catch (error) {
@@ -46,18 +57,18 @@ const resolvers = {
 		addCategory: async (_, { categoryPayload }) => {
 			const { name, price } = categoryPayload;
 			try {
-				const { data } = App.post(`/categories`, { name, price });
-
+				const { data } = await App.post(`/categories`, { name, price });
+				await redis.del("Categories");
 				return { message: "Category added succesfully!" };
 			} catch (error) {
 				console.log(error);
 			}
 		},
 		editCategory: async (_, { category_id, categoryPayload }) => {
-      const { name, price } = categoryPayload;
+			const { name, price } = categoryPayload;
 			try {
-        const { data } = App.put(`/categories/${category_id}`, { name, price });
-
+				const { data } = await App.put(`/categories/${category_id}`, { name, price });
+				await redis.del("Categories");
 				return { message: "Category edited succesfully!" };
 			} catch (error) {
 				console.log(error);
@@ -65,8 +76,8 @@ const resolvers = {
 		},
 		deleteCategory: async (_, { category_id }) => {
 			try {
-        const { data } = App.delete(`/categories/${category_id}`);
-
+				const { data } = await App.delete(`/categories/${category_id}`);
+				await redis.del("Categories");
 				return { message: "Category deleted succesfully!" };
 			} catch (error) {
 				console.log(error);
