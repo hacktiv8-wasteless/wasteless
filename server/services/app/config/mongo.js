@@ -28,8 +28,10 @@ let categoryCollection = null;
 const mongoConnect = async (env) => {
 	try {
 		if (env === "test") {
+			console.log("test")
 			await testClient.connect();
 		} else {
+			console.log("bukan test")
 			await client.connect();
 		}
 

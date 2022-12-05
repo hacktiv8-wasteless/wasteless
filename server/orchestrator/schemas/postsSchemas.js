@@ -1,4 +1,5 @@
 const App = require("../services/app");
+const redis = require("../config/redis")
 
 const typeDefs = `#graphql
 	type Post {
