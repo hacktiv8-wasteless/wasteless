@@ -78,10 +78,8 @@ class Controller {
 			});
 
 			res.status(200).json({
-				code: 200,
-				status: "success",
-				message: "please pay to continue",
-				data: result.invoice_url,
+				external_id : result.external_id,
+				invoice_url: result.invoice_url,
 			});
 		} catch (error) {
 			next(error);
