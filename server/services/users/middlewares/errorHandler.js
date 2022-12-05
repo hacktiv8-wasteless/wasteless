@@ -9,6 +9,7 @@ const errorHandler = (err, req, res, next) => {
 			code = 400;
 			message = err.errors.map((el) => el.message);
 			break;
+		case `BAD_TRANSACTION_REQUEST`:
 		case `BAD_PATCH_REQUEST`:
 		case `BAD_LOGIN_REQUEST`:
 		case `BAD_PATCH_REQUEST`:
