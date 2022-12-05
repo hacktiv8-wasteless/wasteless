@@ -14,7 +14,8 @@ export default function Register({ navigation }) {
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <View>
-            <Text style={styles.title}>Hi, we are Wasteless</Text>
+            <Text style={styles.title}>Hi, we are</Text>
+            <Text style={styles.title}>Wasteless</Text>
             <Text style={styles.welcomeText}>We are here to help you build a recycling habit!</Text>
           </View>
 
@@ -26,6 +27,8 @@ export default function Register({ navigation }) {
               <Text style={styles.button}>here.</Text>
             </Pressable>
           </View>
+
+          <View style={{ marginBottom: 30 }}></View>
         </ScrollView>
       </SafeAreaView>
     </View>
@@ -42,15 +45,15 @@ const styles = StyleSheet.create({
   welcomeText: {
     color: "white",
     marginTop: 15,
-    fontSize: 18,
+    fontSize: 16,
   },
   welcomeText2: {
     color: "white",
     marginTop: 5,
-    fontSize: 18,
+    fontSize: 16,
   },
   title: {
-    fontSize: 54,
+    fontSize: 42,
     fontWeight: "bold",
     color: "white",
   },

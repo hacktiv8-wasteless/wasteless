@@ -1,16 +1,14 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Home from "../screens/Home";
 import SearchAllCategory from "../screens/SearchAllCategory";
-import Categories from "../screens/SearchByCategory";
-import PostItem from "../screens/PostItem";
-import Chat from "../screens/Chat";
-import MyProfile from "../screens/Profile";
-import { AntDesign } from "@expo/vector-icons";
-import { Entypo } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 import PostCategory from "../screens/PostCategory";
-import { Button, useDisclose, Actionsheet, Box, Center, Text } from "native-base";
+import { Button, useDisclose, Actionsheet, Box, Center, Text, View } from "native-base";
 import Notifications from "../screens/Notifications";
 import TopTabNavigator from "./TopTabNavigator";
+import { COLORS } from "../constants";
+import { StyleSheet } from "react-native";
+import NewHome from "../screens/NewHome";
 
 const Tab = createBottomTabNavigator();
 
@@ -20,42 +18,81 @@ const TabNavigator = ({ navigation }) => {
   return (
     <>
       <Tab.Navigator
+        initialRouteName="Home"
         screenOptions={({ route }) => {
           return {
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
+              color = COLORS.primaryShade[500];
               if (route.name === "Home") {
                 iconName = focused ? "home" : "home";
-              } else if (route.name === "MyProfile") {
-                iconName = focused ? "user" : "user";
-              } else if (route.name === "Chat") {
-                iconName = focused ? "wechat" : "wechat";
+                color = focused ? COLORS.primary : COLORS.primaryShade[500];
+              } else if (route.name === "MyListing") {
+                iconName = focused ? "package" : "package";
+                color = focused ? COLORS.primary : COLORS.primaryShade[500];
+              } else if (route.name === "Notifications") {
+                iconName = focused ? "message-circle" : "message-circle";
+                color = focused ? COLORS.primary : COLORS.primaryShade[500];
               } else if (route.name === "Post") {
                 iconName = focused ? "pluscircleo" : "pluscircleo";
+                color = focused ? COLORS.primary : COLORS.primaryShade[500];
               } else if (route.name === "Search") {
-                iconName = focused ? "search1" : "search1";
+                iconName = focused ? "search" : "search";
+                color = focused ? COLORS.primary : COLORS.primaryShade[500];
               }
 
-              return <AntDesign name={iconName} size={size} color={color} />;
+              return <Feather name={iconName} size={size} color={color} />;
+              // <AntDesign name={iconName} size={size} color={color} />;
             },
-            tabBarActiveTintColor: "tomato",
+            tabBarShowLabel: false,
+            tabBarActiveTintColor: COLORS.primary,
             tabBarInactiveTintColor: "gray",
             headerStyle: {
-              backgroundColor: "#339966",
+              backgroundColor: COLORS.white,
             },
             // headerShown: false,
             headerTitleStyle: {
-              color: "white",
+              color: COLORS.primaryShade[500],
+            },
+            headerTitleAlign: "center",
+            tabBarStyle: {
+              height: 75,
             },
           };
         }}
       >
-        <Tab.Screen name="Home" component={Home} />
+        <Tab.Screen
+          name="Home"
+          component={NewHome}
+          options={{
+            headerShown: false,
+            headerRight: () => (
+              <View style={[styles.buttonContainer, styles.headerButton]}>
+                <Button onPress={() => navigation.navigate("MyProfile")} variant="unstyled">
+                  <Feather name="user" size={24} />
+                </Button>
+              </View>
+            ),
+          }}
+        />
         <Tab.Screen name="Search" component={SearchAllCategory} />
-        <Tab.Screen name="PostItem" component={PostItem} options={{ tabBarButton: () => <Button onPress={onOpen}>Test</Button> }} />
+        <Tab.Screen
+          name="PostNavigator"
+          component={PostCategory}
+          options={{
+            tabBarButton: () => (
+              <View style={styles.buttonContainer}>
+                <Button onPress={onOpen} variant="unstyled" style={styles.button}>
+                  <Feather name="plus" size={24} color={COLORS.accent} />
+                </Button>
+              </View>
+            ),
+            title: "Post",
+          }}
+        />
         <Tab.Screen name="Notifications" component={Notifications} />
         {/* <Tab.Screen name="MyProfile" component={MyProfile} /> */}
-        <Tab.Screen name="MyListing" component={TopTabNavigator} />
+        <Tab.Screen name="MyListing" component={TopTabNavigator} options={{ title: "My Listing" }} />
         {/* <Tab.Screen
         name="Categories"
         component={Categories}
@@ -84,7 +121,7 @@ const TabNavigator = ({ navigation }) => {
             {/* Ini ntar flatlist dari category, sekarang HARDCODE DULU */}
             <Actionsheet.Item
               onPress={() => {
-                navigation.navigate("PostItem", {
+                navigation.navigate("Post", {
                   //! NANTI DIGANTI DARI ITEM FLATLIST YA
                   // category: item?.category,
                   category: "plastic",
@@ -96,7 +133,7 @@ const TabNavigator = ({ navigation }) => {
             </Actionsheet.Item>
             <Actionsheet.Item
               onPress={() => {
-                navigation.navigate("PostItem", {
+                navigation.navigate("Post", {
                   //! NANTI DIGANTI DARI ITEM FLATLIST YA
                   // category: item?.category,
                   category: "carton",
@@ -108,7 +145,7 @@ const TabNavigator = ({ navigation }) => {
             </Actionsheet.Item>
             <Actionsheet.Item
               onPress={() => {
-                navigation.navigate("PostItem", {
+                navigation.navigate("Post", {
                   //! NANTI DIGANTI DARI ITEM FLATLIST YA
                   // category: item?.category,
                   category: "glass",
@@ -120,7 +157,7 @@ const TabNavigator = ({ navigation }) => {
             </Actionsheet.Item>
             <Actionsheet.Item
               onPress={() => {
-                navigation.navigate("PostItem", {
+                navigation.navigate("Post", {
                   //! NANTI DIGANTI DARI ITEM FLATLIST YA
                   // category: item?.category,
                   category: "cans",
@@ -132,7 +169,7 @@ const TabNavigator = ({ navigation }) => {
             </Actionsheet.Item>
             <Actionsheet.Item
               onPress={() => {
-                navigation.navigate("PostItem", {
+                navigation.navigate("Post", {
                   //! NANTI DIGANTI DARI ITEM FLATLIST YA
                   // category: item?.category,
                   category: "paper",
@@ -150,3 +187,19 @@ const TabNavigator = ({ navigation }) => {
 };
 
 export default TabNavigator;
+
+const styles = StyleSheet.create({
+  headerButton: {
+    marginRight: 10,
+  },
+  buttonContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    backgroundColor: COLORS.primaryShade[500],
+    borderRadius: 15,
+    height: 50,
+    width: 50,
+  },
+});

@@ -10,33 +10,48 @@ import Categories from "../screens/SearchByCategory";
 
 import PostDetail from "../screens/PostDetail";
 import { COLORS } from "../constants";
+import PostItem from "../screens/PostItem";
+import Profile from "../screens/Profile";
+import NewHome from "../screens/NewHome";
 
 const Stack = createNativeStackNavigator();
 
 export default function StackNavigator({ firstLaunch }) {
   return (
-    // <Stack.Navigator initialRouteName={firstLaunch ? "Onboarding" : "Login"} screenOptions={{ headerShown: false }}>
+    // <Stack.Navigator
+    //   initialRouteName={firstLaunch ? "Onboarding" : "Login"}
+    //   screenOptions={{
+    //     headerStyle: {
+    //       backgroundColor: COLORS.primary,
+    //     },
+    //     headerTintColor: COLORS.white,
+    //     headerTitleAlign: "center",
+    //     headerShadowVisible: false,
+    //   }}
+    // >
     <Stack.Navigator
       initialRouteName="Tab"
       screenOptions={{
-        headerStyle: {
-          backgroundColor: COLORS.primary,
-        },
-        headerTintColor: COLORS.white,
+        // headerStyle: {
+        //   backgroundColor: COLORS.primary,
+        // },
+        // headerTintColor: COLORS.white,
         headerTitleAlign: "center",
-        headerShadowVisible: false,
+        // headerShadowVisible: false,
       }}
     >
-      {/* // <Stack.Navigator initialRouteName="Tab"> */}
-      <Stack.Screen name="Onboarding" component={OnboardingScreenr} options={{ headerShown: false }} />
-      <Stack.Screen name="Register" component={Register} />
-      <Stack.Screen name="Login" component={Login} />
-      <Stack.Screen name="Tab" component={TabNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="PostDetail" component={PostDetail} options={{ headerShown: true }} />
+      {/* <Stack.Screen name="NewHome" component={NewHome} options={{ headerShown: false }} /> */}
 
-      {/* Fadil conflict */}
-      {/* <Stack.Screen name="Tab" component={TabNavigator} />
-      <Stack.Screen name="Categories" component={Categories} /> */}
+      <Stack.Screen name="Onboarding" component={OnboardingScreenr} options={{ headerShown: false }} />
+      <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
+      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+      <Stack.Screen name="Tab" component={TabNavigator} options={{ headerShown: false }} />
+
+      {/* Post, nanti mungkin pindah file stack baru */}
+      <Stack.Screen name="PostDetail" component={PostDetail} options={{ headerShown: true }} />
+      <Stack.Screen name="Post" component={PostItem} options={({ route }) => ({ title: route.params.category })} />
+
+      <Stack.Screen name="MyProfile" component={Profile} />
     </Stack.Navigator>
   );
 }
