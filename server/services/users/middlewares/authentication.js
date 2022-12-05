@@ -2,6 +2,7 @@ const { verifyToken } = require("../helpers/jwt");
 
 const authentication = (req, res, next) => {
 	try {
+		console.log(req.headers)
 		const { access_token } = req.headers;
 		const { id } = verifyToken(access_token);
 		console.log(access_token)

@@ -63,7 +63,7 @@ const resolvers = {
 		getPostByCategory: async (_, { category_id }, context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
-				const { data } = await App.get(`/posts?category=${category_id}`);
+				const { data } = await App.get(`/posts?category_id=${category_id}`);
 
 				return data;
 			} catch (error) {
@@ -86,11 +86,10 @@ const resolvers = {
 	Mutation: {
 		addPost: async (_, { postPayload }, context) => {
 			try {
-				console.log(postPayload)
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = await App.post(
 					`/posts`,
-					{ postPayload },
+					{ ...postPayload, status: "pending" },
 					{
 						headers: {
 							access_token: context.token,
@@ -107,9 +106,10 @@ const resolvers = {
 		editPost: async (_, { post_id, postPayload }, context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
-				const { data } = await App.put(`/posts/${post_id}`, { postPayload });
+				console.log(context.user)
+				const { data } = await App.put(`/posts/${post_id}`, { ...postPayload });
 
-				return data;
+				return { message: "Edit Post Succesful!" };
 			} catch (error) {
 				console.log(error);
 			}
@@ -119,6 +119,8 @@ const resolvers = {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = await App.delete(`/posts/${post_id}`);
+
+				return { message: "Delete Post Succesful!" };
 			} catch (error) {
 				console.log(error);
 			}
