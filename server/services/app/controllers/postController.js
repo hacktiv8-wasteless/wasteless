@@ -3,7 +3,9 @@ const Post = require("../models/post");
 class PostController {
   static async getAllPost(req, res) {
     try {
+      console.log("masuk sini")
       const result = await Post.find();
+      console.log(result)
       res.status(200).json(result);
     } catch (error) {
       res.status(500).json(error.message);
@@ -24,10 +26,11 @@ class PostController {
   }
   static async createPost(req, res) {
     try {
-      const { title, description, mainImage, quantity, status } = req.body;
+      const { title, description, mainImage, quantity, status } = req.body.postPayload;
       if (!title || !mainImage || !description || !quantity || !status) {
         return res.status(404).json({ message: "Invalid input" });
       }
+
       const postInput = { title, description, mainImage, quantity, status };
       await Post.create(postInput);
       res.status(201).json({ message: "Success create post" });

@@ -21,7 +21,7 @@ const server = new ApolloServer({
 startStandaloneServer(server, {
 	listen: { port: process.env.PORT || 4000 },
 	context: async ({ req }) => {
-		const token = req.headers.authorization || "";
+		const token = req.headers.Authorization || "";
 		let user = "";
 		if (token) {
 			user = verifyToken(token);

@@ -91,6 +91,7 @@ const resolvers = {
 		},
 		loginUser: async (_, { userPayload },{}) => {
 			try {
+				console.log(userPayload)
 				const { email, password } = userPayload;
 
 				const { data } = await Users.post(`/users/login`, { email, password });
