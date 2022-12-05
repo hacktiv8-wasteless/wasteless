@@ -104,7 +104,7 @@ class Controller {
 						},
 					}
 				);
-				res.status(201).json({ message: "topup success" });
+				res.status(201).json({ message: "Topup Success!" });
 			}
 		} catch (error) {
 			next(error);
