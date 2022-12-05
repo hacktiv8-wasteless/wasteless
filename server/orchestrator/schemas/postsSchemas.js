@@ -1,5 +1,5 @@
-const { ObjectId } = require("mongodb");
-const { getPosts } = require("../../app/config/mongo");
+// const { ObjectId } = require("mongodb");
+// const { getPosts } = require("../../app/config/mongo");
 const App = require("../services/app");
 
 const typeDefs = `#graphql
