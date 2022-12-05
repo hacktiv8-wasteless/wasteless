@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const PORT = 4001;
+const PORT = process.env.PORT || 4001;
 const uri =
   "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const app = require("../app");
