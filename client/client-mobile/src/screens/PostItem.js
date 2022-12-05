@@ -4,13 +4,25 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { VStack, Text, FormControl, Input, Button, TextArea, Slider, Box, Center, WarningOutlineIcon, Pressable, ScrollView } from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import { useMutation } from "@apollo/client";
+import { POST_POST } from "../query/Posts";
 
 export default function PostItem({ navigation, route }) {
   const { category } = route.params;
   // const giver_id = //! id dari jwt
   // const status //! ini harusnya otomatis dari server jadi pending
 
-  //? Image picker
+  //? Server Wiring --------------------------
+  const [createPost, { data: postData, loading: postLoading, error: postError }] = useMutation(POST_POST);
+
+  if (postLoading) return <Text>Loading......</Text>;
+
+  if (postError) {
+    console.log(postError);
+    return <Text>Error: {postError}</Text>;
+  }
+
+  //? Image picker --------------------------
   const [profileImage, setProfileImage] = useState("");
   const [progress, setProgress] = useState(0);
   // const { token } = props.route.params;

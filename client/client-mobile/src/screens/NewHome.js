@@ -4,6 +4,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { FlatList, Button, Center } from "native-base";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
+import { useQuery } from "@apollo/client";
+import { GET_POSTS } from "../query/Posts";
+import { GET_CATEGORIES } from "../query/Categories";
 
 export default function NewHome({ navigation }) {
   const locations = ["Plastic", "Cardboard", "Paper", "Alumunium can", "Glass"];
@@ -19,6 +22,24 @@ export default function NewHome({ navigation }) {
     { id: 9, title: "Kardus belanja olshop" },
     { id: 10, title: "Kaleng fanta" },
   ];
+
+  //? SERVER WIRING
+  const { loading: postsLoading, error: postsError, data: postsData } = useQuery(GET_POSTS);
+  const { data: categoryData, loading: categoryLoading, error: categoryError } = useQuery(GET_CATEGORIES);
+
+  if (postsLoading || categoryLoading) return <Text>Loading....</Text>;
+  if (postsError || categoryError) {
+    console.log("postsError -------------------------");
+    console.log(postsError);
+    console.log("postsError -------------------------");
+
+    console.log("categoryError -----------------------");
+    console.log(categoryError);
+    console.log("categoryError -----------------------");
+
+    return <Text>Error: {registerError ? registerError : loginError}</Text>;
+  }
+
   return (
     <View style={{ backgroundColor: "white" }}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />

@@ -31,7 +31,7 @@ export default function StackNavigator({ firstLaunch }) {
     // >
     <Stack.Navigator
       // initialRouteName={firstLaunch ? "Onboarding" : "Login"}
-      initialRouteName="Register"
+      initialRouteName="Tab"
       screenOptions={{
         // headerStyle: {
         //   backgroundColor: COLORS.primary,

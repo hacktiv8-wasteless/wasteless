@@ -7,6 +7,7 @@ import { POST_REGISTER, POST_LOGIN } from "../query/Users";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../constants";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getToken, signIn } from "../helpers/util";
 // -------------------------------------------------------------------
 
 const { height, width } = Dimensions.get("screen");
@@ -57,14 +58,16 @@ export default function FormUser({ page, navigation }) {
       console.log("loginData -----------------------");
 
       const access_token = loginData?.loginUser?.access_token;
-      // console.log(access_token);
-      await AsyncStorage.setItem("access_token", access_token);
+      console.log(access_token);
+      // await AsyncStorage.setItem("access_token", access_token);
+
+      signIn(access_token);
 
       //! pindah ke helpers ntar
-      navigation.navigate("Tab");
+      // navigation.navigate("Tab");
       //! navigate ke halaman home
-      setEmail("");
-      setPassword("");
+      // setEmail("");
+      // setPassword("");
     } catch (error) {
       console.log(error);
     }
@@ -79,6 +82,7 @@ export default function FormUser({ page, navigation }) {
         phoneNumber,
         address,
       };
+
       await register({
         variables: { userPayload },
       });

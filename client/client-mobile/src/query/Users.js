@@ -20,3 +20,14 @@ export const POST_LOGIN = gql`
   }
 `;
 
+export const GET_USER_DETAIL = gql`
+  query Query($userId: ID) {
+    getUserById(userId: $userId) {
+      address
+      email
+      id
+      phoneNumber
+      username
+    }
+  }
+`;
