@@ -58,6 +58,7 @@ const TabNavigator = ({ navigation }) => {
             tabBarStyle: {
               height: 75,
             },
+            tabBarHideOnKeyboard: true,
           };
         }}
       >
