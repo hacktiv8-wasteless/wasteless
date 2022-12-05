@@ -111,13 +111,13 @@ class Controller {
 		} catch (error) {
 			next(error);
 		}
-	}
+	
   
-	static async template() {
-      return res.status(200).json(access_token);
-    } catch (error) {
-      next(error);
-    }
+	// static async template() {
+    //   return res.status(200).json(access_token);
+    // } catch (error) {
+    //   next(error);
+    // }
   }
 }
 
