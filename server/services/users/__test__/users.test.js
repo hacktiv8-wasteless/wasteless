@@ -448,5 +448,23 @@ describe("User Routes Test", () => {
           });
       });
     });
+    describe("POST / balance top up by user", () => {
+      test("200 success top up, return array", (done) => {
+        request(app)
+          .post("/users/success")
+          .send({
+            external_id: 1,
+            amount: 50000,
+            status: "paid",
+          })
+          .set("access_token", user_access_token)
+          .then((response) => {
+            const { body, status } = response;
+            console.log(response, "<< ini response");
+            expect(status).toBe(201);
+            expect(body).toBeInstanceOf(Object);
+          });
+      });
+    });
   });
 });

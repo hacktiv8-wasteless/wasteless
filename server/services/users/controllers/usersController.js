@@ -89,6 +89,7 @@ class Controller {
     const { balance } = req.body;
     const { id } = req.user;
     try {
+      console.log(id);
       const result = await sequelize.transaction(async (t) => {
         const foundUser = await User.findByPk(id, { transaction: t });
         // console.log(, "<<<");
@@ -111,31 +112,31 @@ class Controller {
       next(error);
     }
   }
-  static async successTopUp(req, res, next) {
-    try {
-      const { external_id, amount, status } = req.body;
-      if (status == "PAID") {
-        const findWallet = await Balance.findOne({
-          where: {
-            UserId: external_id,
-          },
-        });
-        await Balance.update(
-          {
-            balance: +findWallet.balance + +amount,
-          },
-          {
-            where: {
-              UserId: external_id,
-            },
-          }
-        );
-        res.status(201).json({ message: "topup success" });
-      }
-    } catch (error) {
-      next(error);
-    }
-  }
+  // static async successTopUp(req, res, next) {
+  //   try {
+  //     const { external_id, amount, status } = req.body;
+  //     if (status == "PAID") {
+  //       const findWallet = await Balance.findOne({
+  //         where: {
+  //           UserId: external_id,
+  //         },
+  //       });
+  //       await Balance.update(
+  //         {
+  //           balance: +findWallet.balance + +amount,
+  //         },
+  //         {
+  //           where: {
+  //             UserId: external_id,
+  //           },
+  //         }
+  //       );
+  //       res.status(201).json({ message: "topup success" });
+  //     }
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 
   static async template() {
     return res.status(200).json(access_token);

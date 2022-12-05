@@ -9,6 +9,8 @@ router.post(`/register`, Controller.userRegister);
 router.get(`/`, Controller.getAllUsers);
 router.get(`/:id`, Controller.getUserById);
 router.use(authentication);
+
 router.post(`/topup`, Controller.balanceTopUp);
+router.post(`/success`, Controller.successTopUp);
 
 module.exports = router;

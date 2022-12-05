@@ -1,4 +1,5 @@
-const cloudinary = require("../../services/app/config/cloudinary")
+const cloudinary = require("../config/cloudinary");
+const { Readable } = require('stream');
 
 const streamUpload = (buffer) => {
 	return new Promise((resolve, reject) => {
@@ -10,8 +11,7 @@ const streamUpload = (buffer) => {
 			}
 		});
 
-		const newBuffer = Buffer.from(JSON.parse(buffer))
-        const imgStream = Readable.from(newBuffer)
+		const imgStream = Readable.from(buffer);
 		imgStream.pipe(stream);
 	});
 };
