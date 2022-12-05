@@ -9,6 +9,7 @@ import SearchBar from "../components/SearchBar";
 import CategoryList from "../components/CategoryHome";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StatusBar } from "react-native";
+import { COLORS } from "../constants";
 
 export default function Home({ navigation }) {
   const clearAsyncStorage = async () => {
@@ -29,7 +30,7 @@ export default function Home({ navigation }) {
   }, []);
   return (
     <SafeAreaView>
-      <StatusBar barStyle="light-content" backgroundColor="#339966" />
+      <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
       <ScrollView>
         <SearchBar />
         <Carousel />
