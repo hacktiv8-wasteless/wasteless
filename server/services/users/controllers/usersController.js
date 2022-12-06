@@ -91,7 +91,10 @@ class Controller {
     try {
       console.log(id);
       const result = await sequelize.transaction(async (t) => {
-        const foundUser = await User.findByPk(id, { transaction: t });
+        const foundUser = await User.findOne(
+          { where: { id } },
+          { transaction: t }
+        );
         // console.log(, "<<<");
         const xenditInvoice = await XenditInvoice.createInvoice(
           `${foundUser.id}-${new Date().getTime()}`,
@@ -103,10 +106,8 @@ class Controller {
       });
 
       res.status(200).json({
-        code: 200,
-        status: "success",
-        message: "please pay to continue",
-        data: result.invoice_url,
+        external_id: result.external_id,
+        invoice_url: result.invoice_url,
       });
     } catch (error) {
       next(error);

@@ -15,22 +15,22 @@ const errorHandler = (error, req, res, next) => {
       message = error.message;
       break;
     case `JsonWebTokenError`:
-    case `Unauthorized`:
-      code = 401;
-      message = "Invalid token";
-      break;
-    case `INVALID_CREDENTIALS`:
-      code = 401;
-      message = "Invalid Email or password!";
-      break;
-    case `FORBIDDEN`:
-      code = 403;
-      message = "Invalid access!";
-      break;
-    case `USER_NOT_FOUND`:
-      code = 404;
-      message = `Users with id ${err.id} not Found!`;
-      break;
+    // case `Unauthorized`:
+    //   code = 401;
+    //   message = "Invalid token";
+    //   break;
+    // case `INVALID_CREDENTIALS`:
+    //   code = 401;
+    //   message = "Invalid Email or password!";
+    //   break;
+    // case `FORBIDDEN`:
+    //   code = 403;
+    //   message = "Invalid access!";
+    //   break;
+    // case `USER_NOT_FOUND`:
+    //   code = 404;
+    //   message = `Users with id ${err.id} not Found!`;
+    //   break;
 
     default:
       code = 500;

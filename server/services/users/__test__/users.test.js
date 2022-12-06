@@ -1,32 +1,24 @@
 const app = require("../app");
 const request = require("supertest");
 const { sequelize, User } = require("../models");
-const { hashPassword } = require("../helpers/jwt");
+const { signToken } = require("../helpers/jwt");
 const { queryInterface } = sequelize;
 
-jest.setTimeout(1000);
+jest.setTimeout(10000);
+
+let user_access_token = null;
 
 beforeAll(async () => {
   try {
     const user = await User.create({
-      username: "Budiman99",
-      email: "budiman@gmail.com",
-      password: "Budi1234",
+      username: "kareenwijaya",
+      email: "karen_wijaya@gmail.com",
+      password: "karin123",
+      address: "jakarta",
+      phoneNumber: "081234832132",
     });
-
-    await queryInterface.bulkInsert(
-      "Users",
-      [
-        {
-          username: "Budiman99",
-          email: "budiman@gmail.com",
-          password: "Budi1234",
-          address: "jakarta",
-          phoneNumber: "081234567891",
-        },
-      ],
-      {}
-    );
+    user_access_token = signToken({ id: user.id });
+    console.log(user.id, "<><>");
   } catch (error) {
     console.log(error);
   }
@@ -48,8 +40,8 @@ const user1 = {
   phoneNumber: "081234567891",
 };
 
-const user_access_token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNjcwMjMwOTQ4fQ.WEdfdAmahIRDoYwt5BoMnTqO1C-8fkVoKcFNHPrbGXs";
+// const user_access_token =
+//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNjcwMjM3MzkxfQ.fASVlcKTbQoLcMRhYQ9tuyObkkr1t739QDtdra5li7I";
 
 describe("User Routes Test", () => {
   describe("POST /register - create new user", () => {
@@ -57,11 +49,11 @@ describe("User Routes Test", () => {
       request(app)
         .post("/users/register")
         .send({
-          username: "kareenwijaya",
-          email: "karen_wijaya@gmail.com",
+          username: "annaaja",
+          email: "annaaja@gmail.com",
           password: "karin123",
           address: "jakarta",
-          phoneNumber: "081234832132",
+          phoneNumber: "0812348322343",
         })
         .end((error, res) => {
           if (error) return done(error);
@@ -276,7 +268,7 @@ describe("User Routes Test", () => {
           .end((err, res) => {
             if (err) return done(err);
             const { body, status } = res;
-            console.log(res.body.message, "<<<");
+            // console.log(res.body.message, "<<<");
             expect(status).toBe(200);
             expect(body).toHaveProperty("access_token", expect.any(String));
             return done();
@@ -399,7 +391,7 @@ describe("User Routes Test", () => {
               "points",
               expect.any(Number)
             );
-            done();
+            return done();
           })
           .catch((err) => {
             done(err);
@@ -412,7 +404,7 @@ describe("User Routes Test", () => {
           .get("/users/1")
           .then((response) => {
             const { body, status } = response;
-            // console.log(response.body, "<<<");
+            // console.log(response.body, "<<< get user");
             expect(response.body).toBeInstanceOf(Object);
             expect(response.body).toHaveProperty("id", expect.any(Number));
             expect(response.body).toHaveProperty(
@@ -427,7 +419,7 @@ describe("User Routes Test", () => {
             expect(response.body).toHaveProperty("address", expect.any(String));
             expect(response.body).toHaveProperty("balance", expect.any(Number));
             expect(response.body).toHaveProperty("points", expect.any(Number));
-            done();
+            return done();
           })
           .catch((err) => {
             done(err);
@@ -435,36 +427,41 @@ describe("User Routes Test", () => {
       });
     });
     describe("POST / balance top up by user", () => {
-      test("200 success top up, return array", (done) => {
+      test("201 success top up, return array", (done) => {
         request(app)
           .post("/users/topup")
           .send({ balance: 500000 })
           .set("access_token", user_access_token)
           .then((response) => {
             const { body, status } = response;
-            console.log(response, "<< ini response");
-            expect(status).toBe(201);
+            // console.log(response.body, "<< ini response");
+            expect(status).toBe(200);
             expect(body).toBeInstanceOf(Object);
-          });
-      });
-    });
-    describe("POST / balance top up by user", () => {
-      test("200 success top up, return array", (done) => {
-        request(app)
-          .post("/users/success")
-          .send({
-            external_id: 1,
-            amount: 50000,
-            status: "paid",
+            return done();
           })
-          .set("access_token", user_access_token)
-          .then((response) => {
-            const { body, status } = response;
-            console.log(response, "<< ini response");
-            expect(status).toBe(201);
-            expect(body).toBeInstanceOf(Object);
+          .catch((err) => {
+            console.log(error);
+            done(err);
           });
       });
     });
+    // describe("POST / balance top up by user", () => {
+    //   test("200 success top up, return array", (done) => {
+    //     request(app)
+    //       .post("/users/success")
+    //       .send({
+    //         external_id: 1,
+    //         amount: 50000,
+    //         status: "paid",
+    //       })
+    //       .set("access_token", user_access_token)
+    //       .then((response) => {
+    //         const { body, status } = response;
+    //         // console.log(response, "<< ini response");
+    //         expect(status).toBe(201);
+    //         expect(body).toBeInstanceOf(Object);
+    //       });
+    // });
+    // });
   });
 });
