@@ -31,6 +31,10 @@ export default function NewHome({ navigation }) {
     console.log(await getToken("access_token"));
     console.log(await getToken("userId"));
   };
+
+  // const getName = () => {
+  //   return userData ? capitalize(userData?.getProfile?.username) : "login dulu";
+  // };
   // const categories = ["Plastic", "Cardboard", "Paper", "Alumunium can", "Glass"];
   // const posts = [
   //   { id: 1, title: "Botol Aqua bekas" },
@@ -107,7 +111,7 @@ export default function NewHome({ navigation }) {
               }}
             >
               <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 20, fontWeight: "bold" }}>Welcome {capitalize(userData?.getProfile?.username)} </Text>
+                <Text style={{ fontSize: 20, fontWeight: "bold" }}>Welcome {userData?.getProfile?.username} </Text>
                 <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 5 }}>
                   <Ionicons name="location" size={24} color="gray" />
                   <Text style={{ color: "gray", marginLeft: 10 }}>Pondok Indah, South Jakarta</Text>
