@@ -1,5 +1,6 @@
 const App = require("../services/app");
 const redis = require("../config/redis");
+const { verifyToken } = require("../helper/jwt");
 
 const typeDefs = `#graphql
 	type Post {
@@ -46,10 +47,10 @@ const resolvers = {
 	Query: {
 		getAllPosts: async (_, __, context) => {
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
 				// console.log(context.token);
 
-				redis.del("Posts")
+				redis.del("Posts");
 				const cacheData = await redis.get("Posts");
 
 				if (cacheData) {
@@ -62,10 +63,9 @@ const resolvers = {
 					},
 				});
 
-				console.log(data)
+				console.log(data);
 
 				await redis.set("Posts", JSON.stringify(data));
-
 
 				return data;
 			} catch (error) {
@@ -75,7 +75,7 @@ const resolvers = {
 
 		getPostByCategory: async (_, { category_id }, context) => {
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await App.get(`/posts?category_id=${category_id}`);
 
 				return data;
@@ -86,7 +86,7 @@ const resolvers = {
 
 		getPostById: async (_, { post_id }, context) => {
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await App.get(`/posts/${post_id}`);
 
 				return data;
@@ -99,17 +99,18 @@ const resolvers = {
 	Mutation: {
 		addPost: async (_, { postPayload }, context) => {
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
+				const { id } = verifyToken(context.token);
 				const { data } = await App.post(
 					`/posts`,
-					{ ...postPayload, status: "pending", giver_id:context.user },
+					{ ...postPayload, status: "pending", giver_id: id },
 					{
 						headers: {
 							access_token: context.token,
 						},
 					}
 				);
-				redis.del("Posts")
+				redis.del("Posts");
 
 				return { message: "Add Post Succesful!" };
 			} catch (error) {
@@ -119,11 +120,11 @@ const resolvers = {
 
 		editPost: async (_, { post_id, postPayload }, context) => {
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
 				console.log(context.user);
 				const { data } = await App.put(`/posts/${post_id}`, { ...postPayload });
 
-				redis.del("Posts")
+				redis.del("Posts");
 
 				return { message: "Edit Post Succesful!" };
 			} catch (error) {
@@ -133,10 +134,10 @@ const resolvers = {
 
 		deletePost: async (_, { post_id }, context) => {
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await App.delete(`/posts/${post_id}`);
 
-				redis.del("Posts")
+				redis.del("Posts");
 
 				return { message: "Delete Post Succesful!" };
 			} catch (error) {
@@ -144,20 +145,14 @@ const resolvers = {
 			}
 		},
 
-		createAppointment: async ()=>{
+		createAppointment: async () => {
 			try {
-				
-			} catch (error) {
-				
-			}
+			} catch (error) {}
 		},
-		deleteAppointment: async ()=>{
+		deleteAppointment: async () => {
 			try {
-				
-			} catch (error) {
-				
-			}
-		}
+			} catch (error) {}
+		},
 	},
 };
 
