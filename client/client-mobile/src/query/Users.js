@@ -11,23 +11,36 @@ export const POST_REGISTER = gql`
 `;
 
 export const POST_LOGIN = gql`
-  mutation Mutation($userPayload: userPayload) {
+  mutation LoginUser($userPayload: userPayload) {
     loginUser(userPayload: $userPayload) {
       access_token
       error
+      id
       message
     }
   }
 `;
 
 export const GET_USER_DETAIL = gql`
-  query Query($userId: ID) {
+  query GetUserById($userId: ID) {
     getUserById(userId: $userId) {
-      address
-      email
       id
-      phoneNumber
       username
+      email
+      phoneNumber
+      address
+    }
+  }
+`;
+
+export const GET_PROFILE = gql`
+  query Query {
+    getProfile {
+      id
+      username
+      email
+      phoneNumber
+      address
     }
   }
 `;

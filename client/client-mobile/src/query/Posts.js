@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const GET_POSTS = gql`
-  query Query {
+  query GetAllPost {
     getAllPosts {
       _id
       giver_id
@@ -19,7 +19,7 @@ export const GET_POSTS = gql`
 `;
 
 export const GET_POST_DETAIL = gql`
-  query Query($postId: ID) {
+  query GetPostById($postId: ID) {
     getPostById(post_id: $postId) {
       _id
       giver_id

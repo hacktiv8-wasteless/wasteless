@@ -10,8 +10,8 @@ const Stack = createNativeStackNavigator();
 export default function StackNavigator({ firstLaunch }) {
   return (
     <Stack.Navigator
-      // initialRouteName={firstLaunch ? "Onboarding" : "Login"}
-      initialRouteName="Login"
+      initialRouteName={firstLaunch ? "Onboarding" : "Login"}
+      // initialRouteName="Login"
       screenOptions={{
         // headerStyle: {
         //   backgroundColor: COLORS.primary,
@@ -25,6 +25,8 @@ export default function StackNavigator({ firstLaunch }) {
       <Stack.Screen name="Onboarding" component={OnboardingScreenr} options={{ headerShown: false }} />
       <Stack.Screen name="Register" component={Register} options={{ headerShown: false }} />
       <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+
+      {/* ACCESS_TOKEN NOT NULL */}
       <Stack.Screen name="Tab" component={TabNavigator} options={{ headerShown: false }} />
     </Stack.Navigator>
   );

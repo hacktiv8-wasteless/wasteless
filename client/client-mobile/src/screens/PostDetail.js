@@ -9,6 +9,8 @@ import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { useQuery } from "@apollo/client";
 import { GET_POST_DETAIL } from "../query/Posts";
+import { GET_CATEGORY_ID } from "../query/Categories";
+import { capitalize } from "../helpers/util";
 
 const MAP_PLACEHOLDER = Image.resolveAssetSource(mapPlaceHolder).uri;
 const MARKER_APPROXIMATE = Image.resolveAssetSource(approximateLoc).uri;
@@ -16,43 +18,54 @@ const MARKER_APPROXIMATE = Image.resolveAssetSource(approximateLoc).uri;
 export default function PostDetail({ navigation, route }) {
   const [mapRegion, setmapRegion] = useState(null);
 
+  // useEffect(() => {
+  //   (async () => {
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== "granted") {
+  //       return;
+  //     } else {
+  //       let location = await Location.watchPositionAsync(
+  //         {
+  //           accuracy: Location.Accuracy.High,
+  //           timeInterval: 10000,
+  //           distanceInterval: 10,
+  //         },
+  //         (location_update) => {
+  //           console.log("update location!", location_update.coords, new Date());
+  //           setmapRegion({
+  //             latitude: location_update.coords.latitude,
+  //             longitude: location_update.coords.longitude,
+  //           });
+  //         }
+  //       );
+  //     }
+  //   })();
+  // }, []);
+
+  const { id: postId } = route.params;
+  // const categoryId = postDetailData?.getPostById?.category_id;
+  // console.log(postDetailData);
+
+  const { data: postDetailData, loading: postDetailLoading, error: postDetailError } = useQuery(GET_POST_DETAIL, { variables: { postId } });
+  const { data: categoryDetailData, loading: categoryDetailLoading, error: categoryDetailError, refetch } = useQuery(GET_CATEGORY_ID, { variables: null });
+
   useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== "granted") {
-        return;
-      } else {
-        let location = await Location.watchPositionAsync(
-          {
-            accuracy: Location.Accuracy.High,
-            timeInterval: 10000,
-            distanceInterval: 10,
-          },
-          (location_update) => {
-            console.log("update location!", location_update.coords, new Date());
-            setmapRegion({
-              latitude: location_update.coords.latitude,
-              longitude: location_update.coords.longitude,
-            });
-          }
-        );
-      }
-    })();
-  }, []);
-  // const { id } = route.params;
+    if (postDetailData) {
+      refetch({ categoryId: postDetailData?.getPostById?.category_id });
+    }
+  }, [postDetailData]);
 
-  // useEffect(() => console.log(id), []);
+  if (postDetailLoading || categoryDetailLoading) return <Text>Loadinggg.....</Text>;
+  // if (postDetailError) {
+  //   console.log("postDetailError ---------------------");
+  //   console.log(postDetailError);
+  //   console.log("postDetailError ---------------------");
 
-  const { data: postDetailData, loading: postDetailLoading, error: postDetailError } = useQuery(GET_POST_DETAIL);
-
-  if (postDetailLoading) return <Text>Loadinggg.....</Text>;
-  if (postDetailError) {
-    console.log("postDetailError ---------------------");
-    console.log(postDetailError);
-    console.log("postDetailError ---------------------");
-
-    return <Text>Error: {postDetailError}</Text>;
-  }
+  //   // return <Text>Error: {postDetailError}</Text>;
+  // }
+  // console.log("productId:", postId);
+  // console.log("ProductDetailData: ", postDetailData.getPostById);
+  // console.log("CategoryDetail: ", categoryDetailData.getCategoryById);
 
   return (
     <View>
@@ -62,19 +75,27 @@ export default function PostDetail({ navigation, route }) {
         <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.image} />
       </View> */}
           <View style={styles.imageContainer2}>
-            <Image source={{ uri: "http://placekitten.com/700/800" }} style={styles.image} />
+            <Image source={{ uri: postDetailData?.getPostById?.mainImage }} style={styles.image} />
           </View>
           <View style={styles.postDetail}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <Text style={styles.title}>Plastic bottles</Text>
+              <Text style={styles.title}>{capitalize(postDetailData?.getPostById?.title)}</Text>
               <Button onPress={() => console.log("jalan delete")} variant="unstyled">
                 <Feather name="trash-2" size={24} color="red" />
               </Button>
             </View>
             <View style={{ flexDirection: "row" }}>
-              <Text style={styles.category}>Category</Text>
+              <Text style={styles.category}>{postDetailData ? categoryDetailData?.getCategoryById?.name : ""}</Text>
             </View>
-            <Text>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed est ex, elementum nec placerat at, sagittis vel lorem. Sed posuere ante eu leo euismod, et semper felis fermentum. Fusce malesuada id ipsum ac consequat. Mauris vel consectetur dui. Aenean commodo et diam id auctor. Sed orci est, sagittis et libero quis, varius interdum leo. </Text>
+            <View>
+              <Text>Placeholder biar gampang:</Text>
+              <Text>Total harga: {postDetailData?.getPostById?.quantity * categoryDetailData?.getCategoryById?.price}</Text>
+              <Text>Lat: {postDetailData?.getPostById?.lat}</Text>
+              <Text>Long: {postDetailData?.getPostById?.long}</Text>
+              <Text>Giver_id: {postDetailData?.getPostById?.giver_id}</Text>
+              <Text>Sta: {postDetailData?.getPostById?.giver_id}</Text>
+            </View>
+            <Text>{capitalize(postDetailData?.getPostById?.description)}</Text>
             {/* <Text style={styles.subTitle}>Photos</Text> */}
             <Text style={styles.subTitle}>Location</Text>
             <View style={styles.mapContainer}>

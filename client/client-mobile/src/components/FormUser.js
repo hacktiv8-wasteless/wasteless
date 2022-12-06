@@ -35,11 +35,11 @@ export default function FormUser({ page, navigation }) {
     console.log("registerError ------------------------");
     console.log(registerError);
     console.log("registerError ------------------------");
-
+    console.log();
     console.log("loginError ---------------------------");
     console.log(loginError);
     console.log("loginError ---------------------------");
-    return <Text>Error: {registerError ? registerError : loginError}</Text>;
+    // return <Text>Error: {registerError ? registerError : loginError}</Text>;
   }
 
   const handleSubmitLogin = async () => {
@@ -48,27 +48,44 @@ export default function FormUser({ page, navigation }) {
         email,
         password,
       };
-      // console.log(userPayload);
+
+      console.log(userPayload);
+
       await login({
         variables: { userPayload },
       });
-      // console.log(loginData, "<<<<<<");
-      console.log("loginData -----------------------");
-      console.log(loginData);
-      console.log("loginData -----------------------");
 
-      const access_token = loginData?.loginUser?.access_token;
-      console.log(access_token);
+      // console.log("loginData -----------------------");
+      // console.log(loginData);
+      // console.log("loginData -----------------------");
 
-      signIn(access_token);
+      // console.log(loginData?.loginUser?.access_token);
 
-      //! pindah ke helpers ntar
-      // navigation.navigate("Tab");
-      //! navigate ke halaman home
+      // if (!loginData.loginUser) {
+      //   throw new Error("Error login");
+      // }
+      // if (loginData?.loginUser?.access_token) {
+      //   throw new Error("Error login");
+      // }
 
-      // Reset form
-      setEmail("");
-      setPassword("");
+      // const access_token = loginData?.loginUser?.access_token;
+      // const userId = loginData?.loginUser?.id;
+      // // console.log(access_token);
+
+      // await signIn(access_token, userId);
+
+      // const res = await getToken("access_token");
+      // console.log(res, "----------------------");
+
+      // //! pindah ke helpers ntar
+      // await navigation.replace("Tab");
+      // //! navigate ke halaman home
+
+      // // console.log(loginData?.loginUser.access_token);
+      // // console.log(loginData?.loginUser.id);
+      // // Reset form
+      // // setEmail("");
+      // // setPassword("");
     } catch (error) {
       console.log(error);
     }
@@ -83,17 +100,12 @@ export default function FormUser({ page, navigation }) {
         phoneNumber,
         address,
       };
-
+      // console.log(userPayload);
       await register({
         variables: { userPayload },
       });
 
-      // console.log(userPayload);
-      //! navigate ke halaman login atau langsung ke home (kalo ada access_token)
-      console.log(userPayload);
-      console.log(registerData);
-
-      // navigation.navigate("Login");
+      navigation.navigate("Login");
 
       // Reset form
       setEmail("");
@@ -109,6 +121,21 @@ export default function FormUser({ page, navigation }) {
   const handlerShowPassword = () => {
     show ? setShow(false) : setShow(true);
   };
+
+  const handleLogin = async () => {
+    const access_token = loginData?.loginUser?.access_token;
+    const userId = loginData?.loginUser?.id;
+    // // console.log(access_token);
+
+    await signIn(access_token, userId);
+    navigation.navigate("Tab");
+  };
+
+  useEffect(() => {
+    if (loginData) {
+      handleLogin();
+    }
+  }, [loginData]);
 
   return (
     <>
