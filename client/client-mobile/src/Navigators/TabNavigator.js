@@ -39,7 +39,7 @@ const TabNavigator = ({ navigation }) => {
               if (route.name === "HomeStack") {
                 iconName = focused ? "home" : "home";
                 color = focused ? COLORS.primary : COLORS.primaryShade[500];
-              } else if (route.name === "MyListing") {
+              } else if (route.name === "MyListingNavigator") {
                 iconName = focused ? "package" : "package";
                 color = focused ? COLORS.primary : COLORS.primaryShade[500];
               } else if (route.name === "Notifications") {
@@ -57,19 +57,20 @@ const TabNavigator = ({ navigation }) => {
               // <AntDesign name={iconName} size={size} color={color} />;
             },
             tabBarShowLabel: false,
-            tabBarActiveTintColor: COLORS.primary,
-            tabBarInactiveTintColor: "gray",
             headerStyle: {
               backgroundColor: COLORS.white,
             },
             headerTitleStyle: {
-              color: COLORS.primaryShade[500],
+              color: COLORS.dark,
+              fontSize: 20,
+              fontWeight: "600",
             },
             headerTitleAlign: "center",
             tabBarStyle: {
               height: 75,
             },
             tabBarHideOnKeyboard: true,
+            headerShadowVisible: false,
           };
         }}
       >
@@ -102,8 +103,8 @@ const TabNavigator = ({ navigation }) => {
             title: "Post",
           }}
         />
-        <Tab.Screen name="Notifications" component={Notifications} />
-        <Tab.Screen name="MyListing" component={TopTabNavigator} options={{ title: "My Listing" }} />
+        <Tab.Screen name="Notifications" component={Notifications} options={{ title: "Messages" }} />
+        <Tab.Screen name="MyListingNavigator" component={TopTabNavigator} options={{ title: "My Listings" }} />
       </Tab.Navigator>
 
       {/* Slider */}
@@ -123,6 +124,7 @@ const TabNavigator = ({ navigation }) => {
             </Box>
             {categoryData?.getAllCategories?.map((category) => (
               <Actionsheet.Item
+                key={category._id}
                 onPress={() => {
                   navigation.navigate("Post", {
                     //! NANTI DIGANTI DARI ITEM FLATLIST YA

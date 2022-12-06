@@ -36,7 +36,7 @@ export default function History() {
     <View style={styles.container}>
       {myListingPosts?.map((post) => {
         return (
-          <View style={styles.viewContainer}>
+          <View key={post["_id"]} style={styles.viewContainer}>
             <ListingCard post={post} />
           </View>
         );

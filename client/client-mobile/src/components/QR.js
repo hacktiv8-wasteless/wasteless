@@ -2,6 +2,7 @@ import { StyleSheet, Text, TouchableHighlight, View } from "react-native";
 import React from "react";
 import { Box, Button } from "native-base";
 import { Ionicons } from "@expo/vector-icons";
+import { COLORS } from "../constants";
 
 export default function QR() {
   // const {id} = // dari props flatlist
@@ -22,7 +23,7 @@ const styles = StyleSheet.create({
   qrContainer: {
     marginLeft: 10,
     marginTop: 30,
-    backgroundColor: "white",
+    backgroundColor: COLORS.white,
     borderRadius: 10,
     overflow: "hidden",
 
@@ -37,7 +38,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   button: {
-    backgroundColor: "white",
+    backgroundColor: COLORS.white,
     // borderRadius: 10,
 
     shadowColor: "#000",

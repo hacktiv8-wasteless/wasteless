@@ -31,7 +31,7 @@ export default function ListingCard({ post }) {
           px="3"
           py="2"
         >
-          Title
+          {post.title}
         </Box>
         <Box style={styles.imageContainer}>
           <Image source={{ uri: post?.mainImage }} style={styles.image} resizeMode="cover" />

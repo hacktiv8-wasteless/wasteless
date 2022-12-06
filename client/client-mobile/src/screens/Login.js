@@ -4,15 +4,24 @@ import FormUser from "../components/FormUser";
 import { Button, Pressable, ScrollView } from "native-base";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../constants";
+import { getToken } from "../helpers/util";
 
 export default function Login({ navigation }) {
+  const check = async () => {
+    console.log(await getToken("access_token"));
+    console.log(await getToken("userId"));
+  };
+
   return (
     <View style={styles.container}>
       <SafeAreaView>
+        {/* <Button onPress={check} style={styles.test}>
+          Check
+        </Button> */}
         {/* Status Bar */}
         <StatusBar barStyle="light-content" backgroundColor="#339966" />
 
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 40 }}>
           <View>
             <Text style={styles.title}>Hello Again</Text>
             <Text style={styles.title}>Welcome Back</Text>

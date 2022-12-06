@@ -7,6 +7,7 @@ import axios from "axios";
 import { useMutation } from "@apollo/client";
 import { POST_POST } from "../query/Posts";
 import { getUserId } from "../helpers/util";
+import { COLORS } from "../constants";
 
 export default function PostItem({ navigation, route }) {
   const { categoryId: category_id } = route.params;
@@ -19,14 +20,12 @@ export default function PostItem({ navigation, route }) {
 
   //? Image picker --------------------------
   const [profileImage, setProfileImage] = useState("");
-  const [progress, setProgress] = useState(0);
-  // const { token } = props.route.params;
   const url = "https://wasteless-services-upload.up.railway.app/";
 
   const openImageLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    console.log(await ImagePicker.requestMediaLibraryPermissionsAsync());
+    // console.log(await ImagePicker.requestMediaLibraryPermissionsAsync());
 
     if (status !== "granted") {
       alert("Sorry, we need camera roll permissions to make this work!");
@@ -62,15 +61,11 @@ export default function PostItem({ navigation, route }) {
 
       return data.url;
     } catch (error) {
-      console.log("gggggggggg");
       console.log(error);
-      console.log(error.message);
     }
   };
 
   //? -------------------------------------------
-
-  // const [errors, setErrors] = React.useState({});
 
   //? Server Wiring --------------------------
   const [createPost, { data: postData, loading: postLoading, error: postError }] = useMutation(POST_POST);
@@ -103,7 +98,6 @@ export default function PostItem({ navigation, route }) {
         lat: "30",
         long: "30",
       };
-      // console.log(postPayload);
 
       await createPost({
         variables: { postPayload },
@@ -111,6 +105,7 @@ export default function PostItem({ navigation, route }) {
 
       // Clear form
       // setMainImage("");
+      setProfileImage("");
       setTitle("");
       setDescription("");
       setQuantity("");
@@ -138,53 +133,37 @@ export default function PostItem({ navigation, route }) {
     <>
       {/* Status Bar */}
       {/* <StatusBar barStyle="light-content" backgroundColor="#339966" /> */}
-      <SafeAreaView
-        style={{
-          flex: 1,
-        }}
-      >
+      <SafeAreaView>
         <ScrollView>
-          <View style={styles.imageContainer}>
-            {/* Image handler */}
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-              <TouchableOpacity
-                onPress={openImageLibrary}
-                style={{
-                  height: 125,
-                  width: 125,
-                  borderRadius: 125 / 2,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderStyle: "dashed",
-                  borderWidth: 1,
-                  overflow: "hidden",
-                }}
-              >
-                {profileImage ? (
-                  <Image source={{ uri: profileImage }} style={{ width: "100%", height: "100%" }} />
-                ) : (
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      fontSize: 16,
-                      opacity: 0.3,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Upload Profile Image
-                  </Text>
-                )}
-              </TouchableOpacity>
-              {profileImage ? (
-                <Text onPress={uploadProfileImage} style={[styles.skip, { backgroundColor: "green", color: "white", borderRadius: 8 }]}>
-                  Upload
-                </Text>
-              ) : null}
+          {/* Image handler */}
+          {/* <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.image} /> */}
+          <TouchableOpacity onPress={openImageLibrary}>
+            <View style={{ backgroundColor: "white", paddingHorizontal: 20, paddingTop: 20, paddingBottom: 10 }}>
+              <Text style={styles.label}>Upload Image:</Text>
             </View>
-            {/* <Text>Add Image here</Text> */}
+            <View style={styles.imageContainer2}>
+              {/* <Text>Add Image here</Text> */}
+              {profileImage ? (
+                <Image source={{ uri: profileImage }} style={styles.image} />
+              ) : (
+                <Image source={{ uri: "https://uploader-assets.s3.ap-south-1.amazonaws.com/codepen-default-placeholder.png" }} style={styles.image} />
+                // <Text
+                //   style={{
+                //     textAlign: "center",
+                //     fontSize: 20,
+                //     opacity: 0.3,
+                //     fontWeight: "bold",
+                //   }}
+                // >
+                //   Upload Imagesss
+                // </Text>
+              )}
+            </View>
+          </TouchableOpacity>
+          <View style={styles.imageContainer}>
             {/* <Pressable>
-            <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.imagePlaceholder} resizeMode="cover" />
-          </Pressable> */}
+              <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.imagePlaceholder} resizeMode="cover" />
+            </Pressable> */}
           </View>
           <VStack style={styles.formContainer}>
             <FormControl isRequired marginBottom={3}>
@@ -202,11 +181,11 @@ export default function PostItem({ navigation, route }) {
                 <Text style={styles.label}>Quantity: </Text>
                 <Text>{quantity}kg</Text>
               </View>
-              <Slider onChange={handleQuantityChange} defaultValue={1} minValue={0.5} maxValue={5} step={0.5} colorScheme="green">
-                <Slider.Track>
-                  <Slider.FilledTrack />
+              <Slider onChange={handleQuantityChange} defaultValue={1} minValue={0.5} maxValue={5} step={0.5}>
+                <Slider.Track bgColor={COLORS.muted}>
+                  <Slider.FilledTrack color={"red.100"} bgColor={COLORS.primary} />
                 </Slider.Track>
-                <Slider.Thumb />
+                <Slider.Thumb bgColor={COLORS.primary} />
               </Slider>
             </FormControl>
           </VStack>
@@ -234,8 +213,8 @@ export default function PostItem({ navigation, route }) {
           </VStack>
 
           <VStack style={styles.footer}>
-            <Button isLoading={postLoading ? true : false} onPress={onSubmit} bgColor={"#339966"} width={"full"} height={75} borderRadius={0}>
-              Submit
+            <Button isLoading={postLoading ? true : false} onPress={onSubmit} bgColor={COLORS.primaryShade[500]} width={"full"} height={75} borderTopRadius={20} borderBottomRadius={0}>
+              <Text style={{ color: COLORS.accent, fontWeight: "500", fontSize: 16 }}>Submit</Text>
             </Button>
             {/* Kalo udah sambung server bisa tambah ini buat loading mutation */}
             {/* <Button isLoading>Button</Button> */}
@@ -266,6 +245,14 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     // height: "100%",
   },
+  imageContainer2: {
+    overflow: "hidden",
+    backgroundColor: "white",
+    height: 200,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: { height: "100%", width: "100%", resizeMode: "cover" },
   imagePlaceholder: {
     height: 150,
     width: 150,

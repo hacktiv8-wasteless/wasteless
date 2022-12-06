@@ -38,9 +38,12 @@ export default function OngoingOrder() {
     <View style={styles.container}>
       {myListingPosts?.map((post) => {
         return (
-          <View style={styles.viewContainer}>
+          <View key={post["_id"]} style={styles.viewContainer}>
             <ListingCard post={post} />
-            <QR />
+            <VStack>
+              <UserAvatar />
+              <QR />
+            </VStack>
           </View>
         );
       })}

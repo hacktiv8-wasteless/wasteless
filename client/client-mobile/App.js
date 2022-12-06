@@ -20,27 +20,8 @@ export default function App() {
         setFirstLaunch(false);
       }
     }
-    console.log("before onboard", firstLaunch);
     setData();
-    console.log("after onboard", firstLaunch);
   }, []);
-
-  // if (isFirstLaunch === null) {
-  //   console.log(isFirstLaunch, "dari kondisi if");
-  //   return null;
-  // } else if (isFirstLaunch) {
-  //   return (
-  //     <ApolloProvider client={client}>
-  //       <NavigationContainer>
-  //         <NativeBaseProvider>
-  //           <StackNavigator />
-  //         </NativeBaseProvider>
-  //       </NavigationContainer>
-  //     </ApolloProvider>
-  //   );
-  // } else {
-  //   return <Login />;
-  // }
 
   return (
     firstLaunch != null && (

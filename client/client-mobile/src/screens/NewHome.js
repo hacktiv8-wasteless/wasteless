@@ -15,6 +15,8 @@ import Loader from "../components/Loader";
 import Carousel from "../components/Carousel";
 import { capitalize, getToken, getUserId, signOut } from "../helpers/util";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import SearchBar from "../components/SearchBar";
+import { COLORS } from "../constants";
 
 export default function NewHome({ navigation }) {
   const clearAsyncStorage = async () => {
@@ -62,8 +64,12 @@ export default function NewHome({ navigation }) {
   };
 
   const handleOnSubmit = () => {
-    setFiltered(postsData?.getAllPosts.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
+    setFiltered(postsData?.getAllPosts?.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
   };
+
+  useEffect(() => {
+    setFiltered(postsData?.getAllPosts?.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
+  }, [search]);
 
   if (postsLoading || categoryLoading || userLoading) return <Loader />;
 
@@ -74,7 +80,7 @@ export default function NewHome({ navigation }) {
         {/* Loader */}
 
         <ScrollView>
-          <Button onPress={check} style={styles.test}>
+          {/* <Button onPress={check} style={styles.test}>
             Check
           </Button>
           <Button onPress={logout} style={styles.test}>
@@ -82,7 +88,7 @@ export default function NewHome({ navigation }) {
           </Button>
           <Button onPress={clearAsyncStorage} style={styles.test}>
             Clear all storage
-          </Button>
+          </Button> */}
           <View
             style={{
               // flex: 1,
@@ -99,50 +105,28 @@ export default function NewHome({ navigation }) {
               }}
             >
               <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 20, fontWeight: "bold" }}>Welcome {userData?.getProfile?.username} </Text>
-                <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 5 }}>
-                  <Ionicons name="location" size={24} color="gray" />
-                  <Text style={{ color: "gray", marginLeft: 10 }}>Pondok Indah, South Jakarta</Text>
+                <Text style={{ fontSize: 20, fontWeight: "600", color: COLORS.dark }}>Welcome {capitalize(userData?.getProfile?.username)} </Text>
+                <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 5, paddingRight: 10 }}>
+                  <Ionicons name="location" size={24} color={COLORS.primaryShade[400]} />
+                  <Text style={{ color: "gray", marginLeft: 10, marginRight: 10 }}>Pondok Indah, Jakarta Selatan</Text>
                 </View>
               </View>
-              {/* <Ionicons name="notifications" size={20} color="gray" style={{ paddingHorizontal: 20 }} />
-              <Ionicons name="grid" size={20} color="gray" /> */}
-              <Button onPress={() => navigation.navigate("MyProfile")} variant="unstyled">
-                <Feather name="user" size={24} />
-              </Button>
+              <View>
+                <Button onPress={() => navigation.navigate("MyProfile")} variant="unstyled" style={{ backgroundColor: COLORS.accent, height: 50, width: 50, borderRadius: 25 }}>
+                  <Feather name="user" size={24} color={COLORS.dark} />
+                </Button>
+              </View>
             </View>
 
-            <View
-              style={{
-                flexDirection: "row",
-                marginVertical: 1,
-                padding: 15,
-                borderRadius: 30,
-                backgroundColor: "#e3e3e3",
-                marginVertical: 10,
-              }}
-            >
-              <TextInput
-                style={{
-                  paddingHorizontal: 10,
-                  flex: 1,
-                }}
-                value={search}
-                onChangeText={handleSearchChange}
-                on
-                placeholder="Search Reuseable Materials"
-              />
-              <Pressable onPress={handleOnSubmit}>
-                <Ionicons name="search" size={25} color="gray" style={{ marginRight: 10 }} />
-              </Pressable>
-            </View>
+            {/* Search Bar */}
+            <SearchBar search={search} handleSearchChange={handleSearchChange} handleOnSubmit={handleOnSubmit} />
 
             {/* Category Card */}
             <View style={{ marginVertical: 10 }}>
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 <View style={{ flexDirection: "row" }}>
                   {categoryData?.getAllCategories?.map((item) => {
-                    return <CategoryCard key={item["_id"]} item={item} />;
+                    return <CategoryCard key={item["_id"]} item={item} categoryId={item["_id"]} />;
                   })}
                 </View>
               </ScrollView>
@@ -153,9 +137,9 @@ export default function NewHome({ navigation }) {
 
             {/* Card */}
             <View style={{ flex: 1, marginVertical: 10 }}>
-              <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>Near Me</Text>
-              <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center" }}>
-                {getFilteredPost().map((post) => {
+              <Text style={{ fontSize: 20, fontWeight: "600", marginBottom: 10 }}>Near Me</Text>
+              <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-start" }}>
+                {getFilteredPost()?.map((post) => {
                   return <ItemCardSmall post={post} key={post["_id"]} />;
                 })}
               </View>

@@ -37,8 +37,9 @@ export default function MyListing() {
   return (
     <View style={styles.container}>
       {myListingPosts?.map((post) => {
+        // console.log(post);
         return (
-          <View style={styles.viewContainer}>
+          <View key={post["_id"]} style={styles.viewContainer}>
             <ListingCard post={post} />
             <QR />
           </View>
