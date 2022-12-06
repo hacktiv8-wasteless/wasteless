@@ -7,8 +7,11 @@ import { Entypo } from "@expo/vector-icons";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useQuery } from "@apollo/client";
 import { GET_USER_DETAIL } from "../query/Users";
+import { useNavigation } from "@react-navigation/native";
 
 const Profile = () => {
+  const navigation = useNavigation();
+
   const { data: userDetailData, loading: userDetailLoading, error: userDetailError } = useQuery(GET_USER_DETAIL);
   if (userDetailLoading) return <Text>Loading....</Text>;
   if (userDetailError) {
