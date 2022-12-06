@@ -1,12 +1,18 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useCallback, useState, useEffect } from "react";
-import { GiftedChat } from "react-native-gifted-chat";
+import { Bubble, GiftedChat } from "react-native-gifted-chat";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../configs/firebase";
+import {
+  renderActions,
+  renderComposer,
+  renderInputToolbar,
+  renderSend,
+} from "../components/InputToolbar";
 
-export default function Chat() {
-  const user1 = "1";
-  const user2 = "2";
+export default function Chat({ navigation }) {
+  const user1 = "giver";
+  const user2 = "taker";
 
   let roomId = user1 < user2 ? user1 + user2 : user2 + user1;
 
@@ -51,9 +57,26 @@ export default function Chat() {
 
   return (
     <GiftedChat
+      renderComposer={renderComposer}
+      renderActions={renderActions}
+      renderInputToolbar={renderInputToolbar}
+      alwaysShowSend
       messages={messages}
       showAvatarForEveryMessage={true}
       onSend={(messages) => onSend(messages)}
+      renderBubble={(props) => {
+        return (
+          <Bubble
+            {...props}
+            wrapperStyle={{
+              right: {
+                backgroundColor: "#efc100",
+              },
+              left: {},
+            }}
+          />
+        );
+      }}
       user={{
         _id: user1,
         name: "tes",

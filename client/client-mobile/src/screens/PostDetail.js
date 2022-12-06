@@ -101,8 +101,8 @@ export default function PostDetail({ navigation, route }) {
             <View style={styles.mapContainer}>
               <MapView
                 style={{ ...StyleSheet.absoluteFillObject }}
-                // showsUserLocation={true}
-                followUserLocation={true}
+                showsUserLocation={true}
+                // followUserLocation={true}
                 loadingEnabled={true}
                 region={{
                   ...mapRegion,
@@ -110,11 +110,7 @@ export default function PostDetail({ navigation, route }) {
                   longitudeDelta: 0.03,
                 }}
               >
-                {/* <Marker
-              coordinate={mapRegion}
-              style={{ ...StyleSheet.absoluteFillObject }}
-              image={{ uri: MARKER_APPROXIMATE }}
-            /> */}
+                {mapRegion && <Marker coordinate={mapRegion} style={{ ...StyleSheet.absoluteFillObject }} image={{ uri: MARKER_APPROXIMATE }} />}
               </MapView>
               {/* <Image source={{ uri: MAP_PLACEHOLDER }} style={styles.image} /> */}
             </View>
