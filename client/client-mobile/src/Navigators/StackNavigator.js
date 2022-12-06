@@ -7,6 +7,7 @@ import OnboardingScreenr from "../screens/OnboardingScreen";
 import Login from "../screens/Login";
 import TabNavigator from "./TabNavigator";
 import XenditPayment from "../screens/XenditScreen";
+import HistoryLogs from "../screens/HistoryLogs";
 import Categories from "../screens/SearchByCategory";
 import Payment from "../screens/PaymentScreen";
 import PostDetail from "../screens/PostDetail";
@@ -69,6 +70,7 @@ export default function StackNavigator({ firstLaunch }) {
       <Stack.Screen name="ScanQR" component={ScannerQR} />
       <Stack.Screen name="Payment" component={Payment} />
       <Stack.Screen name="Xendit" component={XenditPayment} />
+      <Stack.Screen name="HistoryLogs" component={HistoryLogs} />
       {/* Post, nanti mungkin pindah file stack baru */}
       <Stack.Screen
         name="PostDetail"

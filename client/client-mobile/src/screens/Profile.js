@@ -95,7 +95,7 @@ const Profile = () => {
             <Text style={styles.menuItemText}>TopUp</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
+        <TouchableRipple onPress={() => navigation.navigate("HistoryLogs")}>
           <View style={styles.menuItem}>
             <Icon name="history" color="green" size={25} />
             <Text style={styles.menuItemText}>History Logs</Text>
