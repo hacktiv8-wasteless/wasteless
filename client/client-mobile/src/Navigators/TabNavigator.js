@@ -8,11 +8,24 @@ import TopTabNavigator from "./TopTabNavigator";
 import { COLORS } from "../constants";
 import { StyleSheet } from "react-native";
 import HomeNavigator from "./HomeNavigator";
+import { useQuery } from "@apollo/client";
+import { GET_CATEGORIES } from "../query/Categories";
+import Loader from "../components/Loader";
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = ({ navigation }) => {
   const { isOpen, onOpen, onClose } = useDisclose();
+
+  const { data: categoryData, loading: categoryLoading, error: categoryError } = useQuery(GET_CATEGORIES);
+
+  if (categoryLoading) return <Loader />;
+  if (categoryError) {
+    console.log("categoryError di tab -----------------------");
+    console.log(categoryError);
+    console.log("categoryError di tab -----------------------");
+  }
+  // console.log(categoryData.getAllCategories);
 
   return (
     <>
@@ -108,67 +121,20 @@ const TabNavigator = ({ navigation }) => {
                 Pick a Category
               </Text>
             </Box>
-            {/* Ini ntar flatlist dari category, sekarang HARDCODE DULU */}
-            <Actionsheet.Item
-              onPress={() => {
-                navigation.navigate("Post", {
-                  //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                  // category: item?.category,
-                  category: "plastic",
-                });
-                onClose();
-              }}
-            >
-              Plastic Packaging
-            </Actionsheet.Item>
-            <Actionsheet.Item
-              onPress={() => {
-                navigation.navigate("Post", {
-                  //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                  // category: item?.category,
-                  category: "carton",
-                });
-                onClose();
-              }}
-            >
-              Carton Packaging
-            </Actionsheet.Item>
-            <Actionsheet.Item
-              onPress={() => {
-                navigation.navigate("Post", {
-                  //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                  // category: item?.category,
-                  category: "glass",
-                });
-                onClose();
-              }}
-            >
-              Glass Packaging
-            </Actionsheet.Item>
-            <Actionsheet.Item
-              onPress={() => {
-                navigation.navigate("Post", {
-                  //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                  // category: item?.category,
-                  category: "cans",
-                });
-                onClose();
-              }}
-            >
-              Aluminum Cans
-            </Actionsheet.Item>
-            <Actionsheet.Item
-              onPress={() => {
-                navigation.navigate("Post", {
-                  //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                  // category: item?.category,
-                  category: "paper",
-                });
-                onClose();
-              }}
-            >
-              Paper/Cardboard
-            </Actionsheet.Item>
+            {categoryData?.getAllCategories?.map((category) => (
+              <Actionsheet.Item
+                onPress={() => {
+                  navigation.navigate("Post", {
+                    //! NANTI DIGANTI DARI ITEM FLATLIST YA
+                    category: category.name,
+                    categoryId: category._id,
+                  });
+                  onClose();
+                }}
+              >
+                {category.name}
+              </Actionsheet.Item>
+            ))}
           </Actionsheet.Content>
         </Actionsheet>
       </Center>
