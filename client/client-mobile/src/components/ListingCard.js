@@ -10,6 +10,7 @@ export default function ListingCard() {
   const handleOnPress = () => {
     console.log("berhasil");
   };
+
   return (
     <View style={{ flexDirection: "column" }}>
       <Pressable onPress={handleOnPress}>
@@ -28,7 +29,7 @@ export default function ListingCard() {
         </Box>
         <Box style={styles.imageContainer}>
           <Image source={{ uri: "http://placekitten.com/600/400" }} style={styles.image} resizeMode="cover" />
-          <Center
+          {/* <Center
             bg={COLORS.accent}
             _text={{
               color: COLORS.dark,
@@ -44,7 +45,7 @@ export default function ListingCard() {
             borderBottomLeftRadius={20}
           >
             Category
-          </Center>
+          </Center> */}
         </Box>
       </Pressable>
     </View>

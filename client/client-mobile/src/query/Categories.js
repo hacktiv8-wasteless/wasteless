@@ -9,3 +9,13 @@ export const GET_CATEGORIES = gql`
     }
   }
 `;
+
+export const GET_CATEGORY_ID = gql`
+  query GetCategoryById($categoryId: ID) {
+    getCategoryById(category_id: $categoryId) {
+      _id
+      name
+      price
+    }
+  }
+`;

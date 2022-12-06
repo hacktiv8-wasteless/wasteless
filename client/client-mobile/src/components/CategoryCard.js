@@ -11,8 +11,8 @@ export default function CategoryCard({ item }) {
 
   return (
     <TouchableOpacity onPress={handleCategoryNavigate}>
-      <View key={item} style={{ borderWidth: 0.5, borderColor: "gray", marginRight: 20, padding: 10, borderRadius: 40 }}>
-        <Text>{item}</Text>
+      <View style={{ borderWidth: 0.5, borderColor: "gray", marginRight: 20, padding: 10, borderRadius: 40 }}>
+        <Text>{item.name}</Text>
       </View>
     </TouchableOpacity>
   );
