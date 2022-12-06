@@ -10,7 +10,7 @@ import { GET_USER_DETAIL } from "../query/Users";
 
 const Profile = () => {
   const { data: userDetailData, loading: userDetailLoading, error: userDetailError } = useQuery(GET_USER_DETAIL);
-  if (userDetailData) return <Text>Loading....</Text>;
+  if (userDetailLoading) return <Text>Loading....</Text>;
   if (userDetailError) {
     console.log("postsError -------------------------");
     console.log(userDetailError);
