@@ -12,6 +12,7 @@ const typeDefs = `#graphql
   
   type Response {
     access_token:String
+	id:Int
     message:String
 	error:Boolean
   }
@@ -71,9 +72,10 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-		getProfile: async (_,__,context) => {
+		getProfile: async (_, __, context) => {
 			try {
-				const {userId} = context.user
+				if (!context.user || !context.token) throw { error: "Invalid access" };
+				const { id: userId } = context.user;
 				const { data } = await Users.get(`/users/${userId}`);
 
 				return data;
@@ -108,7 +110,7 @@ const resolvers = {
 
 				const { data } = await Users.post(`/users/login`, { email, password });
 
-				return data;
+				return { access_token: data.access_token, id: data.id };
 			} catch (error) {
 				console.log(error);
 			}
@@ -122,7 +124,7 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-		createInvoice: async (_, { balance },context) => {
+		createInvoice: async (_, { balance }, context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = await Users.post(
@@ -140,7 +142,7 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-		payInvoice: async (_, { invocePayload },context) => {
+		payInvoice: async (_, { invocePayload }, context) => {
 			// invoice payload semua
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };

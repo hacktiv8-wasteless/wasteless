@@ -55,7 +55,7 @@ class Controller {
 
 			const access_token = signToken({ id: foundUser.id });
 
-			return res.status(200).json({ access_token });
+			return res.status(200).json({ access_token, id: foundUser.id });
 		} catch (error) {
 			next(error);
 		}
