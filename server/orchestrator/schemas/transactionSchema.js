@@ -22,36 +22,53 @@ const typeDefs = `#graphql
 	    getIncomingTransaction(payeeId:Int):[Transaction]
     }
 
-  type Mutation {
-        createInvoice(transactionPayload:transactionPayload):Transaction
-        payInvoice(transactionPayload:transactionPayload):Transaction
+    type Mutation {
+        createTransaction(transactionPayload:transactionPayload):Transaction
     }
 `;
 
 const resolver = {
 	Query: {
-		getOutgoingTransaction: (_, { payerId }) => {
+		getOutgoingTransaction: async (_, { payerId }, context) => {
 			try {
-                if (!context.user || !context.token) throw { error: "Invalid access" }
-                const {data} = Users.get(`/transaction/outgoing/${payerId}`)
+				if (!context.user || !context.token) throw { error: "Invalid access" };
+				const { data } = await Users.get(`/transaction/outgoing/${payerId}`);
 
-                return data
+				return data;
 			} catch (error) {
 				console.log(error);
 			}
 		},
-		getIncomingTransaction: (_, { payeeId }) => {
+		getIncomingTransaction: async (_, { payeeId }, context) => {
 			try {
-                if (!context.user || !context.token) throw { error: "Invalid access" }
-                const {data} = Users.get(`/transaction/incoming/${payeeId}`)
+				if (!context.user || !context.token) throw { error: "Invalid access" };
+				const { data } = await Users.get(`/transaction/incoming/${payeeId}`);
 
-                return data
+				return data;
 			} catch (error) {
 				console.log(error);
 			}
 		},
 	},
 	Mutation: {
+		createTransaction: async (_, { transactionPayload }, context) => {
+			// payload : payeeId, total price
+			try {
+				if (!context.user || !context.token) throw { error: "Invalid access" };
+				const { data } = await Users.post(
+					`/transaction/`,
+					{ ...transactionPayload },
+					{
+						headers: {
+							access_token: context.token,
+						},
+					}
+				);
 
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
 	},
 };

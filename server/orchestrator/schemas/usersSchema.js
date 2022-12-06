@@ -25,6 +25,7 @@ const typeDefs = `#graphql
 	input InvoicePayload {
 		external_id:String
    		totalPrice:Int
+		status:String
 	}
 
   input userPayload {
@@ -38,6 +39,7 @@ const typeDefs = `#graphql
   type Query {
 	getAllUsers:[User]
 	getUserById(userId:ID):User
+	getProfile:User
   }
   
   type Mutation {
@@ -69,10 +71,21 @@ const resolvers = {
 				console.log(error);
 			}
 		},
+		getProfile: async (_,__,context) => {
+			try {
+				const {userId} = context.user
+				const { data } = await Users.get(`/users/${userId}`);
+
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
 	},
 	Mutation: {
 		registerUser: async (_, { userPayload }) => {
 			try {
+				//user payload semua
 				let { username, email, password, phoneNumber, address } = userPayload;
 
 				const { data } = await Users.post(`/users/register`, {
@@ -89,6 +102,7 @@ const resolvers = {
 			}
 		},
 		loginUser: async (_, { userPayload }) => {
+			//user payload cuma email dan password
 			try {
 				const { email, password } = userPayload;
 
@@ -108,7 +122,7 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-		createInvoice: async (_, { balance }) => {
+		createInvoice: async (_, { balance },context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = await Users.post(
@@ -126,12 +140,13 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-		payInvoice: async (_, { invocePayload }) => {
+		payInvoice: async (_, { invocePayload },context) => {
+			// invoice payload semua
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = await Users.post(
-					"/users/topup",
-					{ invocePayload },
+					"/users/sucess",
+					{ ...invocePayload },
 					{
 						headers: {
 							access_token: context.token,
