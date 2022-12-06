@@ -101,9 +101,9 @@ class Controller {
 		try {
 			const { external_id, amount, status } = req.body;
 			if (status == "PAID") {
-				const findWallet = await User.findOne({
+				const foundUser = await User.findOne({
 					where: {
-						UserId: external_id.split("-")[0],
+						id: external_id.split("-")[0],
 					},
 				});
 				await User.update(
@@ -112,7 +112,7 @@ class Controller {
 					},
 					{
 						where: {
-							UserId: external_id.split("-")[0],
+							id: foundUser.id,
 						},
 					}
 				);
@@ -123,37 +123,6 @@ class Controller {
 			next(error);
 		}
 	}
-
-	// static async successTopUp(req, res, next) {
-	// 	try {
-	// 		const { external_id, amount, status } = req.body;
-	// 		if (status == "PAID") {
-	// 			const findWallet = await Balance.findOne({
-	// 				where: {
-	// 					UserId: external_id,
-	// 				},
-	// 			});
-	// 			await Balance.update(
-	// 				{
-	// 					balance: +findWallet.balance + +amount,
-	// 				},
-	// 				{
-	// 					where: {
-	// 						UserId: external_id,
-	// 					},
-	// 				}
-	// 			);
-	// 			res.status(201).json({ message: "Topup Success!" });
-	// 		}
-	// 	} catch (error) {
-	// 		next(error);
-	// 	}
-
-	// static async template() {
-	//   return res.status(200).json(access_token);
-	// } catch (error) {
-	//   next(error);
-	// }
 }
 
 module.exports = Controller;

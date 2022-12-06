@@ -9,6 +9,8 @@ const typeDefs = `#graphql
     password:String!
     phoneNumber:String!
     address:String!
+	balance:Int
+	points:Int
   }
   
   type Response {
