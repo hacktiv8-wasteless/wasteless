@@ -23,8 +23,8 @@ const typeDefs = `#graphql
     description:String
     mainImage:String
     quantity:Int
-    lat:Int
-    long:Int
+    lat:String
+    long:String
     status:String
   }
 
