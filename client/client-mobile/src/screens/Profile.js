@@ -44,19 +44,19 @@ const Profile = () => {
 
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
-          <Entypo name="location" color="#777777" size={20} />
+          <Entypo name="location" color="green" size={20} />
           <Text style={{ color: "#777777", marginLeft: 20 }}>
             Kolkata, India
           </Text>
         </View>
         <View style={styles.row}>
-          <Entypo name="phone" color="#777777" size={20} />
+          <Entypo name="phone" color="green" size={20} />
           <Text style={{ color: "#777777", marginLeft: 20 }}>
             +91-900000009
           </Text>
         </View>
         <View style={styles.row}>
-          <Icon name="email" color="#777777" size={20} />
+          <Icon name="email" color="green" size={20} />
           <Text style={{ color: "#777777", marginLeft: 20 }}>
             john_doe@email.com
           </Text>
@@ -85,31 +85,31 @@ const Profile = () => {
       <View style={styles.menuWrapper}>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Icon name="heart-outline" color="#FF6347" size={25} />
+            <Icon name="heart-outline" color="green" size={25} />
             <Text style={styles.menuItemText}>Your Favorites</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
+        <TouchableRipple onPress={() => navigation.navigate("Payment")}>
           <View style={styles.menuItem}>
-            <AntDesign name="wallet" color="#FF6347" size={25} />
-            <Text style={styles.menuItemText}>Wallet</Text>
+            <AntDesign name="wallet" color="green" size={25} />
+            <Text style={styles.menuItemText}>TopUp</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Icon name="history" color="#FF6347" size={25} />
+            <Icon name="history" color="green" size={25} />
             <Text style={styles.menuItemText}>History Logs</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <AntDesign name="logout" color="#FF6347" size={25} />
+            <AntDesign name="logout" color="green" size={25} />
             <Text style={styles.menuItemText}>logout</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => navigation.navigate("ScanQR")}>
           <View style={styles.menuItem}>
-            <AntDesign name="scan1" color="#FF6347" size={25} />
+            <AntDesign name="scan1" color="green" size={25} />
             <Text style={styles.menuItemText}>Scan Here</Text>
           </View>
         </TouchableRipple>

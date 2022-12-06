@@ -6,8 +6,9 @@ import Register from "../screens/Register";
 import OnboardingScreenr from "../screens/OnboardingScreen";
 import Login from "../screens/Login";
 import TabNavigator from "./TabNavigator";
+import XenditPayment from "../screens/XenditScreen";
 import Categories from "../screens/SearchByCategory";
-
+import Payment from "../screens/PaymentScreen";
 import PostDetail from "../screens/PostDetail";
 import { COLORS } from "../constants";
 import PostItem from "../screens/PostItem";
@@ -66,7 +67,8 @@ export default function StackNavigator({ firstLaunch }) {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="ScanQR" component={ScannerQR} />
-
+      <Stack.Screen name="Payment" component={Payment} />
+      <Stack.Screen name="Xendit" component={XenditPayment} />
       {/* Post, nanti mungkin pindah file stack baru */}
       <Stack.Screen
         name="PostDetail"
