@@ -85,6 +85,7 @@ const resolvers = {
 	Mutation: {
 		registerUser: async (_, { userPayload }) => {
 			try {
+				//user payload semua
 				let { username, email, password, phoneNumber, address } = userPayload;
 
 				const { data } = await Users.post(`/users/register`, {
@@ -100,9 +101,9 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-		loginUser: async (_, { userPayload },{}) => {
+		loginUser: async (_, { userPayload }) => {
+			//user payload cuma email dan password
 			try {
-				console.log(userPayload)
 				const { email, password } = userPayload;
 
 				const { data } = await Users.post(`/users/login`, { email, password });
@@ -121,7 +122,7 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-		createInvoice: async (_, { balance }) => {
+		createInvoice: async (_, { balance },context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = await Users.post(
@@ -139,12 +140,13 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-		payInvoice: async (_, { invocePayload }) => {
+		payInvoice: async (_, { invocePayload },context) => {
+			// invoice payload semua
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = await Users.post(
-					"/users/topup",
-					{ invocePayload },
+					"/users/sucess",
+					{ ...invocePayload },
 					{
 						headers: {
 							access_token: context.token,
