@@ -4,15 +4,15 @@ const Post = require("../models/post");
 class PostController {
 	static async getAllPost(req, res) {
 		const { category_id } = req.query;
-		const options = {};
+		let options = {};
 		try {
 			if (category_id) {
 				options = {
-					category_id: ObjectId(category_id),
+					category_id,
 				};
 			}
 			console.log("masuk sini");
-			const result = await Post.find();
+			const result = await Post.find(options);
 			console.log(result);
 			res.status(200).json(result);
 		} catch (error) {

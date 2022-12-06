@@ -7,7 +7,7 @@ const typeDefs = `#graphql
     _id:ID
     giver_id:ID!
     taker_id:ID
-    category_id:ID!
+    category_id:String
     title:String!
     description:String!
     mainImage:String!
@@ -18,7 +18,7 @@ const typeDefs = `#graphql
     }
 
   input postPayload {
-    category_id:ID
+    category_id:String
     title:String
     description:String
     mainImage:String
@@ -30,7 +30,7 @@ const typeDefs = `#graphql
 
   type Query {
     getAllPosts:[Post]
-    getPostByCategory(category_id:ID):[Post]
+    getPostByCategory(category_id:String):[Post]
     getPostById(post_id:ID):Post
   }
 
