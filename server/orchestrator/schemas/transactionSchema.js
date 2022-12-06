@@ -22,7 +22,7 @@ const typeDefs = `#graphql
 	    getIncomingTransaction(payeeId:Int):[Transaction]
     }
 
-    type Query {
+    type Mutation {
         createTransaction(transactionPayload:transactionPayload):Transaction
     }
 `;
@@ -50,13 +50,14 @@ const resolver = {
 			}
 		},
 	},
-	Resolver: {
+	Mutation: {
 		createTransaction: async (_, { transactionPayload }, context) => {
+			// payload : payeeId, total price
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = await Users.post(
 					`/transaction/`,
-					{ transactionPayload },
+					{ ...transactionPayload },
 					{
 						headers: {
 							access_token: context.token,
