@@ -29,11 +29,11 @@ const postSchema = mongoose.Schema({
     required: [true, "quantity is required"],
   },
   lat: {
-    type: Number,
+    type: String,
     required: [true, "lattitude is required"],
   },
   long: {
-    type: Number,
+    type: String,
     required: [true, "longitude is required"],
   },
   status: {
