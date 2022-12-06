@@ -26,38 +26,15 @@ export default function NewHome({ navigation }) {
     console.log("after", AsyncStorage.getItem("access_token"));
   };
   const check = async () => {
-    // console.log(await AsyncStorage.getItem("access_token"));
-    // console.log(await AsyncStorage.getItem("appLaunched"));
     console.log(await getToken("access_token"));
     console.log(await getToken("userId"));
   };
-
-  // const getName = () => {
-  //   return userData ? capitalize(userData?.getProfile?.username) : "login dulu";
-  // };
-  // const categories = ["Plastic", "Cardboard", "Paper", "Alumunium can", "Glass"];
-  // const posts = [
-  //   { id: 1, title: "Botol Aqua bekas" },
-  //   { id: 2, title: "Botol sabun" },
-  //   { id: 3, title: "Kardus makanan" },
-  //   { id: 4, title: "Kaleng minuman bekas" },
-  //   { id: 5, title: "Kertas bekas skripsi" },
-  //   { id: 6, title: "Kumpulan botol minuman bekas" },
-  //   { id: 7, title: "Kucing liar" },
-  //   { id: 8, title: "Tisu bekas" },
-  //   { id: 9, title: "Kardus belanja olshop" },
-  //   { id: 10, title: "Kaleng fanta" },
-  // ];
-  // console.log("GET TOKEN DR NEWHOME -------------------------------");
-  // console.log(await getToken("access_token"));
-  // console.log("GET TOKEN DR NEWHOME -------------------------------");
 
   //? SERVER WIRING
   const { loading: postsLoading, error: postsError, data: postsData } = useQuery(GET_POSTS);
   const { data: categoryData, loading: categoryLoading, error: categoryError } = useQuery(GET_CATEGORIES);
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_PROFILE);
 
-  if (postsLoading || categoryLoading || userLoading) return <Loader />;
   if (postsError || categoryError || userError) {
     console.log("postsError -------------------------");
     console.log(postsError);
@@ -70,14 +47,7 @@ export default function NewHome({ navigation }) {
     console.log("userData -----------------------");
     console.log(userError);
     console.log("userData -----------------------");
-    // return <Text>Error: {postsError ? postsError : categoryError}</Text>;
   }
-  // console.log(userData.getProfile);
-
-  // useEffect(() => {
-  //   // console.log(categoryData.getAllCategories);
-  //   // console.log(postsData.getAllPosts);
-  // }, []);
 
   const [filtered, setFiltered] = useState([]);
   const [search, setSearch] = useState("");
@@ -94,6 +64,8 @@ export default function NewHome({ navigation }) {
   const handleOnSubmit = () => {
     setFiltered(postsData?.getAllPosts.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
   };
+
+  if (postsLoading || categoryLoading || userLoading) return <Loader />;
 
   return (
     <View style={{ backgroundColor: "white" }}>
