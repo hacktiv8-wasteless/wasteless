@@ -4,25 +4,37 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { VStack, Text, FormControl, Input, Button, TextArea, Slider, Box, Center, WarningOutlineIcon, Pressable, ScrollView } from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import { useMutation } from "@apollo/client";
+import { POST_POST } from "../query/Posts";
 
 export default function PostItem({ navigation, route }) {
   const { category } = route.params;
   // const giver_id = //! id dari jwt
   // const status //! ini harusnya otomatis dari server jadi pending
 
-  //? Image picker
+  //? Server Wiring --------------------------
+  const [createPost, { data: postData, loading: postLoading, error: postError }] = useMutation(POST_POST);
+
+  if (postLoading) return <Text>Loading......</Text>;
+
+  if (postError) {
+    console.log(postError);
+    return <Text>Error: {postError}</Text>;
+  }
+
+  //? Image picker --------------------------
   const [profileImage, setProfileImage] = useState("");
   const [progress, setProgress] = useState(0);
   // const { token } = props.route.params;
-  const url = "https://f1f7-139-228-111-125.ap.ngrok.io/";
+  const url = "https://wasteless-services-upload.up.railway.app/";
 
   const openImageLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    // console.log(await ImagePicker.requestMediaLibraryPermissionsAsync());
-    // // {"canAskAgain": true, "expires": "never", "granted": true, "status": "granted"}
-    // console.log(status);
-    // // granted
+    console.log(await ImagePicker.requestMediaLibraryPermissionsAsync());
+    // {"canAskAgain": true, "expires": "never", "granted": true, "status": "granted"}
+    console.log(status);
+    // granted
 
     if (status !== "granted") {
       alert("Sorry, we need camera roll permissions to make this work!");
@@ -33,7 +45,7 @@ export default function PostItem({ navigation, route }) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
       });
-      console.log("-------------------------");
+      console.log("response -------------------------");
       console.log(response);
       // {
       //   assets: [
@@ -52,7 +64,7 @@ export default function PostItem({ navigation, route }) {
       //   canceled: false,
       //   cancelled: false,
       // };
-      console.log("-------------------------");
+      console.log("response -------------------------");
 
       if (!response.cancelled) {
         setProfileImage(response.uri);
@@ -85,9 +97,9 @@ export default function PostItem({ navigation, route }) {
       // if (res.data.success) {
       //   props.navigation.dispatch(StackActions.replace("UserProfile"));
       // }
-      console.log("---------------");
+      console.log("res ---------------");
       console.log(res);
-      console.log("---------------");
+      console.log("res ---------------");
     } catch (error) {
       console.log("gggggggggg");
       console.log(error);

@@ -1,18 +1,24 @@
 import React from "react";
 import { View, SafeAreaView, StyleSheet } from "react-native";
-import {
-  Avatar,
-  Title,
-  Caption,
-  Text,
-  TouchableRipple,
-} from "react-native-paper";
+import { Avatar, Title, Caption, Text, TouchableRipple } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useQuery } from "@apollo/client";
+import { GET_USER_DETAIL } from "../query/Users";
 
 const Profile = () => {
+  const { data: userDetailData, loading: userDetailLoading, error: userDetailError } = useQuery(GET_USER_DETAIL);
+  if (userDetailLoading) return <Text>Loading....</Text>;
+  if (userDetailError) {
+    console.log("postsError -------------------------");
+    console.log(userDetailError);
+    console.log("postsError -------------------------");
+
+    return <Text>Error: {userDetailError}</Text>;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
@@ -43,21 +49,15 @@ const Profile = () => {
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
           <Entypo name="location" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>
-            Kolkata, India
-          </Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>Kolkata, India</Text>
         </View>
         <View style={styles.row}>
           <Entypo name="phone" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>
-            +91-900000009
-          </Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>+91-900000009</Text>
         </View>
         <View style={styles.row}>
           <Icon name="email" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>
-            john_doe@email.com
-          </Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>john_doe@email.com</Text>
         </View>
       </View>
 

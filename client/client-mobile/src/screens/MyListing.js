@@ -10,6 +10,16 @@ export default function MyListing() {
 
   const [data, setData] = useState(dummy);
 
+  // const { data: userDetailData, loading: userDetailLoading, error: userDetailError } = useQuery(GET_USER_DETAIL);
+  // if (userDetailData) return <Text>Loading....</Text>;
+  // if (userDetailError) {
+  //   console.log("postsError -------------------------");
+  //   console.log(userDetailError);
+  //   console.log("postsError -------------------------");
+
+  //   return <Text>Error: {userDetailError}</Text>;
+  // }
+
   return (
     <View style={styles.container}>
       <FlatList

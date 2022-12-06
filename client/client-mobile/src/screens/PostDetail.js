@@ -4,6 +4,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, ScrollView } from "native-base";
 import mapPlaceHolder from "../../assets/placeHolder/mapPlaceHolder.png";
 import { Feather } from "@expo/vector-icons";
+import { useQuery } from "@apollo/client";
+import { GET_POST_DETAIL } from "../query/Posts";
 
 const MAP_PLACEHOLDER = Image.resolveAssetSource(mapPlaceHolder).uri;
 
@@ -11,6 +13,17 @@ export default function PostDetail({ navigation, route }) {
   // const { id } = route.params;
 
   // useEffect(() => console.log(id), []);
+
+  const { data: postDetailData, loading: postDetailLoading, error: postDetailError } = useQuery(GET_POST_DETAIL);
+
+  if (postDetailLoading) return <Text>Loadinggg.....</Text>;
+  if (postDetailError) {
+    console.log("postDetailError ---------------------");
+    console.log(postDetailError);
+    console.log("postDetailError ---------------------");
+
+    return <Text>Error: {postDetailError}</Text>;
+  }
 
   return (
     <SafeAreaView style={styles.container}>
