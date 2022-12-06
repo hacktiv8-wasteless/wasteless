@@ -30,7 +30,7 @@ export default function FormUser({ page, navigation }) {
   const [register, { data: registerData, loading: registerLoading, error: registerError }] = useMutation(POST_REGISTER);
   const [login, { data: loginData, loading: loginLoading, error: loginError }] = useMutation(POST_LOGIN);
 
-  if (registerLoading || loginLoading) return <Text>Loading....</Text>;
+  // if (registerLoading || loginLoading) return <Text>Loading....</Text>;
   if (registerError || loginError) {
     console.log("registerError ------------------------");
     console.log(registerError);
@@ -59,15 +59,16 @@ export default function FormUser({ page, navigation }) {
 
       const access_token = loginData?.loginUser?.access_token;
       console.log(access_token);
-      // await AsyncStorage.setItem("access_token", access_token);
 
       signIn(access_token);
 
       //! pindah ke helpers ntar
       // navigation.navigate("Tab");
       //! navigate ke halaman home
-      // setEmail("");
-      // setPassword("");
+
+      // Reset form
+      setEmail("");
+      setPassword("");
     } catch (error) {
       console.log(error);
     }
@@ -92,7 +93,7 @@ export default function FormUser({ page, navigation }) {
       console.log(userPayload);
       console.log(registerData);
 
-      navigation.navigate("Login");
+      // navigation.navigate("Login");
 
       // Reset form
       setEmail("");
@@ -139,7 +140,7 @@ export default function FormUser({ page, navigation }) {
                   </Pressable>
                 }
               />
-              <Button colorScheme="indigo" onPress={handleSubmitLogin} style={styles.button}>
+              <Button isLoading={loginLoading ? true : false} isLoadingText={loginLoading ? "Signing in" : ""} colorScheme="indigo" onPress={handleSubmitLogin} style={styles.button}>
                 Sign in
               </Button>
             </Stack>
@@ -178,7 +179,7 @@ export default function FormUser({ page, navigation }) {
 
               <TextArea type="text" placeholder="Enter your address here" onChangeText={handleAddressChange} value={address} size="lg" borderRadius={12} variant="filled" InputRightElement={<Icon as={<MaterialIcons name="location-pin" />} size={8} mr="3" color={COLORS.primaryShade[100]} />} />
 
-              <Button onPress={handleSubmitRegister} style={styles.button}>
+              <Button isLoading={registerLoading ? true : false} isLoadingText={registerLoading ? "Signing in" : ""} onPress={handleSubmitRegister} style={styles.button}>
                 Sign up
               </Button>
             </Stack>
