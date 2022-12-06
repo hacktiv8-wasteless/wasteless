@@ -77,8 +77,8 @@ export default function PostDetail({ navigation, route }) {
         <View style={styles.mapContainer}>
           <MapView
             style={{ ...StyleSheet.absoluteFillObject }}
-            // showsUserLocation={true}
-            followUserLocation={true}
+            showsUserLocation={true}
+            // followUserLocation={true}
             loadingEnabled={true}
             region={{
               ...mapRegion,

@@ -14,6 +14,8 @@ import PostItem from "../screens/PostItem";
 import Profile from "../screens/Profile";
 import NewHome from "../screens/NewHome";
 import Chat from "../screens/Chat";
+import MapDirection from "../screens/MapDirection";
+import Maps from "../screens/Maps";
 
 const Stack = createNativeStackNavigator();
 
@@ -69,6 +71,16 @@ export default function StackNavigator({ firstLaunch }) {
         name="Chat"
         component={Chat}
         options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="MapDirection"
+        component={MapDirection}
+        options={{ headerShown: true }}
+      />
+      <Stack.Screen
+        name="Maps"
+        component={Maps}
+        options={{ headerShown: true }}
       />
 
       {/* Post, nanti mungkin pindah file stack baru */}
