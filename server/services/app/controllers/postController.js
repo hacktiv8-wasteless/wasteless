@@ -41,7 +41,8 @@ class PostController {
       }
 
       const postInput = { title, description, mainImage, quantity, status };
-      await Post.create(postInput);
+      const result = await Post.create(postInput);
+      console.log(result)
       res.status(201).json({ message: "Success create post" });
     } catch (error) {
       res.status(500).json(error.message);

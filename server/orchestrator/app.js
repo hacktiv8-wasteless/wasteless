@@ -22,6 +22,7 @@ startStandaloneServer(server, {
 	listen: { port: process.env.PORT || 4000 },
 	context: async ({ req }) => {
 		const token = req.headers.authorization || "";
+		if(!token) return {}
 		const user = verifyToken(token)
 		return { token, user };
 	},
