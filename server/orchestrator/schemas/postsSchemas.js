@@ -37,6 +37,8 @@ const typeDefs = `#graphql
     addPost(postPayload:postPayload):Response
     editPost(postPayload:postPayload,post_id:ID):Response
     deletePost(post_id:ID):Response
+	createAppointment:Response
+	deleteAppointment:Response
    }
 `;
 
@@ -45,14 +47,25 @@ const resolvers = {
 		getAllPosts: async (_, __, context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
-				console.log(context.token);
+				// console.log(context.token);
+
+				redis.del("Posts")
+				const cacheData = await redis.get("Posts");
+
+				if (cacheData) {
+					return JSON.parse(cacheData);
+				}
+
 				const { data } = await App.get("/posts", {
 					headers: {
 						access_token: context.token,
 					},
 				});
 
-				console.log(data);
+				console.log(data)
+
+				await redis.set("Posts", JSON.stringify(data));
+
 
 				return data;
 			} catch (error) {
@@ -89,13 +102,14 @@ const resolvers = {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = await App.post(
 					`/posts`,
-					{ ...postPayload, status: "pending" },
+					{ ...postPayload, status: "pending", giver_id:context.user },
 					{
 						headers: {
 							access_token: context.token,
 						},
 					}
 				);
+				redis.del("Posts")
 
 				return { message: "Add Post Succesful!" };
 			} catch (error) {
@@ -106,8 +120,10 @@ const resolvers = {
 		editPost: async (_, { post_id, postPayload }, context) => {
 			try {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
-				console.log(context.user)
+				console.log(context.user);
 				const { data } = await App.put(`/posts/${post_id}`, { ...postPayload });
+
+				redis.del("Posts")
 
 				return { message: "Edit Post Succesful!" };
 			} catch (error) {
@@ -120,11 +136,28 @@ const resolvers = {
 				if (!context.user || !context.token) throw { error: "Invalid access" };
 				const { data } = await App.delete(`/posts/${post_id}`);
 
+				redis.del("Posts")
+
 				return { message: "Delete Post Succesful!" };
 			} catch (error) {
 				console.log(error);
 			}
 		},
+
+		createAppointment: async ()=>{
+			try {
+				
+			} catch (error) {
+				
+			}
+		},
+		deleteAppointment: async ()=>{
+			try {
+				
+			} catch (error) {
+				
+			}
+		}
 	},
 };
 

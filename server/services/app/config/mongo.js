@@ -8,11 +8,13 @@ let options;
 
 if (process.env.NODE_ENV !== "test") {
 	options = {
+		dbName: `Wasteless`,
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
 		serverApi: ServerApiVersion.v1,
 	};
 } else {
+	console.log("masuk sini")
 	options = {};
 }
 
@@ -42,6 +44,8 @@ const mongoConnect = async (env) => {
 		db = database;
 		postCollection = posts;
 		categoryCollection = categories;
+
+		return database
 	} catch (error) {
 		console.log(error);
 	}

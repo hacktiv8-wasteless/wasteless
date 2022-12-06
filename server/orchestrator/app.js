@@ -21,9 +21,11 @@ const server = new ApolloServer({
 startStandaloneServer(server, {
 	listen: { port: process.env.PORT || 4000 },
 	context: async ({ req }) => {
+		if(!req.headers.authorization) return {}
 		const token = req.headers.authorization || "";
+		if(!token) return {}
 		const user = verifyToken(token)
-		return { token, user };
+		return { token, user : user.id };
 	},
 }).then(({ url }) => {
 	console.log(`🚀  Server ready at: ${url}`);
