@@ -31,7 +31,7 @@ const resolver = {
 	Query: {
 		getOutgoingTransaction: async (_, { payerId }, context) => {
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await Users.get(`/transaction/outgoing/${payerId}`);
 
 				return data;
@@ -41,7 +41,7 @@ const resolver = {
 		},
 		getIncomingTransaction: async (_, { payeeId }, context) => {
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await Users.get(`/transaction/incoming/${payeeId}`);
 
 				return data;
@@ -54,7 +54,7 @@ const resolver = {
 		createTransaction: async (_, { transactionPayload }, context) => {
 			// payload : payeeId, total price
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await Users.post(
 					`/transaction/`,
 					{ ...transactionPayload },

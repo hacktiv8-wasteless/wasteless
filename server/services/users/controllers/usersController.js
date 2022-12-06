@@ -1,5 +1,5 @@
 const { comparePassword } = require("../helpers/bcrypt");
-const { signToken } = require("../helpers/jwt");
+const { signToken, verifyToken } = require("../helpers/jwt");
 const { User, sequelize } = require("../models");
 const XenditInvoice = require(`../config/xendit`);
 class Controller {
@@ -55,7 +55,13 @@ class Controller {
 				throw { message: "Invalid Email or Password" };
 			}
 
+			console.log(foundUser.id);
+
 			const access_token = signToken({ id: foundUser.id });
+
+			const payload = verifyToken(access_token);
+
+			console.log(payload)
 
 			return res.status(200).json({ access_token, id: foundUser.id });
 		} catch (error) {
@@ -110,7 +116,7 @@ class Controller {
 						},
 					}
 				);
-				
+
 				res.status(201).json({ message: "Topup Success!" });
 			}
 		} catch (error) {

@@ -6,11 +6,7 @@ const categorySchema = require("./schemas/categoriesSchema");
 const postSchema = require("./schemas/postsSchemas");
 
 const server = new ApolloServer({
-	typeDefs: [
-		userSchema.typeDefs,
-		categorySchema.typeDefs,
-		postSchema.typeDefs,
-	],
+	typeDefs: [userSchema.typeDefs, categorySchema.typeDefs, postSchema.typeDefs],
 	resolvers: [
 		userSchema.resolvers,
 		categorySchema.resolvers,
@@ -21,11 +17,10 @@ const server = new ApolloServer({
 startStandaloneServer(server, {
 	listen: { port: process.env.PORT || 4000 },
 	context: async ({ req }) => {
-		if(!req.headers.authorization) return {}
+		// console.log(req.headers)
+		if (!req.headers.authorization) return {};
 		const token = req.headers.authorization || "";
-		if(!token) return {}
-		const user = verifyToken(token)
-		return { token, user : user.id };
+		return {token};
 	},
 }).then(({ url }) => {
 	console.log(`🚀  Server ready at: ${url}`);

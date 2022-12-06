@@ -1,3 +1,4 @@
+const { verifyToken } = require("../helper/jwt");
 const Users = require("../services/users");
 
 const typeDefs = `#graphql
@@ -74,8 +75,8 @@ const resolvers = {
 		},
 		getProfile: async (_, __, context) => {
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
-				const { id: userId } = context.user;
+				if (!context.token) throw { error: "Invalid access" };
+				const { id: userId } = verifyToken(context.token);
 				const { data } = await Users.get(`/users/${userId}`);
 
 				return data;
@@ -126,7 +127,7 @@ const resolvers = {
 		},
 		createInvoice: async (_, { balance }, context) => {
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await Users.post(
 					"/users/topup",
 					{ balance },
@@ -145,7 +146,7 @@ const resolvers = {
 		payInvoice: async (_, { invocePayload }, context) => {
 			// invoice payload semua
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await Users.post(
 					"/users/sucess",
 					{ ...invocePayload },
