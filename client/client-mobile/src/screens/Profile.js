@@ -83,26 +83,32 @@ const Profile = () => {
       <View style={styles.menuWrapper}>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Icon name="heart-outline" color="#FF6347" size={25} />
+            <Icon name="heart-outline" color="green" size={25} />
             <Text style={styles.menuItemText}>Your Favorites</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
+        <TouchableRipple onPress={() => navigation.navigate("Payment")}>
           <View style={styles.menuItem}>
-            <AntDesign name="wallet" color="#FF6347" size={25} />
-            <Text style={styles.menuItemText}>Wallet</Text>
+            <AntDesign name="wallet" color="green" size={25} />
+            <Text style={styles.menuItemText}>TopUp</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
+        <TouchableRipple onPress={() => navigation.navigate("HistoryLogs")}>
           <View style={styles.menuItem}>
-            <Icon name="history" color="#FF6347" size={25} />
+            <Icon name="history" color="green" size={25} />
             <Text style={styles.menuItemText}>History Logs</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <AntDesign name="logout" color="#FF6347" size={25} />
+            <AntDesign name="logout" color="green" size={25} />
             <Text style={styles.menuItemText}>logout</Text>
+          </View>
+        </TouchableRipple>
+        <TouchableRipple onPress={() => navigation.navigate("ScanQR")}>
+          <View style={styles.menuItem}>
+            <AntDesign name="scan1" color="green" size={25} />
+            <Text style={styles.menuItemText}>Scan Here</Text>
           </View>
         </TouchableRipple>
       </View>
