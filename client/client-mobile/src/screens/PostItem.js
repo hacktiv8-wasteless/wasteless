@@ -1,9 +1,33 @@
-import { StyleSheet, View, Image, TouchableHighlight, StatusBar, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import {
+  StyleSheet,
+  View,
+  Image,
+  TouchableHighlight,
+  StatusBar,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { VStack, Text, FormControl, Input, Button, TextArea, Slider, Box, Center, WarningOutlineIcon, Pressable, ScrollView } from "native-base";
+import {
+  VStack,
+  Text,
+  FormControl,
+  Input,
+  Button,
+  TextArea,
+  Slider,
+  Box,
+  Center,
+  WarningOutlineIcon,
+  Pressable,
+  ScrollView,
+} from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import MapView, { Marker } from "react-native-maps";
+import Geocoder from "react-native-geocoding";
+import * as Location from "expo-location";
 
 export default function PostItem({ navigation, route }) {
   const { category } = route.params;
@@ -105,13 +129,14 @@ export default function PostItem({ navigation, route }) {
   const [quantity, setQuantity] = useState(0.5);
   const [lat, setLat] = useState("");
   const [long, setLong] = useState("");
+  const [userLatLon, setUserLatLon] = useState(null);
+  const [userLoc, setUserLoc] = useState("");
 
   const handleImageChange = (val) => setMainImage(val);
   const handleTitleChange = (val) => setTitle(val);
   const handleDescriptionChange = (val) => setDescription(val);
   const handleQuantityChange = (val) => setQuantity(val);
-  const handleLatChange = (val) => setLat(val);
-  const handleLongChange = (val) => setLong(val);
+  const handleLoc = (val) => setUserLoc(val);
 
   const onSubmit = () => {
     //! ganti nama payload sesuai dg graphql
@@ -135,6 +160,49 @@ export default function PostItem({ navigation, route }) {
     setLong("");
   };
 
+  useEffect(() => {
+    (async () => {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          return;
+        } else {
+          let location = await Location.getCurrentPositionAsync();
+
+          setLat(location.coords.latitude);
+          setLong(location.coords.longitude);
+          setUserLatLon({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  const handleMarker = (e) => {
+    setLat(e.nativeEvent.coordinate.latitude);
+    setLong(e.nativeEvent.coordinate.langitude);
+    setUserLatLon(e.nativeEvent.coordinate);
+  };
+
+  const handleInput = async () => {
+    try {
+      Geocoder.init("AIzaSyCVVWasvqI_muG_92Mdo63Ik14SZ6bLlCo", {
+        language: "id",
+      });
+      const loc = await Geocoder.from(userLoc);
+      const coords = loc.results[0].geometry.location;
+      setLat(coords.lat);
+      setLong(coords.lng);
+      setUserLatLon({ latitude: coords.lat, longitude: coords.lng });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       {/* Status Bar */}
@@ -147,7 +215,13 @@ export default function PostItem({ navigation, route }) {
         <ScrollView>
           <View style={styles.imageContainer}>
             {/* Image handler */}
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <TouchableOpacity
                 onPress={openImageLibrary}
                 style={{
@@ -162,7 +236,10 @@ export default function PostItem({ navigation, route }) {
                 }}
               >
                 {profileImage ? (
-                  <Image source={{ uri: profileImage }} style={{ width: "100%", height: "100%" }} />
+                  <Image
+                    source={{ uri: profileImage }}
+                    style={{ width: "100%", height: "100%" }}
+                  />
                 ) : (
                   <Text
                     style={{
@@ -177,7 +254,17 @@ export default function PostItem({ navigation, route }) {
                 )}
               </TouchableOpacity>
               {profileImage ? (
-                <Text onPress={uploadProfileImage} style={[styles.skip, { backgroundColor: "green", color: "white", borderRadius: 8 }]}>
+                <Text
+                  onPress={uploadProfileImage}
+                  style={[
+                    styles.skip,
+                    {
+                      backgroundColor: "green",
+                      color: "white",
+                      borderRadius: 8,
+                    },
+                  ]}
+                >
                   Upload
                 </Text>
               ) : null}
@@ -190,12 +277,26 @@ export default function PostItem({ navigation, route }) {
           <VStack style={styles.formContainer}>
             <FormControl isRequired marginBottom={3}>
               <Text style={styles.label}>Title</Text>
-              <Input placeholder="Title" w="100%" variant="rounded" backgroundColor="white" value={title} onChangeText={handleTitleChange} />
+              <Input
+                placeholder="Title"
+                w="100%"
+                variant="rounded"
+                backgroundColor="white"
+                value={title}
+                onChangeText={handleTitleChange}
+              />
             </FormControl>
 
             <FormControl isRequired marginBottom={3}>
               <Text style={styles.label}>Description</Text>
-              <TextArea h={20} placeholder="e.g. 2kg plastic bottles" backgroundColor="white" borderRadius={15} value={description} onChangeText={handleDescriptionChange} />
+              <TextArea
+                h={20}
+                placeholder="e.g. 2kg plastic bottles"
+                backgroundColor="white"
+                borderRadius={15}
+                value={description}
+                onChangeText={handleDescriptionChange}
+              />
             </FormControl>
 
             <FormControl isRequired>
@@ -203,7 +304,14 @@ export default function PostItem({ navigation, route }) {
                 <Text style={styles.label}>Quantity: </Text>
                 <Text>{quantity}kg</Text>
               </View>
-              <Slider onChange={handleQuantityChange} defaultValue={1} minValue={0.5} maxValue={5} step={0.5} colorScheme="green">
+              <Slider
+                onChange={handleQuantityChange}
+                defaultValue={1}
+                minValue={0.5}
+                maxValue={5}
+                step={0.5}
+                colorScheme="green"
+              >
                 <Slider.Track>
                   <Slider.FilledTrack />
                 </Slider.Track>
@@ -213,29 +321,63 @@ export default function PostItem({ navigation, route }) {
           </VStack>
 
           <VStack style={styles.mapsContainer}>
-            <Pressable>
-              {({ isHovered, isFocused, isPressed }) => {
-                return (
-                  <Box
-                    bg={isPressed ? "coolGray.200" : isHovered ? "coolGray.200" : "white"}
-                    // p="5"
-                    height="full"
-                    borderWidth="1"
-                    borderColor="coolGray.300"
-                    maxHeight={70}
-                  >
-                    <View style={{ padding: 20, flexDirection: "row", justifyContent: "space-between" }}>
-                      <Text style={styles.label}>Your location (approx)</Text>
-                      <Text style={styles.label}>Next</Text>
-                    </View>
-                  </Box>
-                );
-              }}
-            </Pressable>
+            <Box
+              height="full"
+              borderWidth="1"
+              borderColor="coolGray.300"
+              maxHeight={70}
+            >
+              <View
+                style={{
+                  padding: 20,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                {/* <Text>Your location (approx)</Text> */}
+                <Input
+                  placeholder="Location"
+                  w="100%"
+                  backgroundColor="white"
+                  value={userLoc}
+                  onChangeText={handleLoc}
+                  onEndEditing={handleInput}
+                />
+                {/* <Text style={styles.label}>Next</Text> */}
+              </View>
+            </Box>
+            <View style={{ height: "100%" }}>
+              <MapView
+                style={{ ...StyleSheet.absoluteFillObject }}
+                showsUserLocation={true}
+                // followUserLocation={true}
+                loadingEnabled={true}
+                region={{
+                  ...userLatLon,
+                  latitudeDelta: 0.03,
+                  longitudeDelta: 0.03,
+                }}
+              >
+                {userLatLon && (
+                  <Marker
+                    draggable
+                    coordinate={userLatLon}
+                    style={{ ...StyleSheet.absoluteFillObject }}
+                    onDragEnd={handleMarker}
+                  />
+                )}
+              </MapView>
+            </View>
           </VStack>
 
           <VStack style={styles.footer}>
-            <Button onPress={onSubmit} bgColor={"#339966"} width={"full"} height={75} borderRadius={0}>
+            <Button
+              onPress={onSubmit}
+              bgColor={"#339966"}
+              width={"full"}
+              height={75}
+              borderRadius={0}
+            >
               Submit
             </Button>
             {/* Kalo udah sambung server bisa tambah ini buat loading mutation */}
