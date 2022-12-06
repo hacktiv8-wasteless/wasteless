@@ -3,13 +3,19 @@ import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Box, FormControl, Icon, Input, Pressable, Stack, WarningOutlineIcon, Button, Center, Heading, VStack, Link, HStack, Text, TextArea, AspectRatio } from "native-base";
 import { COLORS } from "../constants";
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("screen");
 
-export default function ListingCard() {
+export default function ListingCard({ post }) {
+  const navigation = useNavigation();
+
   const handleOnPress = () => {
     console.log("berhasil");
+    navigation.navigate("PostDetail", { id: post["_id"] });
   };
+
+  console.log(post);
 
   return (
     <View style={{ flexDirection: "column" }}>
@@ -28,7 +34,7 @@ export default function ListingCard() {
           Title
         </Box>
         <Box style={styles.imageContainer}>
-          <Image source={{ uri: "http://placekitten.com/600/400" }} style={styles.image} resizeMode="cover" />
+          <Image source={{ uri: post?.mainImage }} style={styles.image} resizeMode="cover" />
           {/* <Center
             bg={COLORS.accent}
             _text={{

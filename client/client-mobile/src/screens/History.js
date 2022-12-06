@@ -2,25 +2,45 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { FlatList } from "native-base";
 import ListingCard from "../components/ListingCard";
+import { useQuery } from "@apollo/client";
+import { GET_POSTS } from "../query/Posts";
+import { useEffect } from "react";
+import { getUserId } from "../helpers/util";
 
 export default function History() {
-  const dummy = [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }, { id: 6 }];
+  const [userId, setUserId] = useState(null);
 
-  const [data, setData] = useState(dummy);
+  const userIdGetter = async () => {
+    const data = await getUserId();
+    setUserId(Number(data));
+  };
+
+  const { loading: postsLoading, error: postsError, data: postsData } = useQuery(GET_POSTS);
+
+  if (postsLoading) return <Loader />;
+  if (postsError) {
+    console.log("postsError -------------------------");
+    console.log(postsError);
+    console.log("postsError -------------------------");
+  }
+
+  const myListingPosts = postsData?.getAllPosts?.filter((myListing) => {
+    return myListing?.status === "completed" && myListing?.giver_id == userId;
+  });
+
+  useEffect(() => {
+    userIdGetter();
+  }, []);
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={data}
-        renderItem={({ item }) => {
-          return (
-            <View style={styles.viewContainer}>
-              <ListingCard />
-            </View>
-          );
-        }}
-        keyExtractor={(item) => item.id}
-      />
+      {myListingPosts?.map((post) => {
+        return (
+          <View style={styles.viewContainer}>
+            <ListingCard post={post} />
+          </View>
+        );
+      })}
     </View>
   );
 }

@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, TextInput, ScrollView, Image, StatusBar, TouchableOpacity } from "react-native";
-import React, { useEffect } from "react";
+import { StyleSheet, Text, View, TextInput, ScrollView, Image, StatusBar, TouchableOpacity, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { FlatList, Button, Center } from "native-base";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -79,6 +79,22 @@ export default function NewHome({ navigation }) {
   //   // console.log(postsData.getAllPosts);
   // }, []);
 
+  const [filtered, setFiltered] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const handleSearchChange = (val) => setSearch(val);
+
+  const getFilteredPost = () => {
+    if (search) {
+      return filtered;
+    }
+    return postsData?.getAllPosts;
+  };
+
+  const handleOnSubmit = () => {
+    setFiltered(postsData?.getAllPosts.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
+  };
+
   return (
     <View style={{ backgroundColor: "white" }}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
@@ -134,15 +150,19 @@ export default function NewHome({ navigation }) {
                 marginVertical: 10,
               }}
             >
-              <Ionicons name="search" size={20} color="gray" />
               <TextInput
                 style={{
                   paddingHorizontal: 10,
                   flex: 1,
                 }}
+                value={search}
+                onChangeText={handleSearchChange}
+                on
                 placeholder="Search Reuseable Materials"
               />
-              <Ionicons name="filter" size={20} color="gray" />
+              <Pressable onPress={handleOnSubmit}>
+                <Ionicons name="search" size={25} color="gray" style={{ marginRight: 10 }} />
+              </Pressable>
             </View>
 
             {/* Category Card */}
@@ -156,7 +176,6 @@ export default function NewHome({ navigation }) {
               </ScrollView>
             </View>
 
-            {/* Banner */}
             {/* <CardBanner /> */}
             <Carousel />
 
@@ -164,7 +183,7 @@ export default function NewHome({ navigation }) {
             <View style={{ flex: 1, marginVertical: 10 }}>
               <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>Near Me</Text>
               <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center" }}>
-                {postsData?.getAllPosts?.map((post) => {
+                {getFilteredPost().map((post) => {
                   return <ItemCardSmall post={post} key={post["_id"]} />;
                 })}
               </View>

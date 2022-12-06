@@ -54,38 +54,6 @@ export default function FormUser({ page, navigation }) {
       await login({
         variables: { userPayload },
       });
-
-      // console.log("loginData -----------------------");
-      // console.log(loginData);
-      // console.log("loginData -----------------------");
-
-      // console.log(loginData?.loginUser?.access_token);
-
-      // if (!loginData.loginUser) {
-      //   throw new Error("Error login");
-      // }
-      // if (loginData?.loginUser?.access_token) {
-      //   throw new Error("Error login");
-      // }
-
-      // const access_token = loginData?.loginUser?.access_token;
-      // const userId = loginData?.loginUser?.id;
-      // // console.log(access_token);
-
-      // await signIn(access_token, userId);
-
-      // const res = await getToken("access_token");
-      // console.log(res, "----------------------");
-
-      // //! pindah ke helpers ntar
-      // await navigation.replace("Tab");
-      // //! navigate ke halaman home
-
-      // // console.log(loginData?.loginUser.access_token);
-      // // console.log(loginData?.loginUser.id);
-      // // Reset form
-      // // setEmail("");
-      // // setPassword("");
     } catch (error) {
       console.log(error);
     }
