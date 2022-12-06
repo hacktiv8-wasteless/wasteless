@@ -16,7 +16,9 @@ class Controller {
 	static async getUserById(req, res, next) {
 		const { id } = req.params;
 		try {
-			const user = await User.findByPk(id);
+			const user = await User.findByPk(id, {
+				attributes: { excludes: ["password"] },
+			});
 
 			return res.status(200).json(user);
 		} catch (error) {
@@ -89,6 +91,33 @@ class Controller {
 		}
 	}
 
+	static async successTopUp(req, res, next) {
+		try {
+			const { external_id, amount, status } = req.body;
+			if (status == "PAID") {
+				const findWallet = await User.findOne({
+					where: {
+						UserId: external_id.split("-")[0],
+					},
+				});
+				await User.update(
+					{
+						balance: sequelize.literal(`balance + ${amount}`),
+					},
+					{
+						where: {
+							UserId: external_id.split("-")[0],
+						},
+					}
+				);
+				
+				res.status(201).json({ message: "Topup Success!" });
+			}
+		} catch (error) {
+			next(error);
+		}
+	}
+
 	// static async successTopUp(req, res, next) {
 	// 	try {
 	// 		const { external_id, amount, status } = req.body;
@@ -119,7 +148,6 @@ class Controller {
 	// } catch (error) {
 	//   next(error);
 	// }
-	//   }
 }
 
 module.exports = Controller;

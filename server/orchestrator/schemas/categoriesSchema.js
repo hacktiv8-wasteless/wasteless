@@ -27,11 +27,11 @@ const resolvers = {
 		getAllCategories: async () => {
 			try {
 				// redis.del("Categories")
-				// const cacheData = await redis.get("Categories");
+				const cacheData = await redis.get("Categories");
 
-				// if (cacheData) {
-				// 	return JSON.parse(cacheData);
-				// }
+				if (cacheData) {
+					return JSON.parse(cacheData);
+				}
 
 				const { data } = await App.get("/categories");
 				await redis.set("Categories", JSON.stringify(data));
