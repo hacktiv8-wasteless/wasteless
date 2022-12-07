@@ -13,6 +13,7 @@ import {
   Spacer,
 } from "native-base";
 import { db } from "../configs/firebase";
+import { getToken } from "../helpers/util";
 
 export default function Notifications({ navigation }) {
   const data = [
@@ -60,13 +61,16 @@ export default function Notifications({ navigation }) {
   const [notifications, setNotifications] = useState([]);
 
   async function observer() {
-    const user1 = "giver";
-    const user2 = "taker";
+    const user1 = await getToken("username");
 
     const colls = db.collection("chats");
     const docs = await colls
-      .where("user1", "in", [user1, user2])
+      .where("user1", "==", user1)
       .orderBy("timeStamp", "desc");
+
+    if (docs.empty) {
+      docs = colls.where("user2", "==", user1).orderBy("timeStamp", "desc");
+    }
 
     const today = new Date();
 

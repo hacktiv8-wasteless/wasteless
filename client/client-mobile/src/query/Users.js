@@ -17,6 +17,7 @@ export const POST_LOGIN = gql`
       error
       id
       message
+      username
     }
   }
 `;
@@ -47,4 +48,3 @@ export const GET_PROFILE = gql`
     }
   }
 `;
-

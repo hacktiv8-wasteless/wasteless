@@ -22,18 +22,19 @@ import approximateLoc from "../../assets/approximateLoc.png";
 import { Feather } from "@expo/vector-icons";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
-import { useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { GET_POST_DETAIL } from "../query/Posts";
 import { GET_CATEGORY_ID } from "../query/Categories";
 import { capitalize } from "../helpers/util";
 import Loader from "../components/Loader";
-import { GET_PROFILE } from "../query/Users";
+import { GET_PROFILE, GET_USER_DETAIL } from "../query/Users";
 import { COLORS } from "../constants";
 import {
   CHOOSE_APPOINTMENT,
   GET_APPOINTMENT,
   POST_APPOINTMENT,
 } from "../query/Appointment";
+import { db } from "../configs/firebase";
 
 const MAP_PLACEHOLDER = Image.resolveAssetSource(mapPlaceHolder).uri;
 const MARKER_APPROXIMATE = Image.resolveAssetSource(approximateLoc).uri;
@@ -115,6 +116,10 @@ export default function PostDetail({ navigation, route }) {
       error: chooseAppointmentError,
     },
   ] = useMutation(CHOOSE_APPOINTMENT);
+  const [
+    getGiver,
+    { data: giverData, loading: giverLoading, error: giverError },
+  ] = useLazyQuery(GET_USER_DETAIL);
 
   const userId = userData?.getProfile?.id;
 
@@ -125,11 +130,29 @@ export default function PostDetail({ navigation, route }) {
   console.log(categoryDetailData?.getCategoryById?.price);
 
   const handleAppointment = async () => {
-    await appointment({
-      variables: { postId },
-    });
-    console.log("Jalaaaan appointment");
-    console.log(appointmentData);
+    try {
+      await appointment({
+        variables: { postId },
+      });
+      const giver = await getGiver({
+        variables: {
+          userId: +giver_id,
+        },
+      });
+      console.log(giverData);
+      const user1 = giverData.getUserById.username;
+      console.log(user1, "<<<<<<<<<<<<<<,");
+      const user2 = userId;
+      let roomId = user1 < user2 ? user1 + user2 : user2 + user1;
+      const update = await db
+        .collection("chats")
+        .doc(roomId)
+        .set({ user1: user1, user2: user2 });
+
+      navigation.navigate("Chat", { giver: user1 });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleChooseAppointment = async (takerId) => {
@@ -154,6 +177,8 @@ export default function PostDetail({ navigation, route }) {
   if (fetchAppointmentError) {
     console.log(fetchAppointmentError);
   }
+  console.log(giver_id, "<<<giver");
+  console.log(postDetailData, "<<<postdetail");
 
   return (
     <View>

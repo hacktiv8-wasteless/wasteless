@@ -9,16 +9,20 @@ import {
   renderInputToolbar,
   renderSend,
 } from "../components/InputToolbar";
+import { getToken } from "../helpers/util";
 
-export default function Chat({ navigation }) {
-  const user1 = "giver";
-  const user2 = "taker";
-
-  let roomId = user1 < user2 ? user1 + user2 : user2 + user1;
-
+export default function Chat({ navigation, route }) {
   const [messages, setMessages] = useState([]);
+  let user1;
+  let user2;
+
+  let roomId;
 
   async function observer() {
+    user1 = await getToken("username");
+    user2 = route.params.giver;
+
+    roomId = user1 < user2 ? user1 + user2 : user2 + user1;
     const docs = db
       .collection("chats")
       .doc(roomId)
