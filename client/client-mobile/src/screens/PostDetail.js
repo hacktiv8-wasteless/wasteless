@@ -11,6 +11,7 @@ import { useQuery } from "@apollo/client";
 import { GET_POST_DETAIL } from "../query/Posts";
 import { GET_CATEGORY_ID } from "../query/Categories";
 import { capitalize } from "../helpers/util";
+import Loader from "../components/Loader";
 
 const MAP_PLACEHOLDER = Image.resolveAssetSource(mapPlaceHolder).uri;
 const MARKER_APPROXIMATE = Image.resolveAssetSource(approximateLoc).uri;
@@ -55,7 +56,7 @@ export default function PostDetail({ navigation, route }) {
     }
   }, [postDetailData]);
 
-  if (postDetailLoading || categoryDetailLoading) return <Text>Loadinggg.....</Text>;
+  if (postDetailLoading && categoryDetailLoading) return <Loader />;
   // if (postDetailError) {
   //   console.log("postDetailError ---------------------");
   //   console.log(postDetailError);
@@ -79,7 +80,7 @@ export default function PostDetail({ navigation, route }) {
           </View>
           <View style={styles.postDetail}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <Text style={styles.title}>{capitalize(postDetailData?.getPostById?.title)}</Text>
+              <Text style={styles.title}>{postDetailData ? capitalize(postDetailData?.getPostById?.title) : ""}</Text>
               <Button onPress={() => console.log("jalan delete")} variant="unstyled">
                 <Feather name="trash-2" size={24} color="red" />
               </Button>
@@ -93,9 +94,9 @@ export default function PostDetail({ navigation, route }) {
               <Text>Lat: {postDetailData?.getPostById?.lat}</Text>
               <Text>Long: {postDetailData?.getPostById?.long}</Text>
               <Text>Giver_id: {postDetailData?.getPostById?.giver_id}</Text>
-              <Text>Sta: {postDetailData?.getPostById?.giver_id}</Text>
+              <Text>Status: {postDetailData?.getPostById?.status}</Text>
             </View>
-            <Text>{capitalize(postDetailData?.getPostById?.description)}</Text>
+            <Text>{postDetailData ? capitalize(postDetailData?.getPostById?.description) : ""}</Text>
             {/* <Text style={styles.subTitle}>Photos</Text> */}
             <Text style={styles.subTitle}>Location</Text>
             <View style={styles.mapContainer}>

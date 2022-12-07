@@ -31,7 +31,7 @@ export default function ListingCard({ post }) {
           px="3"
           py="2"
         >
-          Title
+          {post.title}
         </Box>
         <Box style={styles.imageContainer}>
           <Image source={{ uri: post?.mainImage }} style={styles.image} resizeMode="cover" />
@@ -75,12 +75,12 @@ const styles = StyleSheet.create({
     // height: "100%",
     // flex: 1,
 
-    shadowColor: "#000",
+    shadowColor: COLORS.primaryShade[500],
     shadowOffset: {
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.1,
     shadowRadius: 3.84,
 
     elevation: 5,

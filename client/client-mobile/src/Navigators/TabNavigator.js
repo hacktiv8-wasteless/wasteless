@@ -19,7 +19,7 @@ const TabNavigator = ({ navigation }) => {
 
   const { data: categoryData, loading: categoryLoading, error: categoryError } = useQuery(GET_CATEGORIES);
 
-  if (categoryLoading) return <Loader />;
+  // if (categoryLoading) return <Loader />;
   if (categoryError) {
     console.log("categoryError di tab -----------------------");
     console.log(categoryError);
@@ -39,7 +39,7 @@ const TabNavigator = ({ navigation }) => {
               if (route.name === "HomeStack") {
                 iconName = focused ? "home" : "home";
                 color = focused ? COLORS.primary : COLORS.primaryShade[500];
-              } else if (route.name === "MyListing") {
+              } else if (route.name === "MyListingNavigator") {
                 iconName = focused ? "package" : "package";
                 color = focused ? COLORS.primary : COLORS.primaryShade[500];
               } else if (route.name === "Notifications") {
@@ -57,19 +57,20 @@ const TabNavigator = ({ navigation }) => {
               // <AntDesign name={iconName} size={size} color={color} />;
             },
             tabBarShowLabel: false,
-            tabBarActiveTintColor: COLORS.primary,
-            tabBarInactiveTintColor: "gray",
             headerStyle: {
               backgroundColor: COLORS.white,
             },
             headerTitleStyle: {
-              color: COLORS.primaryShade[500],
+              color: COLORS.dark,
+              fontSize: 20,
+              fontWeight: "600",
             },
             headerTitleAlign: "center",
             tabBarStyle: {
               height: 75,
             },
             tabBarHideOnKeyboard: true,
+            headerShadowVisible: false,
           };
         }}
       >
@@ -102,8 +103,8 @@ const TabNavigator = ({ navigation }) => {
             title: "Post",
           }}
         />
-        <Tab.Screen name="Notifications" component={Notifications} />
-        <Tab.Screen name="MyListing" component={TopTabNavigator} options={{ title: "My Listing" }} />
+        <Tab.Screen name="Notifications" component={Notifications} options={{ title: "Messages" }} />
+        <Tab.Screen name="MyListingNavigator" component={TopTabNavigator} options={{ title: "My Listings" }} />
       </Tab.Navigator>
 
       {/* Slider */}
@@ -121,20 +122,25 @@ const TabNavigator = ({ navigation }) => {
                 Pick a Category
               </Text>
             </Box>
-            {categoryData?.getAllCategories?.map((category) => (
-              <Actionsheet.Item
-                onPress={() => {
-                  navigation.navigate("Post", {
-                    //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                    category: category.name,
-                    categoryId: category._id,
-                  });
-                  onClose();
-                }}
-              >
-                {category.name}
-              </Actionsheet.Item>
-            ))}
+            {categoryData?.getAllCategories?.map((category) => {
+              // console.log(category);
+              return (
+                <Actionsheet.Item
+                  key={category._id}
+                  onPress={() => {
+                    navigation.navigate("Post", {
+                      //! NANTI DIGANTI DARI ITEM FLATLIST YA
+                      category: category.name,
+                      categoryId: category._id,
+                      price: category.price,
+                    });
+                    onClose();
+                  }}
+                >
+                  {category.name}
+                </Actionsheet.Item>
+              );
+            })}
           </Actionsheet.Content>
         </Actionsheet>
       </Center>
@@ -153,7 +159,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    backgroundColor: COLORS.primaryShade[500],
+    backgroundColor: COLORS.primary,
     borderRadius: 15,
     height: 50,
     width: 50,

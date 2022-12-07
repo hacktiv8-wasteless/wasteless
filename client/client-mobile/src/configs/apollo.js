@@ -9,7 +9,7 @@ const httpLink = createHttpLink({
 const authLink = setContext(async (_, { headers }) => {
   const token = await getToken("access_token");
 
-  console.log("DARI CONFIG APOLLLOOOO", token);
+  // console.log("DARI CONFIG APOLLLOOOO", token);
   return {
     headers: {
       ...headers,
