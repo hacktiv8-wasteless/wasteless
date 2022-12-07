@@ -79,9 +79,10 @@ export default function NewHome({ navigation }) {
 
   console.log(postsLoading);
 
-
   const [userLoc, setUserLoc] = useState("");
   const [userLatLon, setUserLatLon] = useState({});
+
+  // console.log(userLoc);
 
   useEffect(() => {
     (async () => {
@@ -100,20 +101,10 @@ export default function NewHome({ navigation }) {
             lon: location.coords.longitude,
           });
 
-          const loc = await Geocoder.from(
-            location.coords.latitude,
-            location.coords.longitude
-          );
+          const loc = await Geocoder.from(location.coords.latitude, location.coords.longitude);
+          console.log(loc.results[0].address_components);
 
-          setUserLoc(
-            loc.results[0].address_components.find(
-              (el) => el.types[0] === "administrative_area_level_4"
-            ).long_name +
-              ", " +
-              loc.results[0].address_components.find(
-                (el) => el.types[0] === "administrative_area_level_1"
-              ).long_name
-          );
+          setUserLoc(loc.results[0].address_components.find((el) => el.types[0] === "administrative_area_level_4").long_name + ", " + loc.results[0].address_components.find((el) => el.types[0] === "administrative_area_level_1").long_name);
         }
       } catch (error) {
         console.log(error);
@@ -153,7 +144,8 @@ export default function NewHome({ navigation }) {
                     <Text style={{ fontSize: 20, fontWeight: "600", color: COLORS.lightGrey }}>Welcome {capitalize(userData?.getProfile?.username)}</Text>
                     <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 5, paddingRight: 10 }}>
                       <Ionicons name="location" size={24} color={COLORS.lightGrey} />
-                      <Text style={{ color: COLORS.lightGrey, marginLeft: 10, marginRight: 10 }}>Pondok Indah, Jakarta Selatan</Text>
+                      {/* <Text style={{ color: COLORS.lightGrey, marginLeft: 10, marginRight: 10 }}>Pondok Indah, Jakarta Selatan</Text> */}
+                      <Text style={{ color: COLORS.lightGrey, marginLeft: 10, marginRight: 10 }}>{userLoc}</Text>
                     </View>
                   </>
                 )}
@@ -254,7 +246,8 @@ export default function NewHome({ navigation }) {
 }
 
 // Rizqi punya, pindah ke card small
-{/* <Text>
+{
+  /* <Text>
                             {Math.round(
                               latlngDist.distanceDiffInKm(userLatLon, {
                                 lat: -6.001,
@@ -262,7 +255,8 @@ export default function NewHome({ navigation }) {
                               }) * 100
                             ) / 100}{" "}
                             Km
-                          </Text> */}
+                          </Text> */
+}
 
 const styles = StyleSheet.create({
   buttonContainer: {

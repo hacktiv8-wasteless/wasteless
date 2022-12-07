@@ -7,6 +7,7 @@ import { Skeleton } from "native-base";
 import latlngDist from "latlng-distance";
 
 export default function ItemCardSmall({ post, postsLoading, userLatLon }) {
+  console.log(post);
   const navigation = useNavigation();
   // console.log(post["_id"]);
   return (
@@ -24,8 +25,8 @@ export default function ItemCardSmall({ post, postsLoading, userLatLon }) {
             <Text>
               {Math.round(
                 latlngDist.distanceDiffInKm(userLatLon, {
-                  lat: -6.001,
-                  lon: 107.001,
+                  lat: +post.lat,
+                  lon: +post.long,
                 }) * 100
               ) / 100}{" "}
               Km
