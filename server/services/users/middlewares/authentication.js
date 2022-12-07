@@ -6,7 +6,7 @@ const authentication = async (req, res, next) => {
 		console.log(req.headers);
 		const { access_token } = req.headers;
 		console.log(access_token);
-		console.log(id);
+		// console.log(id);
 
 		// console.log(access_token)
 		const payload = verifyToken(access_token);
