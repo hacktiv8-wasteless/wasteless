@@ -1,7 +1,22 @@
-import { Image, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, Divider, HStack, Icon, ScrollView, VStack, Text, Center } from "native-base";
+import {
+  Button,
+  Divider,
+  HStack,
+  Icon,
+  ScrollView,
+  VStack,
+  Text,
+  Center,
+} from "native-base";
 import mapPlaceHolder from "../../assets/placeHolder/mapPlaceHolder.png";
 import approximateLoc from "../../assets/approximateLoc.png";
 import { Feather } from "@expo/vector-icons";
@@ -14,7 +29,11 @@ import { capitalize } from "../helpers/util";
 import Loader from "../components/Loader";
 import { GET_PROFILE } from "../query/Users";
 import { COLORS } from "../constants";
-import { CHOOSE_APPOINTMENT, GET_APPOINTMENT, POST_APPOINTMENT } from "../query/Appointment";
+import {
+  CHOOSE_APPOINTMENT,
+  GET_APPOINTMENT,
+  POST_APPOINTMENT,
+} from "../query/Appointment";
 
 const MAP_PLACEHOLDER = Image.resolveAssetSource(mapPlaceHolder).uri;
 const MARKER_APPROXIMATE = Image.resolveAssetSource(approximateLoc).uri;
@@ -59,18 +78,51 @@ export default function PostDetail({ navigation, route }) {
 
   const { id: postId } = route.params;
 
-  const { data: postDetailData, loading: postDetailLoading, error: postDetailError } = useQuery(GET_POST_DETAIL, { variables: { postId } });
-  const { data: categoryDetailData, loading: categoryDetailLoading, error: categoryDetailError, refetch } = useQuery(GET_CATEGORY_ID, { variables: null });
-  const { data: userData, loading: userLoading, error: userError } = useQuery(GET_PROFILE);
-  const [appointment, { data: appointmentData, loading: appoinmentLoading, error: appointmentError }] = useMutation(POST_APPOINTMENT);
-  const { data: fetchAppointmentData, loading: fetchAppointmentLoading, error: fetchAppointmentError } = useQuery(GET_APPOINTMENT, { variables: { postId } });
-  const [chooseAppointment, { data: chooseAppointmentData, loading: chooseAppointmentLoading, error: chooseAppointmentError }] = useMutation(CHOOSE_APPOINTMENT);
+  const {
+    data: postDetailData,
+    loading: postDetailLoading,
+    error: postDetailError,
+  } = useQuery(GET_POST_DETAIL, { variables: { postId } });
+  const {
+    data: categoryDetailData,
+    loading: categoryDetailLoading,
+    error: categoryDetailError,
+    refetch,
+  } = useQuery(GET_CATEGORY_ID, { variables: null });
+  const {
+    data: userData,
+    loading: userLoading,
+    error: userError,
+  } = useQuery(GET_PROFILE);
+  const [
+    appointment,
+    {
+      data: appointmentData,
+      loading: appoinmentLoading,
+      error: appointmentError,
+    },
+  ] = useMutation(POST_APPOINTMENT);
+  const {
+    data: fetchAppointmentData,
+    loading: fetchAppointmentLoading,
+    error: fetchAppointmentError,
+  } = useQuery(GET_APPOINTMENT, { variables: { postId } });
+  const [
+    chooseAppointment,
+    {
+      data: chooseAppointmentData,
+      loading: chooseAppointmentLoading,
+      error: chooseAppointmentError,
+    },
+  ] = useMutation(CHOOSE_APPOINTMENT);
 
   const userId = userData?.getProfile?.id;
 
   let giver_id, taker_id, status, category_id;
   // console.log(fetchAppointmentData?.getAppointment);
   // console.log("userId: ", userId, "giver_id: ", giver_id);
+  console.log(postDetailData?.getPostById?.quantity);
+  console.log(categoryDetailData?.getCategoryById?.price);
 
   const handleAppointment = async () => {
     await appointment({
@@ -91,7 +143,8 @@ export default function PostDetail({ navigation, route }) {
     console.log(chooseAppointmentData);
   };
 
-  if (postDetailLoading || categoryDetailLoading || fetchAppointmentLoading) return <Loader />;
+  if (postDetailLoading || categoryDetailLoading || fetchAppointmentLoading)
+    return <Loader />;
   if (postDetailError) {
     console.log(postDetailError);
   }
@@ -107,11 +160,20 @@ export default function PostDetail({ navigation, route }) {
       <ScrollView>
         <SafeAreaView style={styles.container}>
           <View style={styles.imageContainer2}>
-            <Image source={{ uri: postDetailData?.getPostById?.mainImage }} style={styles.image} />
+            <Image
+              source={{ uri: postDetailData?.getPostById?.mainImage }}
+              style={styles.image}
+            />
           </View>
           <View style={styles.postDetail}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-              <Text style={styles.title}>{postDetailData ? capitalize(postDetailData?.getPostById?.title) : ""}</Text>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={styles.title}>
+                {postDetailData
+                  ? capitalize(postDetailData?.getPostById?.title)
+                  : ""}
+              </Text>
               <View style={{ flexDirection: "row" }}>
                 <View
                   style={{
@@ -132,7 +194,11 @@ export default function PostDetail({ navigation, route }) {
                     elevation: 3,
                   }}
                 >
-                  <Text>{postDetailData ? categoryDetailData?.getCategoryById?.name : ""}</Text>
+                  <Text>
+                    {postDetailData
+                      ? categoryDetailData?.getCategoryById?.name
+                      : ""}
+                  </Text>
                 </View>
               </View>
               {/* <Button onPress={() => console.log("jalan delete")} variant="unstyled">
@@ -142,12 +208,20 @@ export default function PostDetail({ navigation, route }) {
 
             <View>
               {/* <Text>Placeholder biar gampang:</Text> */}
-              <Text>Total harga: {postDetailData?.getPostById?.quantity * categoryDetailData?.getCategoryById?.price}</Text>
+              <Text>
+                Total harga:{" "}
+                {postDetailData?.getPostById?.quantity *
+                  categoryDetailData?.getCategoryById?.price}
+              </Text>
               {/* <Text>Lat: {postDetailData?.getPostById?.lat}</Text>
               <Text>Long: {postDetailData?.getPostById?.long}</Text>
               <Text>Giver_id: {postDetailData?.getPostById?.giver_id}</Text>
               <Text>Status: {postDetailData?.getPostById?.status}</Text> */}
-              <Text>{postDetailData ? capitalize(postDetailData?.getPostById?.description) : ""}</Text>
+              <Text>
+                {postDetailData
+                  ? capitalize(postDetailData?.getPostById?.description)
+                  : ""}
+              </Text>
             </View>
             {/* <Text style={styles.subTitle}>Photos</Text> */}
           </View>
@@ -197,9 +271,19 @@ export default function PostDetail({ navigation, route }) {
                       // console.log(e);
                       return (
                         <View style={{ flexDirection: "row", height: 45 }}>
-                          <Text style={{ flex: 1, textAlign: "center" }}>{e.username}</Text>
-                          <Pressable onPress={() => handleChooseAppointment(e._id)} style={{ flex: 1 }}>
-                            <Feather style={{ textAlign: "center" }} name="user" size={24} color={COLORS.dark} />
+                          <Text style={{ flex: 1, textAlign: "center" }}>
+                            {e.username}
+                          </Text>
+                          <Pressable
+                            onPress={() => handleChooseAppointment(e._id)}
+                            style={{ flex: 1 }}
+                          >
+                            <Feather
+                              style={{ textAlign: "center" }}
+                              name="user"
+                              size={24}
+                              color={COLORS.dark}
+                            />
                           </Pressable>
                         </View>
                       );
@@ -210,7 +294,13 @@ export default function PostDetail({ navigation, route }) {
             </>
           ) : (
             <View style={{ marginBottom: 20, marginHorizontal: 20 }}>
-              <Button isLoading={appoinmentLoading} onPress={handleAppointment} height={75} borderRadius={20} bgColor={COLORS.primary}>
+              <Button
+                isLoading={appoinmentLoading}
+                onPress={handleAppointment}
+                height={75}
+                borderRadius={20}
+                bgColor={COLORS.primary}
+              >
                 <Text style={styles.button}>Set Appointment</Text>
               </Button>
             </View>
@@ -333,7 +423,14 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },
-  tabelHead: { fontSize: 16, fontWeight: "600", flex: 1, textAlign: "center", backgroundColor: COLORS.lightGrey, paddingTop: 10 },
+  tabelHead: {
+    fontSize: 16,
+    fontWeight: "600",
+    flex: 1,
+    textAlign: "center",
+    backgroundColor: COLORS.lightGrey,
+    paddingTop: 10,
+  },
   button: {
     color: COLORS.accent,
     fontWeight: "500",

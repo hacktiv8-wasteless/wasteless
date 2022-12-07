@@ -83,3 +83,21 @@ export const GET_POST_BY_CATEGORY = gql`
     }
   }
 `;
+
+export const GET_NEARBY_POST = gql`
+  query GetNearbyPosts($postPayload: postPayload) {
+    getNearbyPosts(postPayload: $postPayload) {
+      _id
+      giver_id
+      taker_id
+      category_id
+      title
+      description
+      mainImage
+      quantity
+      lat
+      long
+      status
+    }
+  }
+`;
