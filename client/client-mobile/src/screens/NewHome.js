@@ -76,7 +76,7 @@ export default function NewHome({ navigation }) {
     data: userData,
     loading: userLoading,
     error: userError,
-  } = useQuery(GET_PROFILE);
+  } = useQuery(GET_PROFILE, { fetchPolicy: "no-cache" });
 
   if (postsError || categoryError || userError) {
     console.log("postsError -------------------------");

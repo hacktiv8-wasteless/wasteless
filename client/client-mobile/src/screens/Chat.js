@@ -13,17 +13,20 @@ import { getToken } from "../helpers/util";
 
 export default function Chat({ navigation, route }) {
   const [messages, setMessages] = useState([]);
-  let user1;
-  let user2;
+  const [user1, setUser1] = useState("");
+  const [roomId, setRoomId] = useState("");
+  let user2 = route.params.giver;
 
-  let roomId;
+  console.log(route.params);
 
   async function observer() {
-    user1 = await getToken("username");
-    user2 = route.params.giver;
+    let user1 = await getToken("username");
+    setUser1(user1);
 
-    roomId = user1 < user2 ? user1 + user2 : user2 + user1;
-    const docs = db
+    let roomId = user1 < user2 ? user1 + user2 : user2 + user1;
+    setRoomId(roomId);
+    console.log(roomId);
+    const docs = await db
       .collection("chats")
       .doc(roomId)
       .collection("messages")
@@ -72,6 +75,7 @@ export default function Chat({ navigation, route }) {
       renderSend={renderSend}
       alwaysShowSend
       messages={messages}
+      giver={user2}
       // showAvatarForEveryMessage={false}
       onSend={(messages) => onSend(messages)}
       renderBubble={(props) => {
@@ -89,9 +93,10 @@ export default function Chat({ navigation, route }) {
       }}
       user={{
         _id: user1,
-        name: "tes",
+        name: user1,
         avatar:
           "https://i.pinimg.com/originals/dc/71/5b/dc715b37f20c4e478d5bec142c2aca6a.jpg",
+        roomId,
       }}
     />
   );

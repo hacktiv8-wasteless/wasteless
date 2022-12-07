@@ -16,6 +16,7 @@ import { db } from "../configs/firebase";
 import { getToken } from "../helpers/util";
 
 export default function Notifications({ navigation }) {
+  const [user1, setUser1] = useState("");
   const data = [
     {
       id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
@@ -62,9 +63,10 @@ export default function Notifications({ navigation }) {
 
   async function observer() {
     const user1 = await getToken("username");
+    setUser1(user1);
 
     const colls = db.collection("chats");
-    const docs = await colls
+    let docs = await colls
       .where("user1", "==", user1)
       .orderBy("timeStamp", "desc");
 
@@ -118,7 +120,13 @@ export default function Notifications({ navigation }) {
       <FlatList
         data={notifications}
         renderItem={({ item }) => (
-          <Pressable onPress={() => navigation.navigate("Chat")}>
+          <Pressable
+            onPress={() =>
+              navigation.navigate("Chat", {
+                giver: item.user,
+              })
+            }
+          >
             <Box
               borderBottomWidth="1"
               _dark={{

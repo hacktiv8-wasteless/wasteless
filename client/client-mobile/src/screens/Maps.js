@@ -6,18 +6,19 @@ import { useState, useEffect } from "react";
 import { db } from "../configs/firebase";
 import person from "../../assets/person.png";
 
-export default function Maps() {
+export default function Maps({ route }) {
   const [takerLoc, setTakerLoc] = useState(null);
   const [mapRegion, setMapRegion] = useState(null);
+  const { roomId, user1 } = route.params;
 
   const MARKER_PERSON = Image.resolveAssetSource(person).uri;
 
   async function observer() {
     const docs = db
       .collection("chats")
-      .doc("givertaker")
+      .doc(roomId)
       .collection("location")
-      .doc("taker");
+      .where("id", "!=", user1);
 
     const observer = await docs.onSnapshot(
       (querySnapshot) => {

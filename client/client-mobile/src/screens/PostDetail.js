@@ -41,6 +41,7 @@ const MARKER_APPROXIMATE = Image.resolveAssetSource(approximateLoc).uri;
 
 export default function PostDetail({ navigation, route }) {
   const [mapRegion, setmapRegion] = useState(null);
+  const [giver_id, setGiver_id] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -67,15 +68,20 @@ export default function PostDetail({ navigation, route }) {
   }, []);
 
   useEffect(() => {
+    console.log(postDetailData, "+++++++");
     if (postDetailData) {
       // let { giver_id, taker_id, status, category_id } = postDetailData?.getPostById;
       // giver_id = postDetailData?.getPostById?.giver_id;
       // console.log(postDetailData?.getPostById);
       // category_id = ;
-      giver_id = postDetailData?.getPostById?.giver_id;
+      setGiver_id(postDetailData?.getPostById?.giver_id);
+      console.log(giver_id, "<<<<<<<");
       refetch({ categoryId: postDetailData?.getPostById?.category_id });
     }
   }, [postDetailData]);
+
+  useEffect(() => console.log(giver_id, ">>>>>>>>."), [giver_id]);
+  useEffect(() => console.log(giverData, "-------------"), [giverData]);
 
   const { id: postId } = route.params;
 
@@ -123,11 +129,11 @@ export default function PostDetail({ navigation, route }) {
 
   const userId = userData?.getProfile?.id;
 
-  let giver_id, taker_id, status, category_id;
+  // let giver_id, taker_id, status, category_id;
   // console.log(fetchAppointmentData?.getAppointment);
   // console.log("userId: ", userId, "giver_id: ", giver_id);
-  console.log(postDetailData?.getPostById?.quantity);
-  console.log(categoryDetailData?.getCategoryById?.price);
+  // console.log(postDetailData?.getPostById?.quantity);
+  // console.log(categoryDetailData?.getCategoryById?.price);
 
   const handleAppointment = async () => {
     try {
@@ -136,18 +142,24 @@ export default function PostDetail({ navigation, route }) {
       });
       const giver = await getGiver({
         variables: {
-          userId: +giver_id,
+          userId: giver_id,
         },
       });
-      console.log(giverData);
-      const user1 = giverData.getUserById.username;
+      let user1;
+      if (giver) console.log(giver_id, "<<<<<<<<<<<<<fsd");
+      user1 = giverData.getUserById.username;
       console.log(user1, "<<<<<<<<<<<<<<,");
-      const user2 = userId;
+      const user2 = userData?.getProfile?.username;
       let roomId = user1 < user2 ? user1 + user2 : user2 + user1;
       const update = await db
         .collection("chats")
         .doc(roomId)
-        .set({ user1: user1, user2: user2 });
+        .set({
+          user1: user1,
+          user2: user2,
+          lastMsg: "",
+          timeStamp: new Date(),
+        });
 
       navigation.navigate("Chat", { giver: user1 });
     } catch (error) {
@@ -177,8 +189,6 @@ export default function PostDetail({ navigation, route }) {
   if (fetchAppointmentError) {
     console.log(fetchAppointmentError);
   }
-  console.log(giver_id, "<<<giver");
-  console.log(postDetailData, "<<<postdetail");
 
   return (
     <View>
