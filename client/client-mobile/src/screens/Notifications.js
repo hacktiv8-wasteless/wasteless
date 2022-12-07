@@ -63,41 +63,33 @@ export default function Notifications({ navigation }) {
     const user2 = "taker";
 
     const colls = db.collection("chats");
-    const docs = await colls.where("user1", "in", [user1, user2]);
+    const docs = await colls
+      .where("user1", "in", [user1, user2])
+      .orderBy("timeStamp", "desc");
 
-    // if (docs.empty) {
-    //   console.log("No matching documents.");
-    //   return;
-    // }
-    // let arr = [];
-
-    // docs.forEach((doc) => {
-    //   console.log(doc.id, "=>", doc.data(), "<<<<<<<<<");
-    // arr.push({
-    //   user: doc.data().user1 == user1 ? doc.data().user2 : doc.data().user1,
-    //   lastMsg: doc.data().lastMsg,
-    //   timeStamp: doc.data().timeStamp,
-    // });
-    // });
-
-    const date = new Date();
+    const today = new Date();
 
     const observer = docs.onSnapshot(
       (querySnapshot) => {
         setNotifications(
-          querySnapshot.docs.map((doc) => ({
-            user:
-              doc.data().user1 == user1 ? doc.data().user2 : doc.data().user1,
-            lastMsg: doc.data().lastMsg,
-            timeStamp:
-              doc.data().timeStamp.toDate() > date.setDate(date.getDate() - 1)
-                ? doc.data().timeStamp.toDate().getHours() +
-                  ":" +
-                  doc.data().timeStamp.toDate().getMinutes()
-                : doc.data().timeStamp.toDate().getDate() +
-                  "/" +
-                  (doc.data().timeStamp.toDate().getMonth() + 1),
-          }))
+          querySnapshot.docs.map((doc) => {
+            return {
+              user:
+                doc.data().user1 == user1 ? doc.data().user2 : doc.data().user1,
+              lastMsg: doc.data().lastMsg,
+              timeStamp:
+                doc.data().timeStamp.toDate().getTime() >
+                today.setHours(0, 0, 0, 0)
+                  ? doc.data().timeStamp.toDate().getHours() +
+                    ":" +
+                    doc.data().timeStamp.toDate().getMinutes()
+                  : doc.data().timeStamp.toDate().getDate() +
+                    "/" +
+                    (doc.data().timeStamp.toDate().getMonth() + 1) +
+                    "/" +
+                    doc.data().timeStamp.toDate().getFullYear(),
+            };
+          })
         );
       },
       (err) => {
