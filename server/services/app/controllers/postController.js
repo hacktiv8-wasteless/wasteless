@@ -3,7 +3,7 @@ const Post = require("../models/post");
 
 class PostController {
 	static async getAllPost(req, res) {
-		const { category_id } = req.query;
+		const { category_id, lat, long } = req.query;
 		let options = {};
 		try {
 			if (category_id) {
@@ -11,6 +11,13 @@ class PostController {
 					category_id,
 				};
 			}
+
+			if (lat || long) {
+				options = {
+					
+				};
+			}
+
 			console.log("masuk sini");
 			const result = await Post.find(options);
 			console.log(result);

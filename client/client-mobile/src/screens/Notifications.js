@@ -11,7 +11,10 @@ import {
   Text,
   Spacer,
 } from "native-base";
+<<<<<<< HEAD
+=======
 import { db } from "../configs/firebase";
+>>>>>>> development
 
 export default function Notifications({ navigation }) {
   const data = [
@@ -127,7 +130,11 @@ export default function Notifications({ navigation }) {
                 <Avatar
                   size="48px"
                   source={{
+<<<<<<< HEAD
+                    uri: item.avatarUrl,
+=======
                     uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+>>>>>>> development
                   }}
                 />
                 <VStack>
@@ -138,7 +145,11 @@ export default function Notifications({ navigation }) {
                     color="coolGray.800"
                     bold
                   >
+<<<<<<< HEAD
+                    {item.fullName}
+=======
                     {item.user}
+>>>>>>> development
                   </Text>
                   <Text
                     color="coolGray.600"
@@ -146,7 +157,11 @@ export default function Notifications({ navigation }) {
                       color: "warmGray.200",
                     }}
                   >
+<<<<<<< HEAD
+                    {item.recentText}
+=======
                     {item.lastMsg}
+>>>>>>> development
                   </Text>
                 </VStack>
                 <Spacer />

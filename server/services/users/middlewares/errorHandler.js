@@ -1,48 +1,42 @@
-const errorHandler = (err, req, res, next) => {
-	console.log(err)
-	let code;
-	let message;
+const errorHandler = (error, req, res, next) => {
+  console.log(error);
+  let code;
+  let message;
 
-	switch (err.name) {
-		case `SequelizeValidationError`:
-		case `SequelizeUniqueConstraintError`:
-			code = 400;
-			message = err.errors.map((el) => el.message);
-			break;
-		case `BAD_TRANSACTION_REQUEST`:
-		case `BAD_PATCH_REQUEST`:
-		case `BAD_LOGIN_REQUEST`:
-		case `BAD_PATCH_REQUEST`:
-			code = 400;
-			message = err.message;
-			break;
-		case `JsonWebTokenError`:
-		case `INVALID_ACCESS`:
-			code = 401;
-			message = "Unauthorized action!";
-			break;
-		case `INVALID_CREDENTIALS`:
-			code = 401;
-			message = "Invalid Email or password!";
-			break;
-		case `FORBIDDEN`:
-			code = 403;
-			message = "Invalid access!";
-			break;
-		case `DATA_NOT_FOUND`:
-			code = 404;
-			message = `Movie with id ${err.id} not Found!`;
-			break;
-		case `DATA_NOT_FOUND_GENRE`:
-			code = 404;
-			message = `Genre with id ${err.id} not Found!`;
-			break;
-		default:
-			code = 500;
-			message = "Internal Server Error!";
-			break;
-	}
-	res.status(code).json({ message });
+  switch (error.name) {
+    case `SequelizeValidationError`:
+    case `SequelizeUniqueConstraintError`:
+      code = 400;
+      message = error.errors.map((el) => el.message);
+      break;
+    //ini belum dipake
+    case `BAD_TRANSACTION_REQUEST`:
+    case `BAD_PATCH_REQUEST`:
+      code = 400;
+      message = error.message;
+      break;
+    case `Unauthorized`:
+      code = 401;
+      message = "Invalid token";
+      break;
+    case `JsonWebTokenError`:
+      code = 401;
+      message = "Invalid token";
+      break;
+    case `Invalid Email or Password`:
+      code = 401;
+      message = "Invalid Email or password!";
+      break;
+    // case `Not Found`:
+    // code = 404;
+    // message = "Data not found";
+    // break;
+    default:
+      code = 500;
+      message = "Internal Server Error!";
+      break;
+  }
+  res.status(code).json({ message });
 };
 
-module.exports = errorHandler
+module.exports = errorHandler;

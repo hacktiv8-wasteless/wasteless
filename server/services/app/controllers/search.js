@@ -3,10 +3,16 @@ const Post = require("../models/post");
 class SearchController {
   static async getSearchPost(req, res) {
     try {
-      const search = req.query.search;
+      const search = req.query.search || "";
       let sort = req.query.sort;
+      let category = req.query.category || "category";
 
-      req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
+      const categoryOptions = ["Botol", "Kotak Plastik", "Kardus"];
+
+      // category === "name"
+      //    (category = [...categoryOptions])
+      //   : (category = req.query.category.split(","));
+      // req.query.sort ? (sort = req.query.sort.split(",")) : (sort = [sort]);
 
       // let sortBy = {};
       // if (sort[1]) {
@@ -14,8 +20,9 @@ class SearchController {
       // } else {
       //   sortBy[sort[0]] = "asc";
       // }
+
       const response = await Post.find({
-        title: new RegExp(search, "i"),
+        title: { $regex: search, $options: "i" },
       })
         .where("title")
         .in([...title])

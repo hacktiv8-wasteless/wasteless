@@ -65,6 +65,8 @@ export const EDIT_POST = gql`
     }
   }
 `;
+<<<<<<< HEAD
+=======
 
 export const GET_POST_BY_CATEGORY = gql`
   query GetPostByCategory($categoryId: String) {
@@ -83,3 +85,4 @@ export const GET_POST_BY_CATEGORY = gql`
     }
   }
 `;
+>>>>>>> development

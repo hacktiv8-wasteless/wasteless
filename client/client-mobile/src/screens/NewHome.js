@@ -4,9 +4,12 @@ import { Ionicons } from "@expo/vector-icons";
 import { FlatList, Button, Center, Collapse, Skeleton } from "native-base";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
+<<<<<<< HEAD
+=======
 import * as Location from "expo-location";
 import Geocoder from "react-native-geocoding";
 import latlngDist from "latlng-distance";
+>>>>>>> development
 import { useQuery } from "@apollo/client";
 import { GET_POSTS } from "../query/Posts";
 import { GET_CATEGORIES } from "../query/Categories";
@@ -18,11 +21,16 @@ import Loader from "../components/Loader";
 import Carousel from "../components/Carousel";
 import { capitalize, getToken, getUserId, signOut } from "../helpers/util";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+<<<<<<< HEAD
+
+export default function NewHome({ navigation }) {
+=======
 import SearchBar from "../components/SearchBar";
 import { COLORS } from "../constants";
 
 export default function NewHome({ navigation }) {
   const dummyLoader = ["a", "b", "c", "d", "e", "f", "g"];
+>>>>>>> development
   const clearAsyncStorage = async () => {
     await AsyncStorage.clear();
   };
@@ -68,6 +76,13 @@ export default function NewHome({ navigation }) {
   };
 
   const handleOnSubmit = () => {
+<<<<<<< HEAD
+    setFiltered(postsData?.getAllPosts.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
+  };
+
+  if (postsLoading || categoryLoading || userLoading) return <Loader />;
+
+=======
     setFiltered(postsData?.getAllPosts?.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
   };
 
@@ -111,15 +126,22 @@ export default function NewHome({ navigation }) {
       }
     })();
   }, []);
+>>>>>>> development
   return (
     <View style={{ backgroundColor: COLORS.white }}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
       <SafeAreaView>
         {/* Loader */}
+<<<<<<< HEAD
+
+        <ScrollView>
+          <Button onPress={check} style={styles.test}>
+=======
         {/* <Skeleton.Text isLoaded={!postsLoading} /> */}
 
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* <Button onPress={check} style={styles.test}>
+>>>>>>> development
             Check
           </Button>
           <Button onPress={logout} style={styles.test}>
@@ -127,8 +149,20 @@ export default function NewHome({ navigation }) {
           </Button>
           <Button onPress={clearAsyncStorage} style={styles.test}>
             Clear all storage
+<<<<<<< HEAD
+          </Button>
+          <View
+            style={{
+              // flex: 1,
+              paddingTop: 10,
+              paddingHorizontal: 20,
+              // alignItems: "center",
+            }}
+          >
+=======
           </Button> */}
           <View style={{ backgroundColor: COLORS.primary, paddingTop: 20, paddingBottom: 10, paddingHorizontal: 20, borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
+>>>>>>> development
             <View
               style={{
                 flexDirection: "row",
@@ -137,6 +171,13 @@ export default function NewHome({ navigation }) {
               }}
             >
               <View style={{ flex: 1 }}>
+<<<<<<< HEAD
+                <Text style={{ fontSize: 20, fontWeight: "bold" }}>Welcome {userData?.getProfile?.username} </Text>
+                <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 5 }}>
+                  <Ionicons name="location" size={24} color="gray" />
+                  <Text style={{ color: "gray", marginLeft: 10 }}>Pondok Indah, South Jakarta</Text>
+                </View>
+=======
                 {userLoading ? (
                   <Skeleton.Text isLoaded={!userLoading} lines={2} w={200} />
                 ) : (
@@ -172,6 +213,7 @@ export default function NewHome({ navigation }) {
                 >
                   <Feather name="user" size={24} color={COLORS.dark} />
                 </Button>
+>>>>>>> development
               </View>
             </View>
 
@@ -188,6 +230,44 @@ export default function NewHome({ navigation }) {
                 // paddingHorizontal: 20,
               }}
             >
+<<<<<<< HEAD
+              <TextInput
+                style={{
+                  paddingHorizontal: 10,
+                  flex: 1,
+                }}
+                value={search}
+                onChangeText={handleSearchChange}
+                on
+                placeholder="Search Reuseable Materials"
+              />
+              <Pressable onPress={handleOnSubmit}>
+                <Ionicons name="search" size={25} color="gray" style={{ marginRight: 10 }} />
+              </Pressable>
+            </View>
+
+            {/* Category Card */}
+            <View style={{ marginVertical: 10 }}>
+              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                <View style={{ flexDirection: "row" }}>
+                  {categoryData?.getAllCategories?.map((item) => {
+                    return <CategoryCard key={item["_id"]} item={item} />;
+                  })}
+                </View>
+              </ScrollView>
+            </View>
+
+            {/* <CardBanner /> */}
+            <Carousel />
+
+            {/* Card */}
+            <View style={{ flex: 1, marginVertical: 10 }}>
+              <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>Near Me</Text>
+              <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center" }}>
+                {getFilteredPost().map((post) => {
+                  return <ItemCardSmall post={post} key={post["_id"]} />;
+                })}
+=======
               {/* <CardBanner /> */}
               <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
                 <Carousel />
@@ -236,6 +316,7 @@ export default function NewHome({ navigation }) {
                         return <ItemCardSmall post={post} key={post["_id"]} postsLoading={postsLoading} userLatLon={userLatLon} />;
                       })}
                 </View>
+>>>>>>> development
               </View>
             </View>
           </View>
