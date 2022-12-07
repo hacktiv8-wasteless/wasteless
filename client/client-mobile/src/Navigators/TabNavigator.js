@@ -19,11 +19,7 @@ const TabNavigator = ({ navigation }) => {
 
   const { data: categoryData, loading: categoryLoading, error: categoryError } = useQuery(GET_CATEGORIES);
 
-<<<<<<< HEAD
-  if (categoryLoading) return <Loader />;
-=======
   // if (categoryLoading) return <Loader />;
->>>>>>> development
   if (categoryError) {
     console.log("categoryError di tab -----------------------");
     console.log(categoryError);
@@ -107,13 +103,8 @@ const TabNavigator = ({ navigation }) => {
             title: "Post",
           }}
         />
-<<<<<<< HEAD
-        <Tab.Screen name="Notifications" component={Notifications} />
-        <Tab.Screen name="MyListing" component={TopTabNavigator} options={{ title: "My Listing" }} />
-=======
         <Tab.Screen name="Notifications" component={Notifications} options={{ title: "Messages" }} />
         <Tab.Screen name="MyListingNavigator" component={TopTabNavigator} options={{ title: "My Listings" }} />
->>>>>>> development
       </Tab.Navigator>
 
       {/* Slider */}
@@ -131,22 +122,6 @@ const TabNavigator = ({ navigation }) => {
                 Pick a Category
               </Text>
             </Box>
-<<<<<<< HEAD
-            {categoryData?.getAllCategories?.map((category) => (
-              <Actionsheet.Item
-                onPress={() => {
-                  navigation.navigate("Post", {
-                    //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                    category: category.name,
-                    categoryId: category._id,
-                  });
-                  onClose();
-                }}
-              >
-                {category.name}
-              </Actionsheet.Item>
-            ))}
-=======
             {categoryData?.getAllCategories?.map((category) => {
               // console.log(category);
               return (
@@ -166,7 +141,6 @@ const TabNavigator = ({ navigation }) => {
                 </Actionsheet.Item>
               );
             })}
->>>>>>> development
           </Actionsheet.Content>
         </Actionsheet>
       </Center>

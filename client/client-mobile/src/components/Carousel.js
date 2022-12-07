@@ -42,9 +42,6 @@ export default function Carousel() {
 }
 
 const style = StyleSheet.create({
-<<<<<<< HEAD
-  container: { width: "100%", height: 150, overflow: "hidden", borderRadius: 15, justifyContent: "center", alignContent: "center" },
-=======
   container: {
     width: "100%",
     height: 150,
@@ -62,7 +59,6 @@ const style = StyleSheet.create({
 
     elevation: 5,
   },
->>>>>>> development
   scroll: { width, height },
   image: {
     width,

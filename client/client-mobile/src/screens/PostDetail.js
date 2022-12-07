@@ -11,10 +11,7 @@ import { useQuery } from "@apollo/client";
 import { GET_POST_DETAIL } from "../query/Posts";
 import { GET_CATEGORY_ID } from "../query/Categories";
 import { capitalize } from "../helpers/util";
-<<<<<<< HEAD
-=======
 import Loader from "../components/Loader";
->>>>>>> development
 
 const MAP_PLACEHOLDER = Image.resolveAssetSource(mapPlaceHolder).uri;
 const MARKER_APPROXIMATE = Image.resolveAssetSource(approximateLoc).uri;
@@ -59,11 +56,7 @@ export default function PostDetail({ navigation, route }) {
     }
   }, [postDetailData]);
 
-<<<<<<< HEAD
-  if (postDetailLoading || categoryDetailLoading) return <Text>Loadinggg.....</Text>;
-=======
   if (postDetailLoading && categoryDetailLoading) return <Loader />;
->>>>>>> development
   // if (postDetailError) {
   //   console.log("postDetailError ---------------------");
   //   console.log(postDetailError);
@@ -87,11 +80,7 @@ export default function PostDetail({ navigation, route }) {
           </View>
           <View style={styles.postDetail}>
             <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-<<<<<<< HEAD
-              <Text style={styles.title}>{capitalize(postDetailData?.getPostById?.title)}</Text>
-=======
               <Text style={styles.title}>{postDetailData ? capitalize(postDetailData?.getPostById?.title) : ""}</Text>
->>>>>>> development
               <Button onPress={() => console.log("jalan delete")} variant="unstyled">
                 <Feather name="trash-2" size={24} color="red" />
               </Button>
@@ -105,15 +94,9 @@ export default function PostDetail({ navigation, route }) {
               <Text>Lat: {postDetailData?.getPostById?.lat}</Text>
               <Text>Long: {postDetailData?.getPostById?.long}</Text>
               <Text>Giver_id: {postDetailData?.getPostById?.giver_id}</Text>
-<<<<<<< HEAD
-              <Text>Sta: {postDetailData?.getPostById?.giver_id}</Text>
-            </View>
-            <Text>{capitalize(postDetailData?.getPostById?.description)}</Text>
-=======
               <Text>Status: {postDetailData?.getPostById?.status}</Text>
             </View>
             <Text>{postDetailData ? capitalize(postDetailData?.getPostById?.description) : ""}</Text>
->>>>>>> development
             {/* <Text style={styles.subTitle}>Photos</Text> */}
             <Text style={styles.subTitle}>Location</Text>
             <View style={styles.mapContainer}>
