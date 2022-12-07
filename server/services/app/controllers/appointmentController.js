@@ -25,9 +25,9 @@ class appointmentController {
         created_at: Date.now(),
       });
       SendEmail(email, username);
-      if (!username || !email || !phoneNumber || !slots || !postId) {
-        return res.status(404).json({ message: "Cant get appoinment" });
-      }
+      // if (!username || !email || !phoneNumber) {
+      //   return res.status(404).json({ message: "Cant get appoinment" });
+      // }
       await newappointment.save();
       const newAppoinment = await Appointment.find().populate();
       const createNew = newAppoinment.forEach((el) => el._id);
@@ -38,9 +38,13 @@ class appointmentController {
     }
   }
   static async all(req, res) {
-    // Returns all appointments
-    const newAppoinment = await Appointment.find().populate();
-    res.status(200).json(newAppoinment);
+    try {
+      // Returns all appointments
+      const newAppoinment = await Appointment.find().populate();
+      res.status(200).json(newAppoinment);
+    } catch (error) {
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   }
 }
 

@@ -2,6 +2,7 @@ const request = require("supertest");
 const mongoose = require("mongoose");
 const app = require("../app");
 const Appointment = require("../models/appointment");
+const Slot = require("../models/slot");
 
 const inputSlot = () => {
   return {
@@ -46,30 +47,28 @@ afterAll(async () => {
 });
 
 describe("test for endpoint appointment", () => {
-  describe("create post /appointment/:postid", () => {
-    test("get data post", async () => {
-      const post = await Post.create(inputPost());
-      const response = await request(app).get("/posts");
-      //   console.log(response, "<<<");
+  describe("get data /appointment", () => {
+    test("get data", async () => {
+      const appointment = await Appointment.create(inputAppoinmnet());
+      const response = await request(app).get("/appointment");
+      // console.log(response, "<<<");
       expect(response.statusCode).toEqual(200);
       expect(response.body.length).toBeGreaterThan(0);
     });
     test("test for failed data", async () => {
-      jest
-        .spyOn(Appointment, "find")
-        .mockRejectedValue(new Error("failed to get data"));
-      const response = await request(app).get("/posts");
+      jest.spyOn(Appointment, "find").mockRejectedValue(new Error());
+      const response = await request(app).get("/appointment");
+      // console.log(response, "<<<<<<");
       expect(response.statusCode).toEqual(500);
-      expect(response.body).toEqual("failed to get data");
+      expect(response.body.message).toEqual("Internal Server Error");
     });
   });
   describe("create post /appointment/:postid", () => {
     test("create data post", async () => {
       const appointment = await Appointment.create(inputAppoinmnet());
-      const response = await request(app).post(
-        `/appointment/${appointment._id}`
-      );
-      // console.log(response, "<<< ini di test");
+      // console.log(appointment, "<<<---");
+      const response = await request(app).post(`/appointment/1`);
+      // console.log(response.body, "<<< ini di test");
       expect(response.statusCode).toEqual(200);
       expect(response.body.message).toEqual("success add appoinment");
     });
@@ -83,7 +82,7 @@ describe("test for endpoint appointment", () => {
       });
       // console.log(res.body, "<><>");
       expect(res.statusCode).toEqual(404);
-      expect(res.body).toEqual({});
+      expect(res.body).toHaveProperty("message");
     });
     test("error empty field email", async () => {
       const mockPosts = inputAppoinmnet();
@@ -95,9 +94,9 @@ describe("test for endpoint appointment", () => {
       });
       // console.log(res.body, "<<<<");
       expect(res.statusCode).toEqual(404);
-      expect(res.body).toEqual({});
+      expect(res.body).toHaveProperty("message");
     });
-    test.only("error empty field phone number", async () => {
+    test("error empty field phone number", async () => {
       const mockPosts = inputAppoinmnet();
       const res = await request(app).post("/appointment/1").send({
         username: mockPosts.username,
@@ -105,13 +104,13 @@ describe("test for endpoint appointment", () => {
         slots: mockPosts.slots,
         postId: mockPosts.postId,
       });
-      console.log(res.body, "<<<<");
+      // console.log(res.body, "<<<<");
       expect(res.statusCode).toEqual(404);
       expect(res.body).toHaveProperty("message");
     });
     test("error empty field slot", async () => {
       const mockPosts = inputAppoinmnet();
-      const res = await request(app).post("/appointment").send({
+      const res = await request(app).post("/appointment/1").send({
         username: mockPosts.username,
         email: mockPosts.email,
         phoneNumber: mockPosts.phoneNumber,
@@ -119,27 +118,28 @@ describe("test for endpoint appointment", () => {
       });
       // console.log(res.body, "<<<<");
       expect(res.statusCode).toEqual(404);
-      expect(res.body).toEqual({});
-    });
-    test("error empty field status", async () => {
-      const mockPosts = inputPost();
-      const res = await request(app).post("/posts").send({
-        description: mockPosts.description,
-        mainImage: mockPosts.mainImage,
-        quantity: mockPosts.quantity,
-        title: mockPosts.title,
-      });
-      expect(res.statusCode).toEqual(404);
       expect(res.body).toHaveProperty("message");
     });
+    test("error empty field postId", async () => {
+      const mockPosts = inputAppoinmnet();
+      const res = await request(app).post("/appointment").send({
+        username: mockPosts.username,
+        email: mockPosts.email,
+        phoneNumber: mockPosts.phoneNumber,
+        slots: mockPosts.slots,
+      });
+      expect(res.statusCode).toEqual(404);
+      expect(res.body).toEqual({});
+    });
     test("Failed 500", async () => {
-      const mockPosts = inputPost();
+      const mockPosts = inputAppoinmnet();
       jest
-        .spyOn(Post, "create")
-        .mockRejectedValue(new Error("test add news error 500"));
-      const res = await request(app).post("/posts").send(mockPosts);
-      expect(res.statusCode).toEqual(500);
-      expect(res.body).toEqual("test add news error 500");
+        .spyOn(Appointment, "create")
+        .mockRejectedValue(new Error("test add appointment error 500"));
+      const res = await request(app).post("/appointment").send(mockPosts);
+      // console.log(res, "<<<+++");
+      expect(res.statusCode).toEqual(404);
+      expect(res.body).toEqual("test add appointment error 500");
     });
   });
 });

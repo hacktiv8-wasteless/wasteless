@@ -11,11 +11,11 @@ const appointmentSchema = mongoose.Schema({
   },
   email: {
     type: String,
-    // required: [true, "email is required"],
+    required: [true, "email is required"],
   },
   phoneNumber: {
     type: String,
-    // required: [true, "phoneNumber is required"],
+    required: [true, "phoneNumber is required"],
   },
   slots: {
     type: ObjectId,
