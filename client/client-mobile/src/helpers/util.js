@@ -25,9 +25,12 @@ export const signIn = async (newToken, userId) => {
 // };
 
 export const signOut = async () => {
-  return await AsyncStorage.removeItem(ACCESS_TOKEN);
+  await AsyncStorage.removeItem(ACCESS_TOKEN);
 };
 
 export const capitalize = (string) => {
-  return string.charAt(0).toUpperCase() + string.slice(1);
+  if (string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+  return "";
 };
