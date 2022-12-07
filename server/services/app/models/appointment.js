@@ -5,6 +5,9 @@ const appointmentSchema = mongoose.Schema({
   id: {
     type: ObjectId,
   },
+  userId: {
+    type: String,
+  },
   username: {
     type: String,
     require: [true, "username is required"],
