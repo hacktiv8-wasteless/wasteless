@@ -104,7 +104,7 @@ const TabNavigator = ({ navigation }) => {
           }}
         />
         <Tab.Screen name="Notifications" component={Notifications} options={{ title: "Messages" }} />
-        <Tab.Screen name="MyListingNavigator" component={TopTabNavigator} options={{ title: "My Listings" }} />
+        <Tab.Screen name="MyListingNavigator" component={TopTabNavigator} options={{ title: "My Listings", headerShown: false }} />
       </Tab.Navigator>
 
       {/* Slider */}

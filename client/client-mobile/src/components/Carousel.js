@@ -5,7 +5,7 @@ import { COLORS } from "../constants";
 const { width } = Dimensions.get("window");
 const height = width * 0.5;
 
-const images = ["https://news.miami.edu/life/_assets/images/images-stories/2019/11/recycling-greenu-940x529.jpg", "https://api.watsons.co.id/api/v2/wtcid/blog/wp-content/uploads/0533-Main-Banner-3.png", "https://bessemercity.com/wp-content/uploads/2020/05/GlobalRecyclingDay-2019.jpg"];
+const images = ["https://ik.imagekit.io/kafax3vfm/Carousel1_m3_eZM1M0?ik-sdk-version=javascript-1.4.3&updatedAt=1670396803756", "https://ik.imagekit.io/kafax3vfm/carousel_3VJDXk2Sr?ik-sdk-version=javascript-1.4.3&updatedAt=1670398235040", "https://ik.imagekit.io/kafax3vfm/Carousel_SPgQIpClL?ik-sdk-version=javascript-1.4.3&updatedAt=1670399206657"];
 
 export default function Carousel() {
   const [img, setImg] = useState({
@@ -43,6 +43,7 @@ export default function Carousel() {
 
 const style = StyleSheet.create({
   container: {
+    backgroundColor: "white",
     width: "100%",
     height: 150,
     overflow: "hidden",

@@ -51,9 +51,9 @@ export default function PostDetail({ navigation, route }) {
       // let { giver_id, taker_id, status, category_id } = postDetailData?.getPostById;
       // giver_id = postDetailData?.getPostById?.giver_id;
       // console.log(postDetailData?.getPostById);
-      category_id = postDetailData?.getPostById?.category_id;
+      // category_id = ;
       giver_id = postDetailData?.getPostById?.giver_id;
-      refetch({ categoryId: category_id });
+      refetch({ categoryId: postDetailData?.getPostById?.category_id });
     }
   }, [postDetailData]);
 
@@ -141,7 +141,7 @@ export default function PostDetail({ navigation, route }) {
             </View>
 
             <View>
-              <Text>Placeholder biar gampang:</Text>
+              {/* <Text>Placeholder biar gampang:</Text> */}
               <Text>Total harga: {postDetailData?.getPostById?.quantity * categoryDetailData?.getCategoryById?.price}</Text>
               {/* <Text>Lat: {postDetailData?.getPostById?.lat}</Text>
               <Text>Long: {postDetailData?.getPostById?.long}</Text>
@@ -175,25 +175,26 @@ export default function PostDetail({ navigation, route }) {
       </View> */}
           {userId === postDetailData?.getPostById?.giver_id ? (
             <>
-              <View style={{ paddingHorizontal: 20, marginBottom: 20 }}>
-                <Text style={styles.label}>Tabel Taker ID</Text>
-                <Text>STATUS: Pending</Text>
-                <View style={{ borderColor: "black", borderWidth: 1 }}>
-                  <View style={{ flexDirection: "row", height: 45 }}>
-                    <Text style={styles.tabelHead}>Username</Text>
-                    <Text style={styles.tabelHead}>Action</Text>
+              <View style={styles.postDetail}>
+                <View style={{ marginBottom: 20 }}>
+                  <Text style={styles.label}>Buyer</Text>
+                  <View style={{}}>
+                    <View style={{ flexDirection: "row", height: 45 }}>
+                      <Text style={styles.tabelHead}>Username</Text>
+                      <Text style={styles.tabelHead}>Action</Text>
+                    </View>
+                    {fetchAppointmentData?.getAppointment.map((e) => {
+                      // console.log(e);
+                      return (
+                        <View style={{ flexDirection: "row", height: 45 }}>
+                          <Text style={{ flex: 1, textAlign: "center" }}>{e.username}</Text>
+                          <Pressable onPress={() => handleChooseAppointment(e._id)} style={{ flex: 1 }}>
+                            <Feather style={{ textAlign: "center" }} name="user" size={24} color={COLORS.dark} />
+                          </Pressable>
+                        </View>
+                      );
+                    })}
                   </View>
-                  {fetchAppointmentData?.getAppointment.map((e) => {
-                    // console.log(e);
-                    return (
-                      <View style={{ flexDirection: "row", height: 45 }}>
-                        <Text style={{ flex: 1, textAlign: "center" }}>{e.username}</Text>
-                        <Pressable onPress={() => handleChooseAppointment(e._id)} style={{ flex: 1 }}>
-                          <Feather style={{ textAlign: "center" }} name="user" size={24} color={COLORS.dark} />
-                        </Pressable>
-                      </View>
-                    );
-                  })}
                 </View>
               </View>
             </>
@@ -322,7 +323,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 5,
   },
-  tabelHead: { fontSize: 16, fontWeight: "600", flex: 1, textAlign: "center", backgroundColor: "tomato", paddingTop: 10 },
+  tabelHead: { fontSize: 16, fontWeight: "600", flex: 1, textAlign: "center", backgroundColor: COLORS.lightGrey, paddingTop: 10 },
   button: {
     color: COLORS.accent,
     fontWeight: "500",
