@@ -42,7 +42,27 @@ export default function Carousel() {
 }
 
 const style = StyleSheet.create({
+<<<<<<< HEAD
   container: { width: "100%", height: 150, overflow: "hidden", borderRadius: 15, justifyContent: "center", alignContent: "center" },
+=======
+  container: {
+    width: "100%",
+    height: 150,
+    overflow: "hidden",
+    borderRadius: 15,
+    justifyContent: "center",
+    alignContent: "center",
+    shadowColor: COLORS.primaryShade[500],
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+>>>>>>> development
   scroll: { width, height },
   image: {
     width,

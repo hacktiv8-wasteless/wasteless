@@ -1,15 +1,34 @@
+<<<<<<< HEAD
 import { StyleSheet, View, Image, TouchableHighlight, StatusBar, TouchableOpacity } from "react-native";
+=======
+import { StyleSheet, View, Image, TouchableHighlight, StatusBar, TouchableOpacity, TextInput } from "react-native";
+>>>>>>> development
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { VStack, Text, FormControl, Input, Button, TextArea, Slider, Box, Center, WarningOutlineIcon, Pressable, ScrollView } from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+<<<<<<< HEAD
 import { useMutation } from "@apollo/client";
 import { POST_POST } from "../query/Posts";
 import { getUserId } from "../helpers/util";
 
 export default function PostItem({ navigation, route }) {
   const { categoryId: category_id } = route.params;
+=======
+import MapView, { Marker } from "react-native-maps";
+import Geocoder from "react-native-geocoding";
+import * as Location from "expo-location";
+import { useMutation } from "@apollo/client";
+import { POST_POST } from "../query/Posts";
+import { getUserId } from "../helpers/util";
+import { COLORS } from "../constants";
+
+export default function PostItem({ navigation, route }) {
+  const { categoryId: category_id } = route.params;
+  const { price } = route.params;
+  // console.log(price);
+>>>>>>> development
   const [userId, setUserId] = useState(null);
 
   const userIdGetter = async () => {
@@ -19,14 +38,21 @@ export default function PostItem({ navigation, route }) {
 
   //? Image picker --------------------------
   const [profileImage, setProfileImage] = useState("");
+<<<<<<< HEAD
   const [progress, setProgress] = useState(0);
   // const { token } = props.route.params;
+=======
+>>>>>>> development
   const url = "https://wasteless-services-upload.up.railway.app/";
 
   const openImageLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
+<<<<<<< HEAD
     console.log(await ImagePicker.requestMediaLibraryPermissionsAsync());
+=======
+    // console.log(await ImagePicker.requestMediaLibraryPermissionsAsync());
+>>>>>>> development
 
     if (status !== "granted") {
       alert("Sorry, we need camera roll permissions to make this work!");
@@ -62,14 +88,13 @@ export default function PostItem({ navigation, route }) {
 
       return data.url;
     } catch (error) {
-      console.log("gggggggggg");
       console.log(error);
-      console.log(error.message);
     }
   };
 
   //? -------------------------------------------
 
+<<<<<<< HEAD
   // const [errors, setErrors] = React.useState({});
 
   //? Server Wiring --------------------------
@@ -81,13 +106,30 @@ export default function PostItem({ navigation, route }) {
   const [quantity, setQuantity] = useState(0.5);
   // const [lat, setLat] = useState("");
   // const [long, setLong] = useState("");
+=======
+  //? Server Wiring --------------------------
+  const [createPost, { data: postData, loading: postLoading, error: postError }] = useMutation(POST_POST);
+
+  // const [mainImage, setMainImage] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [quantity, setQuantity] = useState(5);
+  const [lat, setLat] = useState("");
+  const [long, setLong] = useState("");
+  const [userLatLon, setUserLatLon] = useState(null);
+  const [userLoc, setUserLoc] = useState("");
+>>>>>>> development
 
   // const handleImageChange = (val) => setMainImage(val);
   const handleTitleChange = (val) => setTitle(val);
   const handleDescriptionChange = (val) => setDescription(val);
   const handleQuantityChange = (val) => setQuantity(val);
+<<<<<<< HEAD
   // const handleLatChange = (val) => setLat(val);
   // const handleLongChange = (val) => setLong(val);
+=======
+  const handleLoc = (val) => setUserLoc(val);
+>>>>>>> development
 
   const onSubmit = async () => {
     try {
@@ -98,12 +140,19 @@ export default function PostItem({ navigation, route }) {
         mainImage,
         title,
         description,
+<<<<<<< HEAD
         quantity,
+=======
+        quantity: +quantity,
+>>>>>>> development
         // RIZZZZQIII NANTI DISINI YAA
         lat: "30",
         long: "30",
       };
+<<<<<<< HEAD
       // console.log(postPayload);
+=======
+>>>>>>> development
 
       await createPost({
         variables: { postPayload },
@@ -111,11 +160,19 @@ export default function PostItem({ navigation, route }) {
 
       // Clear form
       // setMainImage("");
+<<<<<<< HEAD
+=======
+      setProfileImage("");
+>>>>>>> development
       setTitle("");
       setDescription("");
       setQuantity("");
 
+<<<<<<< HEAD
       navigation.navigate("MyListing");
+=======
+      navigation.navigate("MyListingNavigator");
+>>>>>>> development
       // setLat("");
       // setLong("");
     } catch (error) {
@@ -123,6 +180,52 @@ export default function PostItem({ navigation, route }) {
     }
   };
 
+<<<<<<< HEAD
+=======
+  useEffect(() => {
+    (async () => {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          return;
+        } else {
+          let location = await Location.getCurrentPositionAsync();
+
+          setLat(location.coords.latitude);
+          setLong(location.coords.longitude);
+          setUserLatLon({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  const handleMarker = (e) => {
+    setLat(e.nativeEvent.coordinate.latitude);
+    setLong(e.nativeEvent.coordinate.langitude);
+    setUserLatLon(e.nativeEvent.coordinate);
+  };
+
+  const handleInput = async () => {
+    try {
+      Geocoder.init("AIzaSyCVVWasvqI_muG_92Mdo63Ik14SZ6bLlCo", {
+        language: "id",
+      });
+      const loc = await Geocoder.from(userLoc);
+      const coords = loc.results[0].geometry.location;
+      setLat(coords.lat);
+      setLong(coords.lng);
+      setUserLatLon({ latitude: coords.lat, longitude: coords.lng });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+>>>>>>> development
   // if (postLoading) return <Text>Loading......</Text>;
 
   if (postError) {
@@ -138,53 +241,37 @@ export default function PostItem({ navigation, route }) {
     <>
       {/* Status Bar */}
       {/* <StatusBar barStyle="light-content" backgroundColor="#339966" /> */}
-      <SafeAreaView
-        style={{
-          flex: 1,
-        }}
-      >
+      <SafeAreaView style={styles.container}>
         <ScrollView>
-          <View style={styles.imageContainer}>
-            {/* Image handler */}
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-              <TouchableOpacity
-                onPress={openImageLibrary}
-                style={{
-                  height: 125,
-                  width: 125,
-                  borderRadius: 125 / 2,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderStyle: "dashed",
-                  borderWidth: 1,
-                  overflow: "hidden",
-                }}
-              >
-                {profileImage ? (
-                  <Image source={{ uri: profileImage }} style={{ width: "100%", height: "100%" }} />
-                ) : (
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      fontSize: 16,
-                      opacity: 0.3,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Upload Profile Image
-                  </Text>
-                )}
-              </TouchableOpacity>
-              {profileImage ? (
-                <Text onPress={uploadProfileImage} style={[styles.skip, { backgroundColor: "green", color: "white", borderRadius: 8 }]}>
-                  Upload
-                </Text>
-              ) : null}
+          {/* Image handler */}
+          {/* <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.image} /> */}
+          <TouchableOpacity onPress={openImageLibrary}>
+            <View style={{ backgroundColor: "white", paddingHorizontal: 20, paddingTop: 20, paddingBottom: 10 }}>
+              <Text style={styles.label}>Upload Image:</Text>
             </View>
-            {/* <Text>Add Image here</Text> */}
+            <View style={styles.imageContainer2}>
+              {/* <Text>Add Image here</Text> */}
+              {profileImage ? (
+                <Image source={{ uri: profileImage }} style={styles.image} />
+              ) : (
+                <Image source={{ uri: "https://uploader-assets.s3.ap-south-1.amazonaws.com/codepen-default-placeholder.png" }} style={styles.image} />
+                // <Text
+                //   style={{
+                //     textAlign: "center",
+                //     fontSize: 20,
+                //     opacity: 0.3,
+                //     fontWeight: "bold",
+                //   }}
+                // >
+                //   Upload Imagesss
+                // </Text>
+              )}
+            </View>
+          </TouchableOpacity>
+          <View style={styles.imageContainer}>
             {/* <Pressable>
-            <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.imagePlaceholder} resizeMode="cover" />
-          </Pressable> */}
+              <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.imagePlaceholder} resizeMode="cover" />
+            </Pressable> */}
           </View>
           <VStack style={styles.formContainer}>
             <FormControl isRequired marginBottom={3}>
@@ -202,40 +289,59 @@ export default function PostItem({ navigation, route }) {
                 <Text style={styles.label}>Quantity: </Text>
                 <Text>{quantity}kg</Text>
               </View>
-              <Slider onChange={handleQuantityChange} defaultValue={1} minValue={0.5} maxValue={5} step={0.5} colorScheme="green">
-                <Slider.Track>
-                  <Slider.FilledTrack />
+              <Slider onChange={handleQuantityChange} defaultValue={5} minValue={1} maxValue={10} step={1}>
+                <Slider.Track bgColor={COLORS.muted}>
+                  <Slider.FilledTrack color={"red.100"} bgColor={COLORS.primary} />
                 </Slider.Track>
-                <Slider.Thumb />
+                <Slider.Thumb bgColor={COLORS.primary} />
               </Slider>
             </FormControl>
           </VStack>
 
           <VStack style={styles.mapsContainer}>
-            <Pressable>
-              {({ isHovered, isFocused, isPressed }) => {
-                return (
-                  <Box
-                    bg={isPressed ? "coolGray.200" : isHovered ? "coolGray.200" : "white"}
-                    // p="5"
-                    height="full"
-                    borderWidth="1"
-                    borderColor="coolGray.300"
-                    maxHeight={70}
-                  >
-                    <View style={{ padding: 20, flexDirection: "row", justifyContent: "space-between" }}>
-                      <Text style={styles.label}>Your location (approx)</Text>
-                      <Text style={styles.label}>Next</Text>
-                    </View>
-                  </Box>
-                );
-              }}
-            </Pressable>
+            <Box height="full" borderWidth="1" borderColor="coolGray.300" maxHeight={70}>
+              <View
+                style={{
+                  padding: 20,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                {/* <Text>Your location (approx)</Text> */}
+                <Input placeholder="Location" w="100%" backgroundColor="white" value={userLoc} onChangeText={handleLoc} onEndEditing={handleInput} />
+                {/* <Text style={styles.label}>Next</Text> */}
+              </View>
+            </Box>
+            <View style={{ height: "100%" }}>
+              <MapView
+                style={{ ...StyleSheet.absoluteFillObject }}
+                showsUserLocation={true}
+                // followUserLocation={true}
+                loadingEnabled={true}
+                region={{
+                  ...userLatLon,
+                  latitudeDelta: 0.03,
+                  longitudeDelta: 0.03,
+                }}
+              >
+                {userLatLon && <Marker draggable coordinate={userLatLon} style={{ ...StyleSheet.absoluteFillObject }} onDragEnd={handleMarker} />}
+              </MapView>
+            </View>
           </VStack>
 
+          <View style={styles.totalPrice}>
+            <Text style={styles.label}>Total Price: </Text>
+            <Text style={styles.label}>Rp.{quantity * price}</Text>
+          </View>
+
           <VStack style={styles.footer}>
+<<<<<<< HEAD
             <Button isLoading={postLoading ? true : false} onPress={onSubmit} bgColor={"#339966"} width={"full"} height={75} borderRadius={0}>
               Submit
+=======
+            <Button isLoading={postLoading ? true : false} onPress={onSubmit} bgColor={COLORS.primary} width={"full"} height={75} borderTopRadius={20} borderBottomRadius={0}>
+              <Text style={{ color: COLORS.accent, fontWeight: "500", fontSize: 16 }}>Submit</Text>
+>>>>>>> development
             </Button>
             {/* Kalo udah sambung server bisa tambah ini buat loading mutation */}
             {/* <Button isLoading>Button</Button> */}
@@ -255,7 +361,7 @@ export default function PostItem({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
-    backgroundColor: "#eeeeee",
+    backgroundColor: COLORS.lightGrey,
   },
   imageContainer: {
     // height: 200,
@@ -266,6 +372,14 @@ const styles = StyleSheet.create({
     overflow: "hidden",
     // height: "100%",
   },
+  imageContainer2: {
+    overflow: "hidden",
+    backgroundColor: "white",
+    height: 200,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: { height: "100%", width: "100%", resizeMode: "cover" },
   imagePlaceholder: {
     height: 150,
     width: 150,
@@ -280,6 +394,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flex: 1,
     height: 300,
+    marginBottom: 20,
   },
   footer: {
     justifyContent: "center",
@@ -289,5 +404,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
+  },
+  totalPrice: {
+    padding: 20,
+    backgroundColor: "white",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    // marginBottom: 20,
   },
 });

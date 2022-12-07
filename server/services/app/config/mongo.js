@@ -7,15 +7,15 @@ const uri =
 let options;
 
 if (process.env.NODE_ENV !== "test") {
-  options = {
-    dbName: `Wasteless`,
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    serverApi: ServerApiVersion.v1,
-  };
+	options = {
+		dbName: `Wasteless`,
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		serverApi: ServerApiVersion.v1,
+	};
 } else {
-  console.log("masuk sini");
-  options = {};
+	console.log("masuk sini")
+	options = {};
 }
 
 const client = new MongoClient(uri, options);

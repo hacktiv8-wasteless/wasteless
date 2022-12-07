@@ -35,6 +35,7 @@ export default function MyListing() {
   }, []);
 
   return (
+<<<<<<< HEAD
     <View style={styles.container}>
       {myListingPosts?.map((post) => {
         return (
@@ -44,6 +45,22 @@ export default function MyListing() {
           </View>
         );
       })}
+=======
+    <View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          {myListingPosts?.map((post) => {
+            // console.log(post);
+            return (
+              <View key={post["_id"]} style={styles.viewContainer}>
+                <ListingCard post={post} />
+                <QR />
+              </View>
+            );
+          })}
+        </View>
+      </ScrollView>
+>>>>>>> development
     </View>
   );
 }

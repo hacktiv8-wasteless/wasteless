@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { FlatList, VStack } from "native-base";
 import ListingCard from "../components/ListingCard";
@@ -35,6 +35,7 @@ export default function OngoingOrder() {
   }, []);
 
   return (
+<<<<<<< HEAD
     <View style={styles.container}>
       {myListingPosts?.map((post) => {
         return (
@@ -44,6 +45,24 @@ export default function OngoingOrder() {
           </View>
         );
       })}
+=======
+    <View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          {myListingPosts?.map((post) => {
+            return (
+              <View key={post["_id"]} style={styles.viewContainer}>
+                <ListingCard post={post} />
+                <VStack>
+                  <UserAvatar />
+                  <QR />
+                </VStack>
+              </View>
+            );
+          })}
+        </View>
+      </ScrollView>
+>>>>>>> development
     </View>
   );
 }

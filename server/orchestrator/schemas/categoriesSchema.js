@@ -23,70 +23,67 @@ const typeDefs = `#graphql
 `;
 
 const resolvers = {
-  Query: {
-    getAllCategories: async () => {
-      try {
-        // redis.del("Categories")
-        const cacheData = await redis.get("Categories");
+	Query: {
+		getAllCategories: async () => {
+			try {
+				// redis.del("Categories")
+				const cacheData = await redis.get("Categories");
 
-        if (cacheData) {
-          return JSON.parse(cacheData);
-        }
+				if (cacheData) {
+					return JSON.parse(cacheData);
+				}
 
-        const { data } = await App.get("/categories");
-        await redis.set("Categories", JSON.stringify(data));
+				const { data } = await App.get("/categories");
+				await redis.set("Categories", JSON.stringify(data));
 
-        // console.log(data)
+				// console.log(data)
 
-        return data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    getCategoryById: async (_, { category_id }) => {
-      try {
-        const { data } = await App.get(`/categories/${category_id}`);
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		getCategoryById: async (_, { category_id }) => {
+			try {
+				const { data } = await App.get(`/categories/${category_id}`);
 
-        return data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
-  Mutation: {
-    addCategory: async (_, { categoryPayload }) => {
-      const { name, price } = categoryPayload;
-      try {
-        const { data } = await App.post(`/categories`, { name, price });
-        await redis.del("Categories");
-        return { message: "Category added succesfully!" };
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    editCategory: async (_, { category_id, categoryPayload }) => {
-      const { name, price } = categoryPayload;
-      try {
-        const { data } = await App.put(`/categories/${category_id}`, {
-          name,
-          price,
-        });
-        await redis.del("Categories");
-        return { message: "Category edited succesfully!" };
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    deleteCategory: async (_, { category_id }) => {
-      try {
-        const { data } = await App.delete(`/categories/${category_id}`);
-        await redis.del("Categories");
-        return { message: "Category deleted succesfully!" };
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
+	Mutation: {
+		addCategory: async (_, { categoryPayload }) => {
+			const { name, price } = categoryPayload;
+			try {
+				const { data } = await App.post(`/categories`, { name, price });
+				await redis.del("Categories");
+				return { message: "Category added succesfully!" };
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		editCategory: async (_, { category_id, categoryPayload }) => {
+			const { name, price } = categoryPayload;
+			try {
+				const { data } = await App.put(`/categories/${category_id}`, { name, price });
+				await redis.del("Categories");
+				return { message: "Category edited succesfully!" };
+			} catch (error) {
+				console.log(error);
+			}
+		},
+		deleteCategory: async (_, { category_id }) => {
+			try {
+				const { data } = await App.delete(`/categories/${category_id}`);
+				await redis.del("Categories");
+				return { message: "Category deleted succesfully!" };
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
 };
 
 module.exports = { typeDefs, resolvers };

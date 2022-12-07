@@ -11,6 +11,10 @@ import {
   Text,
   Spacer,
 } from "native-base";
+<<<<<<< HEAD
+=======
+import { db } from "../configs/firebase";
+>>>>>>> development
 
 export default function Notifications({ navigation }) {
   const data = [
@@ -54,13 +58,62 @@ export default function Notifications({ navigation }) {
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwgu1A5zgPSvfE83nurkuzNEoXs9DMNr8Ww&usqp=CAU",
     },
   ];
+
+  const [notifications, setNotifications] = useState([]);
+
+  async function observer() {
+    const user1 = "giver";
+    const user2 = "taker";
+
+    const colls = db.collection("chats");
+    const docs = await colls
+      .where("user1", "in", [user1, user2])
+      .orderBy("timeStamp", "desc");
+
+    const today = new Date();
+
+    const observer = docs.onSnapshot(
+      (querySnapshot) => {
+        setNotifications(
+          querySnapshot.docs.map((doc) => {
+            return {
+              user:
+                doc.data().user1 == user1 ? doc.data().user2 : doc.data().user1,
+              lastMsg: doc.data().lastMsg,
+              timeStamp:
+                doc.data().timeStamp.toDate().getTime() >
+                today.setHours(0, 0, 0, 0)
+                  ? doc.data().timeStamp.toDate().getHours() +
+                    ":" +
+                    doc.data().timeStamp.toDate().getMinutes()
+                  : doc.data().timeStamp.toDate().getDate() +
+                    "/" +
+                    (doc.data().timeStamp.toDate().getMonth() + 1) +
+                    "/" +
+                    doc.data().timeStamp.toDate().getFullYear(),
+            };
+          })
+        );
+      },
+      (err) => {
+        console.log(`Encountered error: ${err}`);
+      }
+    );
+
+    // setNotifications(arr);
+  }
+
+  useEffect(() => {
+    observer();
+  }, []);
+
   return (
     <Box>
       <Heading fontSize="xl" p="4" pb="3">
         Inbox
       </Heading>
       <FlatList
-        data={data}
+        data={notifications}
         renderItem={({ item }) => (
           <Pressable onPress={() => navigation.navigate("Chat")}>
             <Box
@@ -77,7 +130,11 @@ export default function Notifications({ navigation }) {
                 <Avatar
                   size="48px"
                   source={{
+<<<<<<< HEAD
                     uri: item.avatarUrl,
+=======
+                    uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+>>>>>>> development
                   }}
                 />
                 <VStack>
@@ -88,7 +145,11 @@ export default function Notifications({ navigation }) {
                     color="coolGray.800"
                     bold
                   >
+<<<<<<< HEAD
                     {item.fullName}
+=======
+                    {item.user}
+>>>>>>> development
                   </Text>
                   <Text
                     color="coolGray.600"
@@ -96,7 +157,11 @@ export default function Notifications({ navigation }) {
                       color: "warmGray.200",
                     }}
                   >
+<<<<<<< HEAD
                     {item.recentText}
+=======
+                    {item.lastMsg}
+>>>>>>> development
                   </Text>
                 </VStack>
                 <Spacer />

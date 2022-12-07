@@ -65,3 +65,24 @@ export const EDIT_POST = gql`
     }
   }
 `;
+<<<<<<< HEAD
+=======
+
+export const GET_POST_BY_CATEGORY = gql`
+  query GetPostByCategory($categoryId: String) {
+    getPostByCategory(category_id: $categoryId) {
+      _id
+      giver_id
+      taker_id
+      category_id
+      title
+      description
+      mainImage
+      quantity
+      lat
+      long
+      status
+    }
+  }
+`;
+>>>>>>> development

@@ -8,12 +8,22 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useQuery } from "@apollo/client";
 import { GET_USER_DETAIL } from "../query/Users";
 import { useNavigation } from "@react-navigation/native";
+<<<<<<< HEAD
+=======
+import Loader from "../components/Loader";
+import { signOut } from "../helpers/util";
+>>>>>>> development
 
 const Profile = () => {
   const navigation = useNavigation();
 
   const { data: userDetailData, loading: userDetailLoading, error: userDetailError } = useQuery(GET_USER_DETAIL);
+<<<<<<< HEAD
   if (userDetailLoading) return <Text>Loading....</Text>;
+=======
+
+  if (userDetailLoading) return <Loader />;
+>>>>>>> development
   if (userDetailError) {
     console.log("postsError -------------------------");
     console.log(userDetailError);
@@ -102,7 +112,12 @@ const Profile = () => {
             <Text style={styles.menuItemText}>History Logs</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
+        <TouchableRipple
+          onPress={async () => {
+            await signOut();
+            navigation.replace("Login");
+          }}
+        >
           <View style={styles.menuItem}>
             <AntDesign name="logout" color="green" size={25} />
             <Text style={styles.menuItemText}>logout</Text>
@@ -122,6 +137,7 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "white",
   },
   userInfoSection: {
     paddingHorizontal: 30,

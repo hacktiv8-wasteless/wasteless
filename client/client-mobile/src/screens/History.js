@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { FlatList } from "native-base";
 import ListingCard from "../components/ListingCard";
@@ -33,6 +33,7 @@ export default function History() {
   }, []);
 
   return (
+<<<<<<< HEAD
     <View style={styles.container}>
       {myListingPosts?.map((post) => {
         return (
@@ -41,6 +42,20 @@ export default function History() {
           </View>
         );
       })}
+=======
+    <View>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.container}>
+          {myListingPosts?.map((post) => {
+            return (
+              <View key={post["_id"]} style={styles.viewContainer}>
+                <ListingCard post={post} />
+              </View>
+            );
+          })}
+        </View>
+      </ScrollView>
+>>>>>>> development
     </View>
   );
 }
