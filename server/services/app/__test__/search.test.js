@@ -11,6 +11,10 @@ const inputPost = () => {
     description: "botol plastik ",
     quantity: 10,
     status: "available",
+    lat: "-6",
+    long: "130",
+    category_id: "638ebdd4e1e660e420e4d1d9",
+    giver_id: "1",
   };
 };
 
@@ -48,24 +52,3 @@ describe("test for search post by title", () => {
     });
   });
 });
-
-/* describe("Search Routes Test", () => {
-    describe("GET /search - return data food matches by name", () => {
-        test("200 Success get all foods data, return array", (done) => {
-        request(server)
-            .get("/search?=ayam")
-            .set({ access_token: user_access_token })
-            .then((response) => {
-            const { body, status } = response;
-            expect(status).toBe(200);
-            expect(body[0]).toBeInstanceOf(Object);
-            expect(body[0].Food).toBeInstanceOf(Array);
-            done();
-            })
-            .catch((err) => {
-            done(err);
-            });
-        });
-    });
-});
- */

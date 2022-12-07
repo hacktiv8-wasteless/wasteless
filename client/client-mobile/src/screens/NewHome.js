@@ -114,7 +114,7 @@ export default function NewHome({ navigation }) {
 
   // if (postsLoading || categoryLoading || userLoading) return <Loader />;
 
-  console.log(postsLoading);
+  // console.log(postsLoading);
 
   const [userLoc, setUserLoc] = useState("");
   const [userLatLon, setUserLatLon] = useState({});
@@ -138,11 +138,9 @@ export default function NewHome({ navigation }) {
             lon: location.coords.longitude,
           });
 
-          const loc = await Geocoder.from(
-            location.coords.latitude,
-            location.coords.longitude
-          );
-          console.log(loc.results[0].address_components);
+
+          const loc = await Geocoder.from(location.coords.latitude, location.coords.longitude);
+          // console.log(loc.results[0].address_components);
 
           setUserLoc(
             loc.results[0].address_components.find(

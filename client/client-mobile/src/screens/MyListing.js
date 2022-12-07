@@ -8,6 +8,7 @@ import { useQuery } from "@apollo/client";
 import { GET_POSTS } from "../query/Posts";
 import { GET_CATEGORIES, GET_CATEGORY_ID } from "../query/Categories";
 import { getUserId } from "../helpers/util";
+import Loader from "../components/Loader";
 
 export default function MyListing() {
   const [userId, setUserId] = useState(null);

@@ -1,9 +1,9 @@
 const { ObjectId } = require("mongodb");
 const Post = require("../models/post");
-
+let latlngDist = require("latlng-distance");
 class PostController {
 	static async getAllPost(req, res) {
-		const { category_id } = req.query;
+		const { category_id, lat, long } = req.query;
 		let options = {};
 		try {
 			if (category_id) {
@@ -11,9 +11,24 @@ class PostController {
 					category_id,
 				};
 			}
+
+			console.log(req.query);
+
 			console.log("masuk sini");
-			const result = await Post.find(options);
+			let result = await Post.find(options);
+
+			if (lat || long) {
+				result = result.filter(
+					(el) =>
+						latlngDist.distanceDiffInKm(
+							{ lat: +lat, lon: +long },
+							{ lat: +el.lat, lon: +el.long }
+						) <= 5
+				);
+			}
+
 			console.log(result);
+
 			res.status(200).json(result);
 		} catch (error) {
 			res.status(500).json(error.message);

@@ -19,19 +19,16 @@ const typeDefs = `#graphql
     message:String
 	error:Boolean
   }
-
   type Invoice {
     external_id:String
     totalPrice:Int
     invoice_url:String
 	}
-
 	input InvoicePayload {
 		external_id:String
    		totalPrice:Int
 		status:String
 	}
-
   input userPayload {
     username:String
     email:String
@@ -113,7 +110,7 @@ const resolvers = {
 
 				const { data } = await Users.post(`/users/login`, { email, password });
 
-				return { access_token: data.access_token, id: data.id };
+				return data;
 			} catch (error) {
 				console.log(error);
 			}

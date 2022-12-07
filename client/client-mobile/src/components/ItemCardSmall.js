@@ -7,7 +7,7 @@ import { Skeleton } from "native-base";
 import latlngDist from "latlng-distance";
 
 export default function ItemCardSmall({ post, postsLoading, userLatLon }) {
-  console.log(post);
+  // console.log(post);
   const navigation = useNavigation();
   // console.log(post["_id"]);
   return (
