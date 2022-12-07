@@ -2,7 +2,15 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SearchAllCategory from "../screens/SearchAllCategory";
 import { Feather } from "@expo/vector-icons";
 import PostCategory from "../screens/PostCategory";
-import { Button, useDisclose, Actionsheet, Box, Center, Text, View } from "native-base";
+import {
+  Button,
+  useDisclose,
+  Actionsheet,
+  Box,
+  Center,
+  Text,
+  View,
+} from "native-base";
 import Notifications from "../screens/Notifications";
 import TopTabNavigator from "./TopTabNavigator";
 import { COLORS } from "../constants";
@@ -17,13 +25,13 @@ const Tab = createBottomTabNavigator();
 const TabNavigator = ({ navigation }) => {
   const { isOpen, onOpen, onClose } = useDisclose();
 
-  const { data: categoryData, loading: categoryLoading, error: categoryError } = useQuery(GET_CATEGORIES);
+  const {
+    data: categoryData,
+    loading: categoryLoading,
+    error: categoryError,
+  } = useQuery(GET_CATEGORIES);
 
-<<<<<<< HEAD
-  if (categoryLoading) return <Loader />;
-=======
   // if (categoryLoading) return <Loader />;
->>>>>>> development
   if (categoryError) {
     console.log("categoryError di tab -----------------------");
     console.log(categoryError);
@@ -85,7 +93,10 @@ const TabNavigator = ({ navigation }) => {
             headerShown: false,
             headerRight: () => (
               <View style={[styles.buttonContainer, styles.headerButton]}>
-                <Button onPress={() => navigation.navigate("MyProfile")} variant="unstyled">
+                <Button
+                  onPress={() => navigation.navigate("MyProfile")}
+                  variant="unstyled"
+                >
                   <Feather name="user" size={24} />
                 </Button>
               </View>
@@ -99,7 +110,11 @@ const TabNavigator = ({ navigation }) => {
           options={{
             tabBarButton: () => (
               <View style={styles.buttonContainer}>
-                <Button onPress={onOpen} variant="unstyled" style={styles.button}>
+                <Button
+                  onPress={onOpen}
+                  variant="unstyled"
+                  style={styles.button}
+                >
                   <Feather name="plus" size={24} color={COLORS.accent} />
                 </Button>
               </View>
@@ -107,13 +122,16 @@ const TabNavigator = ({ navigation }) => {
             title: "Post",
           }}
         />
-<<<<<<< HEAD
-        <Tab.Screen name="Notifications" component={Notifications} />
-        <Tab.Screen name="MyListing" component={TopTabNavigator} options={{ title: "My Listing" }} />
-=======
-        <Tab.Screen name="Notifications" component={Notifications} options={{ title: "Messages" }} />
-        <Tab.Screen name="MyListingNavigator" component={TopTabNavigator} options={{ title: "My Listings" }} />
->>>>>>> development
+        <Tab.Screen
+          name="Notifications"
+          component={Notifications}
+          options={{ title: "Messages" }}
+        />
+        <Tab.Screen
+          name="MyListingNavigator"
+          component={TopTabNavigator}
+          options={{ title: "My Listings" }}
+        />
       </Tab.Navigator>
 
       {/* Slider */}
@@ -131,22 +149,6 @@ const TabNavigator = ({ navigation }) => {
                 Pick a Category
               </Text>
             </Box>
-<<<<<<< HEAD
-            {categoryData?.getAllCategories?.map((category) => (
-              <Actionsheet.Item
-                onPress={() => {
-                  navigation.navigate("Post", {
-                    //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                    category: category.name,
-                    categoryId: category._id,
-                  });
-                  onClose();
-                }}
-              >
-                {category.name}
-              </Actionsheet.Item>
-            ))}
-=======
             {categoryData?.getAllCategories?.map((category) => {
               // console.log(category);
               return (
@@ -166,7 +168,6 @@ const TabNavigator = ({ navigation }) => {
                 </Actionsheet.Item>
               );
             })}
->>>>>>> development
           </Actionsheet.Content>
         </Actionsheet>
       </Center>

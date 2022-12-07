@@ -12,19 +12,22 @@ class PostController {
 				};
 			}
 
+			console.log(req.query);
+
 			console.log("masuk sini");
-			const result = await Post.find(options);
-			console.log(result);
+			let result = await Post.find(options);
 
 			if (lat || long) {
 				result = result.filter(
 					(el) =>
 						latlngDist.distanceDiffInKm(
-							{ lat, lon: long },
-							{ lat: el.lat, lon: el.long }
-						) < 5
+							{ lat: +lat, lon: +long },
+							{ lat: +el.lat, lon: +el.long }
+						) <= 5
 				);
 			}
+
+			console.log(result);
 
 			res.status(200).json(result);
 		} catch (error) {

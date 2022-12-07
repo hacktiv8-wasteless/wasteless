@@ -1,27 +1,17 @@
-<<<<<<< HEAD
-import { View, StyleSheet } from "react-native";
-=======
 import { View, StyleSheet, Image } from "react-native";
->>>>>>> development
 import MapView, { Marker } from "react-native-maps";
 import MapViewDirections from "react-native-maps-directions";
 import * as Location from "expo-location";
 import { useState, useEffect } from "react";
 import { db } from "../configs/firebase";
-<<<<<<< HEAD
-=======
 import person from "../../assets/person.png";
->>>>>>> development
 
 export default function Maps() {
   const [takerLoc, setTakerLoc] = useState(null);
   const [mapRegion, setMapRegion] = useState(null);
 
-<<<<<<< HEAD
-=======
   const MARKER_PERSON = Image.resolveAssetSource(person).uri;
 
->>>>>>> development
   async function observer() {
     const docs = db
       .collection("chats")
@@ -87,10 +77,7 @@ export default function Maps() {
           <Marker
             coordinate={takerLoc}
             style={{ ...StyleSheet.absoluteFillObject }}
-<<<<<<< HEAD
-=======
             image={{ uri: MARKER_PERSON }}
->>>>>>> development
           />
         )}
       </MapView>
@@ -101,9 +88,5 @@ export default function Maps() {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    borderRadius: 16,
-    margin: 30,
   },
 });

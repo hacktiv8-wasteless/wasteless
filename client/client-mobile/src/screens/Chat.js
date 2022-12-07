@@ -53,14 +53,11 @@ export default function Chat({ navigation }) {
       .collection("messages")
       .doc(_id)
       .set({ _id, createdAt, text, user });
-<<<<<<< HEAD
-=======
 
     await db
       .collection("chats")
       .doc(roomId)
       .update({ lastMsg: text, timeStamp: new Date() });
->>>>>>> development
   }, []);
 
   return (
@@ -68,9 +65,10 @@ export default function Chat({ navigation }) {
       renderComposer={renderComposer}
       renderActions={renderActions}
       renderInputToolbar={renderInputToolbar}
+      renderSend={renderSend}
       alwaysShowSend
       messages={messages}
-      showAvatarForEveryMessage={true}
+      // showAvatarForEveryMessage={false}
       onSend={(messages) => onSend(messages)}
       renderBubble={(props) => {
         return (
@@ -78,9 +76,9 @@ export default function Chat({ navigation }) {
             {...props}
             wrapperStyle={{
               right: {
-                backgroundColor: "#efc100",
+                backgroundColor: "#339966",
               },
-              left: {},
+              left: { marginLeft: -47 },
             }}
           />
         );

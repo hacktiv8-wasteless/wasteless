@@ -12,23 +12,13 @@ import XenditPayment from "../screens/XenditScreen";
 import HistoryLogs from "../screens/HistoryLogs";
 import ScannerQR from "../screens/Scanner";
 import Payment from "../screens/PaymentScreen";
-<<<<<<< HEAD
-=======
 import Categories from "../screens/SearchByCategory";
 import { COLORS } from "../constants";
->>>>>>> development
 
 const Stack = createNativeStackNavigator();
 
 export default function HomeNavigator() {
   return (
-<<<<<<< HEAD
-    <Stack.Navigator screenOptions={{ headerShown: false, headerTitleAlign: "center" }}>
-      {/* <Stack.Navigator > */}
-      <Stack.Screen name="Home" component={NewHome} />
-      <Stack.Screen name="PostDetail" component={PostDetail} options={{ headerShown: true }} />
-      <Stack.Screen name="Post" component={PostItem} options={({ route }) => ({ title: route.params.category, headerShown: true })} />
-=======
     <Stack.Navigator
       screenOptions={{
         headerTitleAlign: "center",
@@ -60,7 +50,6 @@ export default function HomeNavigator() {
         }}
       />
 
->>>>>>> development
       <Stack.Screen name="MyProfile" component={Profile} />
       <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
       <Stack.Screen name="MapDirection" component={MapDirection} options={{ headerShown: true }} />

@@ -75,7 +75,7 @@ module.exports = (sequelize, DataTypes) => {
       hooks: {
         beforeCreate: (instance) => {
           instance.password = hashPassword(instance.password);
-          instance.balance = 50000;
+          instance.balance = 0;
           instance.points = 0;
         },
       },

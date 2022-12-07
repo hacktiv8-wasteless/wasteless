@@ -84,9 +84,10 @@ const resolvers = {
 			}
 		},
 
-		getNearbyPosts: async (_, { lat, long }, context) => {
+		getNearbyPosts: async (_, { postPayload }, context) => {
 			try {
 				if (!context.token) throw { error: "Invalid access" };
+				const { lat, long } = postPayload;
 				// console.log(context.token);
 
 				redis.del("Posts");
@@ -133,7 +134,6 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-
 		getAppointment: async (_, {post_id}, context) => {
 			try {
 				if (!context.token) throw { error: "Invalid access" };

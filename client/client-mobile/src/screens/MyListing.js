@@ -8,6 +8,7 @@ import { useQuery } from "@apollo/client";
 import { GET_POSTS } from "../query/Posts";
 import { GET_CATEGORIES, GET_CATEGORY_ID } from "../query/Categories";
 import { getUserId } from "../helpers/util";
+import Loader from "../components/Loader";
 
 export default function MyListing() {
   const [userId, setUserId] = useState(null);
@@ -35,17 +36,6 @@ export default function MyListing() {
   }, []);
 
   return (
-<<<<<<< HEAD
-    <View style={styles.container}>
-      {myListingPosts?.map((post) => {
-        return (
-          <View style={styles.viewContainer}>
-            <ListingCard post={post} />
-            <QR />
-          </View>
-        );
-      })}
-=======
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
@@ -60,7 +50,6 @@ export default function MyListing() {
           })}
         </View>
       </ScrollView>
->>>>>>> development
     </View>
   );
 }

@@ -9,12 +9,15 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import { db } from "../configs/firebase";
 import * as Location from "expo-location";
+import loc from "../../assets/chatLoc.png";
+
+const RENDER_LOC = Image.resolveAssetSource(loc).uri;
 
 export const renderInputToolbar = (props) => (
   <InputToolbar
     {...props}
     containerStyle={{
-      backgroundColor: "#222B45",
+      backgroundColor: "#339966",
       paddingTop: 6,
     }}
     primaryStyle={{ alignItems: "center" }}
@@ -79,15 +82,18 @@ export const renderActions = (props) => {
         height: 44,
         alignItems: "center",
         justifyContent: "center",
-        marginLeft: 4,
-        marginRight: 4,
-        marginBottom: 0,
+        marginLeft: 2,
+        marginRight: 2,
+        marginBottom: 2,
       }}
       icon={() => (
         <Image
-          style={{ width: 32, height: 32 }}
+          style={{
+            width: 32,
+            height: 32,
+          }}
           source={{
-            uri: "https://placeimg.com/32/32/any",
+            uri: RENDER_LOC,
           }}
         />
       )}
@@ -112,11 +118,10 @@ export const renderComposer = (props) => (
     {...props}
     textInputStyle={{
       color: "#222B45",
-      backgroundColor: "#EDF1F7",
+      backgroundColor: "#FFFFFF",
       borderWidth: 1,
       borderRadius: 5,
-      borderColor: "#E4E9F2",
-      paddingTop: 8.5,
+      borderColor: "#339966",
       paddingHorizontal: 12,
       marginLeft: 0,
     }}
@@ -126,20 +131,15 @@ export const renderComposer = (props) => (
 export const renderSend = (props) => (
   <Send
     {...props}
-    disabled={!props.text}
+    // disabled={!props.text}
     containerStyle={{
-      width: 44,
-      height: 44,
       alignItems: "center",
       justifyContent: "center",
-      marginHorizontal: 4,
+      marginHorizontal: 2,
     }}
-  >
-    <Image
-      style={{ width: 32, height: 32 }}
-      source={{
-        uri: "https://placeimg.com/32/32/any",
-      }}
-    />
-  </Send>
+    textStyle={{
+      color: "#FFFFFF",
+      marginVertical: 8,
+    }}
+  ></Send>
 );

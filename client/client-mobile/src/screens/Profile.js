@@ -1,29 +1,34 @@
 import React from "react";
 import { View, SafeAreaView, StyleSheet } from "react-native";
-import { Avatar, Title, Caption, Text, TouchableRipple } from "react-native-paper";
+import {
+  // Avatar,
+  Title,
+  Caption,
+  Text,
+  TouchableRipple,
+} from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { Avatar } from "native-base";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useQuery } from "@apollo/client";
 import { GET_USER_DETAIL } from "../query/Users";
 import { useNavigation } from "@react-navigation/native";
-<<<<<<< HEAD
-=======
 import Loader from "../components/Loader";
-import { signOut } from "../helpers/util";
->>>>>>> development
+import { signOut, capitalize } from "../helpers/util";
+import { COLORS } from "../constants";
 
 const Profile = () => {
   const navigation = useNavigation();
 
-  const { data: userDetailData, loading: userDetailLoading, error: userDetailError } = useQuery(GET_USER_DETAIL);
-<<<<<<< HEAD
-  if (userDetailLoading) return <Text>Loading....</Text>;
-=======
+  const {
+    data: userDetailData,
+    loading: userDetailLoading,
+    error: userDetailError,
+  } = useQuery(GET_USER_DETAIL);
 
   if (userDetailLoading) return <Loader />;
->>>>>>> development
   if (userDetailError) {
     console.log("postsError -------------------------");
     console.log(userDetailError);
@@ -36,12 +41,23 @@ const Profile = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
         <View style={{ flexDirection: "row", marginTop: 15 }}>
-          <Avatar.Image
+          {/* <Avatar.Image
             source={{
               uri: "https://img.freepik.com/premium-vector/man-avatar-profile-round-icon_24640-14044.jpg?w=2000",
             }}
             size={80}
-          />
+          /> */}
+          <Avatar size={"80px"} bg={COLORS.accent}>
+            <Text
+              style={{
+                fontSize: 35,
+                fontWeight: "600",
+                color: COLORS.dark,
+              }}
+            >
+              A
+            </Text>
+          </Avatar>
           <View style={{ marginLeft: 20 }}>
             <Title
               style={[
@@ -62,15 +78,21 @@ const Profile = () => {
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
           <Entypo name="location" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>Kolkata, India</Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>
+            Kolkata, India
+          </Text>
         </View>
         <View style={styles.row}>
           <Entypo name="phone" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>+91-900000009</Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>
+            +91-900000009
+          </Text>
         </View>
         <View style={styles.row}>
           <Icon name="email" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>john_doe@email.com</Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>
+            john_doe@email.com
+          </Text>
         </View>
       </View>
 

@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { COLORS } from "../constants";
 import {
   FlatList,
   Box,
@@ -11,10 +12,7 @@ import {
   Text,
   Spacer,
 } from "native-base";
-<<<<<<< HEAD
-=======
 import { db } from "../configs/firebase";
->>>>>>> development
 
 export default function Notifications({ navigation }) {
   const data = [
@@ -77,6 +75,7 @@ export default function Notifications({ navigation }) {
         setNotifications(
           querySnapshot.docs.map((doc) => {
             return {
+              id: doc.id,
               user:
                 doc.data().user1 == user1 ? doc.data().user2 : doc.data().user1,
               lastMsg: doc.data().lastMsg,
@@ -121,22 +120,23 @@ export default function Notifications({ navigation }) {
               _dark={{
                 borderColor: "muted.50",
               }}
-              borderColor="muted.800"
+              borderColor="muted.400"
               pl={["0", "4"]}
               pr={["0", "5"]}
               py="2"
+              marginY={1}
             >
               <HStack space={[2, 3]} justifyContent="space-between">
                 <Avatar
                   size="48px"
-                  source={{
-<<<<<<< HEAD
-                    uri: item.avatarUrl,
-=======
-                    uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
->>>>>>> development
-                  }}
-                />
+                  marginLeft={4}
+                  marginRight={2}
+                  // source={{
+                  //   uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                  // }}
+                >
+                  {item.user.charAt(0).toUpperCase()}
+                </Avatar>
                 <VStack>
                   <Text
                     _dark={{
@@ -145,11 +145,7 @@ export default function Notifications({ navigation }) {
                     color="coolGray.800"
                     bold
                   >
-<<<<<<< HEAD
-                    {item.fullName}
-=======
                     {item.user}
->>>>>>> development
                   </Text>
                   <Text
                     color="coolGray.600"
@@ -157,11 +153,7 @@ export default function Notifications({ navigation }) {
                       color: "warmGray.200",
                     }}
                   >
-<<<<<<< HEAD
-                    {item.recentText}
-=======
                     {item.lastMsg}
->>>>>>> development
                   </Text>
                 </VStack>
                 <Spacer />
@@ -172,6 +164,8 @@ export default function Notifications({ navigation }) {
                   }}
                   color="coolGray.800"
                   alignSelf="flex-start"
+                  marginRight={3}
+                  paddingTop={1}
                 >
                   {item.timeStamp}
                 </Text>

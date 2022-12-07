@@ -11,16 +11,13 @@ import { useQuery } from "@apollo/client";
 import { GET_POST_DETAIL } from "../query/Posts";
 import { GET_CATEGORY_ID } from "../query/Categories";
 import { capitalize } from "../helpers/util";
-<<<<<<< HEAD
-=======
 import Loader from "../components/Loader";
->>>>>>> development
 
 const MAP_PLACEHOLDER = Image.resolveAssetSource(mapPlaceHolder).uri;
 const MARKER_APPROXIMATE = Image.resolveAssetSource(approximateLoc).uri;
 
 export default function PostDetail({ navigation, route }) {
-  const [mapRegion, setmapRegion] = useState(null);
+  // const [mapRegion, setmapRegion] = useState(null);
 
   // useEffect(() => {
   //   (async () => {
@@ -50,8 +47,17 @@ export default function PostDetail({ navigation, route }) {
   // const categoryId = postDetailData?.getPostById?.category_id;
   // console.log(postDetailData);
 
-  const { data: postDetailData, loading: postDetailLoading, error: postDetailError } = useQuery(GET_POST_DETAIL, { variables: { postId } });
-  const { data: categoryDetailData, loading: categoryDetailLoading, error: categoryDetailError, refetch } = useQuery(GET_CATEGORY_ID, { variables: null });
+  const {
+    data: postDetailData,
+    loading: postDetailLoading,
+    error: postDetailError,
+  } = useQuery(GET_POST_DETAIL, { variables: { postId } });
+  const {
+    data: categoryDetailData,
+    loading: categoryDetailLoading,
+    error: categoryDetailError,
+    refetch,
+  } = useQuery(GET_CATEGORY_ID, { variables: null });
 
   useEffect(() => {
     if (postDetailData) {
@@ -59,11 +65,7 @@ export default function PostDetail({ navigation, route }) {
     }
   }, [postDetailData]);
 
-<<<<<<< HEAD
-  if (postDetailLoading || categoryDetailLoading) return <Text>Loadinggg.....</Text>;
-=======
   if (postDetailLoading && categoryDetailLoading) return <Loader />;
->>>>>>> development
   // if (postDetailError) {
   //   console.log("postDetailError ---------------------");
   //   console.log(postDetailError);
@@ -83,52 +85,76 @@ export default function PostDetail({ navigation, route }) {
         <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.image} />
       </View> */}
           <View style={styles.imageContainer2}>
-            <Image source={{ uri: postDetailData?.getPostById?.mainImage }} style={styles.image} />
+            <Image
+              source={{ uri: postDetailData?.getPostById?.mainImage }}
+              style={styles.image}
+            />
           </View>
           <View style={styles.postDetail}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-<<<<<<< HEAD
-              <Text style={styles.title}>{capitalize(postDetailData?.getPostById?.title)}</Text>
-=======
-              <Text style={styles.title}>{postDetailData ? capitalize(postDetailData?.getPostById?.title) : ""}</Text>
->>>>>>> development
-              <Button onPress={() => console.log("jalan delete")} variant="unstyled">
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text style={styles.title}>
+                {postDetailData
+                  ? capitalize(postDetailData?.getPostById?.title)
+                  : ""}
+              </Text>
+              <Button
+                onPress={() => console.log("jalan delete")}
+                variant="unstyled"
+              >
                 <Feather name="trash-2" size={24} color="red" />
               </Button>
             </View>
             <View style={{ flexDirection: "row" }}>
-              <Text style={styles.category}>{postDetailData ? categoryDetailData?.getCategoryById?.name : ""}</Text>
+              <Text style={styles.category}>
+                {postDetailData
+                  ? categoryDetailData?.getCategoryById?.name
+                  : ""}
+              </Text>
             </View>
             <View>
               <Text>Placeholder biar gampang:</Text>
-              <Text>Total harga: {postDetailData?.getPostById?.quantity * categoryDetailData?.getCategoryById?.price}</Text>
+              <Text>
+                Total harga:{" "}
+                {postDetailData?.getPostById?.quantity *
+                  categoryDetailData?.getCategoryById?.price}
+              </Text>
               <Text>Lat: {postDetailData?.getPostById?.lat}</Text>
               <Text>Long: {postDetailData?.getPostById?.long}</Text>
               <Text>Giver_id: {postDetailData?.getPostById?.giver_id}</Text>
-<<<<<<< HEAD
-              <Text>Sta: {postDetailData?.getPostById?.giver_id}</Text>
-            </View>
-            <Text>{capitalize(postDetailData?.getPostById?.description)}</Text>
-=======
               <Text>Status: {postDetailData?.getPostById?.status}</Text>
             </View>
-            <Text>{postDetailData ? capitalize(postDetailData?.getPostById?.description) : ""}</Text>
->>>>>>> development
+            <Text>
+              {postDetailData
+                ? capitalize(postDetailData?.getPostById?.description)
+                : ""}
+            </Text>
             {/* <Text style={styles.subTitle}>Photos</Text> */}
             <Text style={styles.subTitle}>Location</Text>
             <View style={styles.mapContainer}>
               <MapView
                 style={{ ...StyleSheet.absoluteFillObject }}
-                showsUserLocation={true}
-                // followUserLocation={true}
+                // showsUserLocation={true}
+                followUserLocation={true}
                 loadingEnabled={true}
                 region={{
-                  ...mapRegion,
-                  latitudeDelta: 0.03,
-                  longitudeDelta: 0.03,
+                  latitude: ~~postDetailData?.getPostById?.lat,
+                  longitude: ~~postDetailData?.getPostById?.long,
+                  latitudeDelta: 0.053,
+                  longitudeDelta: 0.053,
                 }}
               >
-                {mapRegion && <Marker coordinate={mapRegion} style={{ ...StyleSheet.absoluteFillObject }} image={{ uri: MARKER_APPROXIMATE }} />}
+                {postDetailData && (
+                  <Marker
+                    coordinate={{
+                      latitude: ~~postDetailData?.getPostById?.lat,
+                      longitude: ~~postDetailData?.getPostById?.long,
+                    }}
+                    style={{ ...StyleSheet.absoluteFillObject }}
+                    image={{ uri: MARKER_APPROXIMATE }}
+                  />
+                )}
               </MapView>
               {/* <Image source={{ uri: MAP_PLACEHOLDER }} style={styles.image} /> */}
             </View>

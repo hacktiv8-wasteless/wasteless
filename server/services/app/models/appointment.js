@@ -10,6 +10,7 @@ const appointmentSchema = mongoose.Schema({
   },
   username: {
     type: String,
+    require: [true, "username is required"],
   },
   email: {
     type: String,

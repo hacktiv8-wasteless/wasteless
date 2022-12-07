@@ -35,17 +35,6 @@ export default function OngoingOrder() {
   }, []);
 
   return (
-<<<<<<< HEAD
-    <View style={styles.container}>
-      {myListingPosts?.map((post) => {
-        return (
-          <View style={styles.viewContainer}>
-            <ListingCard post={post} />
-            <QR />
-          </View>
-        );
-      })}
-=======
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
@@ -62,7 +51,6 @@ export default function OngoingOrder() {
           })}
         </View>
       </ScrollView>
->>>>>>> development
     </View>
   );
 }
