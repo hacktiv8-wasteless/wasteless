@@ -118,14 +118,17 @@ export default function Notifications({ navigation }) {
               _dark={{
                 borderColor: "muted.50",
               }}
-              borderColor="muted.800"
+              borderColor="muted.400"
               pl={["0", "4"]}
               pr={["0", "5"]}
               py="2"
+              marginY={1}
             >
               <HStack space={[2, 3]} justifyContent="space-between">
                 <Avatar
                   size="48px"
+                  marginLeft={4}
+                  marginRight={2}
                   source={{
                     uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
                   }}
@@ -157,6 +160,8 @@ export default function Notifications({ navigation }) {
                   }}
                   color="coolGray.800"
                   alignSelf="flex-start"
+                  marginRight={3}
+                  paddingTop={1}
                 >
                   {item.timeStamp}
                 </Text>

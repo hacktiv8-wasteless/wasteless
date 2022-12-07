@@ -65,6 +65,7 @@ export default function Chat({ navigation }) {
       renderComposer={renderComposer}
       renderActions={renderActions}
       renderInputToolbar={renderInputToolbar}
+      renderSend={renderSend}
       alwaysShowSend
       messages={messages}
       showAvatarForEveryMessage={true}
@@ -75,7 +76,7 @@ export default function Chat({ navigation }) {
             {...props}
             wrapperStyle={{
               right: {
-                backgroundColor: "#efc100",
+                backgroundColor: "#339966",
               },
               left: {},
             }}
