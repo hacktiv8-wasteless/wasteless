@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { Dimensions, ScrollView, StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { FlatList } from "native-base";
 import ListingCard from "../components/ListingCard";
@@ -6,6 +6,9 @@ import { useQuery } from "@apollo/client";
 import { GET_POSTS } from "../query/Posts";
 import { useEffect } from "react";
 import { getUserId } from "../helpers/util";
+import Loader from "../components/Loader";
+
+const { height, width } = Dimensions.get("screen");
 
 export default function History() {
   const [userId, setUserId] = useState(null);
@@ -36,19 +39,24 @@ export default function History() {
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
-          {myListingPosts?.map((post) => {
-            return (
-              <View key={post["_id"]} style={styles.viewContainer}>
-                <ListingCard post={post} />
-              </View>
-            );
-          })}
+          {myListingPosts.length === 0 ? (
+            <View style={{ justifyContent: "center", alignItems: "center", height: height - 200 }}>
+              <Text style={{ fontWeight: "400", fontSize: 16, color: "gray" }}>No posts.</Text>
+            </View>
+          ) : (
+            myListingPosts?.map((post) => {
+              return (
+                <View key={post["_id"]} style={styles.viewContainer}>
+                  <ListingCard post={post} />
+                </View>
+              );
+            })
+          )}
         </View>
       </ScrollView>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",

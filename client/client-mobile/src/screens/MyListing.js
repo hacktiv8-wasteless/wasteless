@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import ListingCard from "../components/ListingCard";
@@ -9,6 +9,8 @@ import { GET_POSTS } from "../query/Posts";
 import { GET_CATEGORIES, GET_CATEGORY_ID } from "../query/Categories";
 import { getUserId } from "../helpers/util";
 import Loader from "../components/Loader";
+
+const { height, width } = Dimensions.get("screen");
 
 export default function MyListing() {
   const [userId, setUserId] = useState(null);
@@ -39,15 +41,20 @@ export default function MyListing() {
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
-          {myListingPosts?.map((post) => {
-            // console.log(post);
-            return (
-              <View key={post["_id"]} style={styles.viewContainer}>
-                <ListingCard post={post} />
-                <QR />
-              </View>
-            );
-          })}
+          {myListingPosts.length === 0 ? (
+            <View style={{ justifyContent: "center", alignItems: "center", height: height - 200 }}>
+              <Text style={{ fontWeight: "400", fontSize: 16, color: "gray" }}>No posts.</Text>
+            </View>
+          ) : (
+            myListingPosts?.map((post) => {
+              return (
+                <View key={post["_id"]} style={styles.viewContainer}>
+                  <ListingCard post={post} />
+                  <QR />
+                </View>
+              );
+            })
+          )}
         </View>
       </ScrollView>
     </View>

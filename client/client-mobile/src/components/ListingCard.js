@@ -15,7 +15,7 @@ export default function ListingCard({ post }) {
     navigation.navigate("PostDetail", { id: post["_id"] });
   };
 
-  console.log(post);
+  // console.log(post);
 
   return (
     <View style={{ flexDirection: "column" }}>
