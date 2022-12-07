@@ -12,39 +12,48 @@ const { height, width } = Dimensions.get("screen");
 
 export default function History() {
   const [userId, setUserId] = useState(null);
+  const [completedPosts, setCompletedPosts] = useState([]);
+  console.log(userId);
+  useEffect(() => {
+    let newFilter = postsData?.getAllPosts.filter((el) => el.taker_id == userId && el.status == "complete");
+    setCompletedPosts(newFilter);
+  }, [postsData, userId]);
+
+  console.log(completedPosts);
 
   const userIdGetter = async () => {
     const data = await getUserId();
     setUserId(Number(data));
   };
 
-  const { loading: postsLoading, error: postsError, data: postsData } = useQuery(GET_POSTS);
+  const { data: postsData, loading: postsLoading, error: postsError } = useQuery(GET_POSTS);
 
-  if (postsLoading) return <Loader />;
   if (postsError) {
     console.log("postsError -------------------------");
     console.log(postsError);
     console.log("postsError -------------------------");
   }
 
-  const myListingPosts = postsData?.getAllPosts?.filter((myListing) => {
-    return myListing?.status === "completed" && myListing?.giver_id == userId;
-  });
+  // const myListingPosts = postsData?.getAllPosts?.filter((myListing) => {
+  //   return (myListing?.status === "complete" && myListing?.giver_id == userId) || (myListing?.status === "complete" && myListing?.taker_id === userId);
+  // });
 
   useEffect(() => {
     userIdGetter();
   }, []);
 
+  if (postsLoading) return <Loader />;
+
   return (
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
-          {myListingPosts.length === 0 ? (
+          {completedPosts?.length === 0 ? (
             <View style={{ justifyContent: "center", alignItems: "center", height: height - 200 }}>
               <Text style={{ fontWeight: "400", fontSize: 16, color: "gray" }}>No posts.</Text>
             </View>
           ) : (
-            myListingPosts?.map((post) => {
+            completedPosts?.map((post) => {
               return (
                 <View key={post["_id"]} style={styles.viewContainer}>
                   <ListingCard post={post} />

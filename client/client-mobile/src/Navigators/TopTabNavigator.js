@@ -13,7 +13,7 @@ export default function TopTabNavigator() {
     <TopTab.Navigator initialLayout="MyListing" screenOptions={{ tabBarLabelStyle: { textTransform: "none" }, headerShadowVisible: false, tabBarPressColor: COLORS.lightGrey, tabBarIndicatorStyle: { backgroundColor: COLORS.primary } }}>
       <TopTab.Screen name="MyListing" component={MyListing} options={{ title: "Available" }} />
       <TopTab.Screen name="Ongoing" component={OngoingOrder} options={{ title: "Booked" }} />
-      <TopTab.Screen name="History" component={History} options={{ title: "History" }} />
+      <TopTab.Screen name="History" component={History} options={{ title: "Sold" }} />
     </TopTab.Navigator>
   );
 }

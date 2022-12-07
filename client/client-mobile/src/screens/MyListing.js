@@ -22,7 +22,6 @@ export default function MyListing() {
 
   const { loading: postsLoading, error: postsError, data: postsData } = useQuery(GET_POSTS);
 
-  if (postsLoading) return <Loader />;
   if (postsError) {
     console.log("postsError -------------------------");
     console.log(postsError);
@@ -37,11 +36,13 @@ export default function MyListing() {
     userIdGetter();
   }, []);
 
+  if (postsLoading) return <Loader />;
+
   return (
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.container}>
-          {myListingPosts.length === 0 ? (
+          {myListingPosts?.length === 0 ? (
             <View style={{ justifyContent: "center", alignItems: "center", height: height - 200 }}>
               <Text style={{ fontWeight: "400", fontSize: 16, color: "gray" }}>No posts.</Text>
             </View>

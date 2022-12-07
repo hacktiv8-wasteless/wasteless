@@ -13,10 +13,43 @@ import { Ionicons } from "@expo/vector-icons";
 import { GET_POSTS, GET_POST_BY_CATEGORY } from "../query/Posts";
 import ItemCardSmall from "../components/ItemCardSmall";
 import { COLORS } from "../constants";
+import Loader from "../components/Loader";
+import * as Location from "expo-location";
+import Geocoder from "react-native-geocoding";
 
 export default function CategoryScreen() {
   // const locations = ["Plastic", "Cardboard", "Paper", "Alumunium can", "Glass"];
   // <StatusBar barStyle="light-content" backgroundColor={COLORS.white} />;
+  const [userLoc, setUserLoc] = useState("");
+  const [userLatLon, setUserLatLon] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          return;
+        } else {
+          Geocoder.init("AIzaSyCVVWasvqI_muG_92Mdo63Ik14SZ6bLlCo", {
+            language: "id",
+          });
+          let location = await Location.getCurrentPositionAsync();
+
+          setUserLatLon({
+            lat: location.coords.latitude,
+            lon: location.coords.longitude,
+          });
+
+          const loc = await Geocoder.from(location.coords.latitude, location.coords.longitude);
+          // console.log(loc.results[0].address_components);
+
+          setUserLoc(loc.results[0].address_components.find((el) => el.types[0] === "administrative_area_level_4").long_name + ", " + loc.results[0].address_components.find((el) => el.types[0] === "administrative_area_level_1").long_name);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
 
   const { loading: postCategoryLoading, error: postCategoryError, data: postCategoryData } = useQuery(GET_POST_BY_CATEGORY);
   const { loading: postsLoading, error: postsError, data: postsData } = useQuery(GET_POSTS);
@@ -85,7 +118,7 @@ export default function CategoryScreen() {
               <Text style={{ fontSize: 20, fontWeight: "600", marginBottom: 10 }}>Search: {search}</Text>
               <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-start" }}>
                 {getFilteredPost()?.map((post) => {
-                  return <ItemCardSmall post={post} key={post["_id"]} />;
+                  return <ItemCardSmall post={post} key={post["_id"]} postsLoading={postsLoading} userLatLon={userLatLon} />;
                 })}
               </View>
             </View>

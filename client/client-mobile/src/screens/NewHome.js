@@ -1,24 +1,7 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  ScrollView,
-  Image,
-  StatusBar,
-  TouchableOpacity,
-  Pressable,
-} from "react-native";
+import { StyleSheet, Text, View, TextInput, ScrollView, Image, StatusBar, TouchableOpacity, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import {
-  FlatList,
-  Button,
-  Center,
-  Collapse,
-  Skeleton,
-  Avatar,
-} from "native-base";
+import { FlatList, Button, Center, Collapse, Skeleton, Avatar } from "native-base";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import * as Location from "expo-location";
@@ -54,21 +37,9 @@ export default function NewHome({ navigation }) {
   };
 
   //? SERVER WIRING
-  const {
-    loading: postsLoading,
-    error: postsError,
-    data: postsData,
-  } = useQuery(GET_POSTS);
-  const {
-    data: categoryData,
-    loading: categoryLoading,
-    error: categoryError,
-  } = useQuery(GET_CATEGORIES);
-  const {
-    data: userData,
-    loading: userLoading,
-    error: userError,
-  } = useQuery(GET_PROFILE);
+  const { loading: postsLoading, error: postsError, data: postsData } = useQuery(GET_POSTS);
+  const { data: categoryData, loading: categoryLoading, error: categoryError } = useQuery(GET_CATEGORIES);
+  const { data: userData, loading: userLoading, error: userError } = useQuery(GET_PROFILE);
 
   if (postsError || categoryError || userError) {
     console.log("postsError -------------------------");
@@ -97,19 +68,11 @@ export default function NewHome({ navigation }) {
   };
 
   const handleOnSubmit = () => {
-    setFiltered(
-      postsData?.getAllPosts?.filter((post) =>
-        post.title.toLowerCase().includes(search.toLowerCase())
-      )
-    );
+    setFiltered(postsData?.getAllPosts?.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
   };
 
   useEffect(() => {
-    setFiltered(
-      postsData?.getAllPosts?.filter((post) =>
-        post.title.toLowerCase().includes(search.toLowerCase())
-      )
-    );
+    setFiltered(postsData?.getAllPosts?.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
   }, [search]);
 
   // if (postsLoading || categoryLoading || userLoading) return <Loader />;
@@ -121,42 +84,34 @@ export default function NewHome({ navigation }) {
 
   // console.log(userLoc);
 
-  useEffect(() => {
-    (async () => {
-      try {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== "granted") {
-          return;
-        } else {
-          Geocoder.init("AIzaSyCVVWasvqI_muG_92Mdo63Ik14SZ6bLlCo", {
-            language: "id",
-          });
-          let location = await Location.getCurrentPositionAsync();
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       let { status } = await Location.requestForegroundPermissionsAsync();
+  //       if (status !== "granted") {
+  //         return;
+  //       } else {
+  //         Geocoder.init("AIzaSyCVVWasvqI_muG_92Mdo63Ik14SZ6bLlCo", {
+  //           language: "id",
+  //         });
+  //         let location = await Location.getCurrentPositionAsync();
 
-          setUserLatLon({
-            lat: location.coords.latitude,
-            lon: location.coords.longitude,
-          });
+  //         setUserLatLon({
+  //           lat: location.coords.latitude,
+  //           lon: location.coords.longitude,
+  //         });
 
+  //         const loc = await Geocoder.from(location.coords.latitude, location.coords.longitude);
+  //         // console.log(loc.results[0].address_components);
 
-          const loc = await Geocoder.from(location.coords.latitude, location.coords.longitude);
-          // console.log(loc.results[0].address_components);
+  //         setUserLoc(loc.results[0].address_components.find((el) => el.types[0] === "administrative_area_level_4").long_name + ", " + loc.results[0].address_components.find((el) => el.types[0] === "administrative_area_level_1").long_name);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   })();
+  // }, []);
 
-          setUserLoc(
-            loc.results[0].address_components.find(
-              (el) => el.types[0] === "administrative_area_level_4"
-            ).long_name +
-              ", " +
-              loc.results[0].address_components.find(
-                (el) => el.types[0] === "administrative_area_level_1"
-              ).long_name
-          );
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
   return (
     <View style={{ backgroundColor: COLORS.white }}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
@@ -165,7 +120,7 @@ export default function NewHome({ navigation }) {
         {/* <Skeleton.Text isLoaded={!postsLoading} /> */}
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* <Button onPress={check} style={styles.test}>
+          <Button onPress={check} style={styles.test}>
             Check
           </Button>
           <Button onPress={logout} style={styles.test}>
@@ -173,7 +128,7 @@ export default function NewHome({ navigation }) {
           </Button>
           <Button onPress={clearAsyncStorage} style={styles.test}>
             Clear all storage
-          </Button> */}
+          </Button>
           <View
             style={{
               backgroundColor: COLORS.primary,
@@ -213,11 +168,7 @@ export default function NewHome({ navigation }) {
                         paddingRight: 10,
                       }}
                     >
-                      <Ionicons
-                        name="location"
-                        size={24}
-                        color={COLORS.lightGrey}
-                      />
+                      <Ionicons name="location" size={24} color={COLORS.lightGrey} />
                       {/* <Text style={{ color: COLORS.lightGrey, marginLeft: 10, marginRight: 10 }}>Pondok Indah, Jakarta Selatan</Text> */}
                       <Text
                         style={{
@@ -271,11 +222,7 @@ export default function NewHome({ navigation }) {
             </View>
 
             {/* Search Bar */}
-            <SearchBar
-              search={search}
-              handleSearchChange={handleSearchChange}
-              handleOnSubmit={handleOnSubmit}
-            />
+            <SearchBar search={search} handleSearchChange={handleSearchChange} handleOnSubmit={handleOnSubmit} />
           </View>
           <View style={{ backgroundColor: COLORS.primary }}>
             <View
@@ -294,43 +241,24 @@ export default function NewHome({ navigation }) {
 
               {/* Category Card */}
               <View style={{ marginVertical: 10 }}>
-                <ScrollView
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                >
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                   <View style={{ flexDirection: "row" }}>
                     {categoryLoading
                       ? dummyLoader.map((dummy) => (
                           <View key={dummy} style={styles.categoryCard}>
-                            <Skeleton.Text
-                              isLoaded={!categoryLoading}
-                              lines={1}
-                              w={75}
-                            />
+                            <Skeleton.Text isLoaded={!categoryLoading} lines={1} w={75} />
                           </View>
                         ))
                       : categoryData?.getAllCategories?.map((item) => {
-                          return (
-                            <CategoryCard
-                              key={item["_id"]}
-                              item={item}
-                              categoryId={item["_id"]}
-                            />
-                          );
+                          return <CategoryCard key={item["_id"]} item={item} categoryId={item["_id"]} />;
                         })}
                   </View>
                 </ScrollView>
               </View>
 
               {/* Card */}
-              <View
-                style={{ flex: 1, marginVertical: 20, paddingHorizontal: 20 }}
-              >
-                <Text
-                  style={{ fontSize: 20, fontWeight: "600", marginBottom: 10 }}
-                >
-                  Near Me
-                </Text>
+              <View style={{ flex: 1, marginVertical: 20, paddingHorizontal: 20 }}>
+                <Text style={{ fontSize: 20, fontWeight: "600", marginBottom: 10 }}>Near Me</Text>
                 <View
                   style={{
                     flexDirection: "row",
@@ -350,20 +278,11 @@ export default function NewHome({ navigation }) {
                                 borderRadius: 20,
                               }}
                             >
-                              <Skeleton
-                                isLoaded={!postsLoading}
-                                h={"full"}
-                                w={"full"}
-                              />
+                              <Skeleton isLoaded={!postsLoading} h={"full"} w={"full"} />
                               {/* <Image source={{ uri: post.mainImage }} style={{ width: 150, height: 150 }} /> */}
                             </View>
-                            <View
-                              style={{ marginVertical: 10, flexWrap: "wrap" }}
-                            >
-                              <Skeleton.Text
-                                isLoaded={!postsLoading}
-                                lines={2}
-                              />
+                            <View style={{ marginVertical: 10, flexWrap: "wrap" }}>
+                              <Skeleton.Text isLoaded={!postsLoading} lines={2} />
                               {/* <Text style={{ fontSize: 16, fontWeight: "700" }}>{post.title.charAt(0).toUpperCase() + post.title.slice(1)}</Text>
                           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
                             <Ionicons name="location" size={18} color={COLORS.primaryShade[400]} />
@@ -373,14 +292,7 @@ export default function NewHome({ navigation }) {
                         </View>
                       ))
                     : getFilteredPost()?.map((post) => {
-                        return (
-                          <ItemCardSmall
-                            post={post}
-                            key={post["_id"]}
-                            postsLoading={postsLoading}
-                            userLatLon={userLatLon}
-                          />
-                        );
+                        return <ItemCardSmall post={post} key={post["_id"]} postsLoading={postsLoading} userLatLon={userLatLon} />;
                       })}
                 </View>
               </View>

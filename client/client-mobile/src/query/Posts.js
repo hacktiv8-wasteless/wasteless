@@ -83,3 +83,11 @@ export const GET_POST_BY_CATEGORY = gql`
     }
   }
 `;
+
+export const POST_COMPLETE_POST = gql`
+  mutation Mutation($postId: String, $giverId: String, $totalPrice: Int) {
+    completePost(post_id: $postId, giver_id: $giverId, totalPrice: $totalPrice) {
+      message
+    }
+  }
+`;

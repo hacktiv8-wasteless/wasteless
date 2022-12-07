@@ -15,9 +15,9 @@ export default function Login({ navigation }) {
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        {/* <Button onPress={check} style={styles.test}>
+        <Button onPress={check} style={styles.test}>
           Check
-        </Button> */}
+        </Button>
         {/* Status Bar */}
         <StatusBar barStyle="light-content" backgroundColor="#339966" />
 

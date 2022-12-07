@@ -8,13 +8,14 @@ import { Feather } from "@expo/vector-icons";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_POST_DETAIL } from "../query/Posts";
+import { GET_POST_DETAIL, POST_COMPLETE_POST } from "../query/Posts";
 import { GET_CATEGORY_ID } from "../query/Categories";
-import { capitalize } from "../helpers/util";
+import { capitalize, getUserId } from "../helpers/util";
 import Loader from "../components/Loader";
 import { GET_PROFILE } from "../query/Users";
 import { COLORS } from "../constants";
 import { CHOOSE_APPOINTMENT, GET_APPOINTMENT, POST_APPOINTMENT } from "../query/Appointment";
+import OngoingOrder from "./OngoingOrder";
 
 const MAP_PLACEHOLDER = Image.resolveAssetSource(mapPlaceHolder).uri;
 const MARKER_APPROXIMATE = Image.resolveAssetSource(approximateLoc).uri;
@@ -57,6 +58,12 @@ export default function PostDetail({ navigation, route }) {
     }
   }, [postDetailData]);
 
+  //   useEffect(()=> {
+  // if (categoryDetailData) {
+
+  // }
+  //   }, [categoryDetailData])
+
   const { id: postId } = route.params;
 
   const { data: postDetailData, loading: postDetailLoading, error: postDetailError } = useQuery(GET_POST_DETAIL, { variables: { postId } });
@@ -65,6 +72,7 @@ export default function PostDetail({ navigation, route }) {
   const [appointment, { data: appointmentData, loading: appoinmentLoading, error: appointmentError }] = useMutation(POST_APPOINTMENT);
   const { data: fetchAppointmentData, loading: fetchAppointmentLoading, error: fetchAppointmentError } = useQuery(GET_APPOINTMENT, { variables: { postId } });
   const [chooseAppointment, { data: chooseAppointmentData, loading: chooseAppointmentLoading, error: chooseAppointmentError }] = useMutation(CHOOSE_APPOINTMENT);
+  const [completePost, { data: completePostData, loading: completePostLoading, error: completePostError }] = useMutation(POST_COMPLETE_POST);
 
   const userId = userData?.getProfile?.id;
 
@@ -81,6 +89,7 @@ export default function PostDetail({ navigation, route }) {
   };
 
   const handleChooseAppointment = async (takerId) => {
+    // console.log(takerId);
     await chooseAppointment({
       variables: {
         takerId,
@@ -89,6 +98,16 @@ export default function PostDetail({ navigation, route }) {
     });
     console.log("Jalan chooseAppointment");
     console.log(chooseAppointmentData);
+  };
+
+  const handleCompletePosts = async () => {
+    completePost({
+      variables: {
+        postId,
+        giverId: userId,
+        totalPrice: postDetailData?.getPostById?.quantity * categoryDetailData?.getCategoryById?.price,
+      },
+    }).then(({ data }) => console.log(data));
   };
 
   if (postDetailLoading || categoryDetailLoading || fetchAppointmentLoading) return <Loader />;
@@ -101,6 +120,8 @@ export default function PostDetail({ navigation, route }) {
   if (fetchAppointmentError) {
     console.log(fetchAppointmentError);
   }
+
+  // console.log(postDetailData?.getPostById);
 
   return (
     <View>
@@ -142,7 +163,8 @@ export default function PostDetail({ navigation, route }) {
 
             <View>
               {/* <Text>Placeholder biar gampang:</Text> */}
-              <Text>Total harga: {postDetailData?.getPostById?.quantity * categoryDetailData?.getCategoryById?.price}</Text>
+              <Text>Total price: {postDetailData?.getPostById?.quantity * categoryDetailData?.getCategoryById?.price}</Text>
+              {/* <Text>Poster: {postDetailData?.getPostById}</Text> */}
               {/* <Text>Lat: {postDetailData?.getPostById?.lat}</Text>
               <Text>Long: {postDetailData?.getPostById?.long}</Text>
               <Text>Giver_id: {postDetailData?.getPostById?.giver_id}</Text>
@@ -183,36 +205,62 @@ export default function PostDetail({ navigation, route }) {
           {/* <View style={{ alignItems: "center" }}>
         <Button style={styles.button}>Set Appointment</Button>
       </View> */}
-          {userId === postDetailData?.getPostById?.giver_id ? (
-            <>
-              <View style={styles.postDetail}>
-                <View style={{ marginBottom: 20 }}>
-                  <Text style={styles.label}>Buyer</Text>
-                  <View style={{}}>
-                    <View style={{ flexDirection: "row", height: 45 }}>
-                      <Text style={styles.tabelHead}>Username</Text>
-                      <Text style={styles.tabelHead}>Action</Text>
-                    </View>
-                    {fetchAppointmentData?.getAppointment.map((e) => {
-                      // console.log(e);
-                      return (
-                        <View style={{ flexDirection: "row", height: 45 }}>
-                          <Text style={{ flex: 1, textAlign: "center" }}>{e.username}</Text>
-                          <Pressable onPress={() => handleChooseAppointment(e._id)} style={{ flex: 1 }}>
-                            <Feather style={{ textAlign: "center" }} name="user" size={24} color={COLORS.dark} />
-                          </Pressable>
-                        </View>
-                      );
-                    })}
+
+          {userId === postDetailData?.getPostById?.giver_id && postDetailData?.getPostById?.status === "pending" && (
+            <View style={styles.postDetail}>
+              <View style={{ marginBottom: 20 }}>
+                <Text style={styles.label}>Buyer</Text>
+                <View style={{}}>
+                  <View style={{ flexDirection: "row", height: 45 }}>
+                    <Text style={styles.tabelHead}>Username</Text>
+                    <Text style={styles.tabelHead}>Action</Text>
                   </View>
+                  {fetchAppointmentData?.getAppointment.map((e) => {
+                    console.log(e);
+                    return (
+                      <View style={{ flexDirection: "row", height: 45 }}>
+                        <Text style={{ flex: 1, textAlign: "center" }}>{e.username}</Text>
+                        <Pressable onPress={() => handleChooseAppointment(e.userId)} style={{ flex: 1 }}>
+                          <Feather style={{ textAlign: "center" }} name="user" size={24} color={COLORS.dark} />
+                        </Pressable>
+                      </View>
+                    );
+                  })}
                 </View>
               </View>
-            </>
-          ) : (
+            </View>
+          )}
+
+          {userId !== postDetailData?.getPostById?.giver_id && postDetailData?.getPostById?.status === "pending" && (
             <View style={{ marginBottom: 20, marginHorizontal: 20 }}>
               <Button isLoading={appoinmentLoading} onPress={handleAppointment} height={75} borderRadius={20} bgColor={COLORS.primary}>
                 <Text style={styles.button}>Set Appointment</Text>
               </Button>
+            </View>
+          )}
+
+          {userId === postDetailData?.getPostById?.giver_id && postDetailData?.getPostById?.status === "ongoing" && (
+            <View style={[styles.postDetail, { justifyContent: "center", alignItems: "center" }]}>
+              <Text style={styles.label}>Awaiting payment</Text>
+            </View>
+          )}
+
+          {userId === postDetailData?.getPostById?.taker_id && postDetailData?.getPostById?.status === "ongoing" && (
+            <View style={[styles.postDetail, { justifyContent: "center", alignItems: "center" }]}>
+              <Text style={styles.label}>Ongoing taker</Text>
+              <Button onPress={handleCompletePosts}>Pay</Button>
+            </View>
+          )}
+
+          {userId === postDetailData?.getPostById?.taker_id && postDetailData?.getPostById?.status === "complete" && (
+            <View style={[styles.postDetail, { justifyContent: "center", alignItems: "center" }]}>
+              <Text style={styles.label}>Completed transaction</Text>
+            </View>
+          )}
+
+          {userId === postDetailData?.getPostById?.giver_id && postDetailData?.getPostById?.status === "complete" && (
+            <View style={[styles.postDetail, { justifyContent: "center", alignItems: "center" }]}>
+              <Text style={styles.label}>Completed transaction</Text>
             </View>
           )}
 

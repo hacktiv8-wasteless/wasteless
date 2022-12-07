@@ -91,17 +91,22 @@ export default function FormUser({ page, navigation }) {
   };
 
   const handleLogin = async () => {
-    const access_token = loginData?.loginUser?.access_token;
-    const userId = loginData?.loginUser?.id;
-    // // console.log(access_token);
+    try {
+      const access_token = loginData?.loginUser?.access_token;
+      const userId = loginData?.loginUser?.id;
+      // // console.log(access_token);
 
-    await signIn(access_token, userId);
-    navigation.navigate("Tab");
+      await signIn(access_token, userId);
+      navigation.navigate("Tab");
+    } catch (error) {
+      console.log();
+    }
   };
 
   useEffect(() => {
     if (loginData) {
       handleLogin();
+      console.log(loginData);
     }
   }, [loginData]);
 

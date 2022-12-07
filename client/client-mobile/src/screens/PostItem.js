@@ -1,28 +1,7 @@
-import {
-  StyleSheet,
-  View,
-  Image,
-  TouchableHighlight,
-  StatusBar,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import { StyleSheet, View, Image, TouchableHighlight, StatusBar, TouchableOpacity, TextInput } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import {
-  VStack,
-  Text,
-  FormControl,
-  Input,
-  Button,
-  TextArea,
-  Slider,
-  Box,
-  Center,
-  WarningOutlineIcon,
-  Pressable,
-  ScrollView,
-} from "native-base";
+import { VStack, Text, FormControl, Input, Button, TextArea, Slider, Box, Center, WarningOutlineIcon, Pressable, ScrollView } from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import MapView, { Marker } from "react-native-maps";
@@ -260,14 +239,7 @@ export default function PostItem({ navigation, route }) {
 
             <FormControl isRequired marginBottom={3}>
               <Text style={styles.label}>Description</Text>
-              <TextArea
-                h={20}
-                placeholder="e.g. 2kg plastic bottles"
-                backgroundColor="white"
-                borderRadius={15}
-                value={description}
-                onChangeText={handleDescriptionChange}
-              />
+              <TextArea h={20} placeholder="e.g. 2kg plastic bottles" backgroundColor="white" borderRadius={15} value={description} onChangeText={handleDescriptionChange} />
             </FormControl>
 
             <FormControl isRequired>
@@ -275,18 +247,9 @@ export default function PostItem({ navigation, route }) {
                 <Text style={styles.label}>Quantity: </Text>
                 <Text>{quantity}kg</Text>
               </View>
-              <Slider
-                onChange={handleQuantityChange}
-                defaultValue={5}
-                minValue={1}
-                maxValue={10}
-                step={1}
-              >
+              <Slider onChange={handleQuantityChange} defaultValue={5} minValue={1} maxValue={10} step={1}>
                 <Slider.Track bgColor={COLORS.muted}>
-                  <Slider.FilledTrack
-                    color={"red.100"}
-                    bgColor={COLORS.primary}
-                  />
+                  <Slider.FilledTrack color={"red.100"} bgColor={COLORS.primary} />
                 </Slider.Track>
                 <Slider.Thumb bgColor={COLORS.primary} />
               </Slider>

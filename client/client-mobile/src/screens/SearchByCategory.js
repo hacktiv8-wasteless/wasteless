@@ -7,6 +7,8 @@ import { useQuery } from "@apollo/client";
 import { GET_POST_BY_CATEGORY } from "../query/Posts";
 import ItemCardSmall from "../components/ItemCardSmall";
 import React, { useEffect, useState } from "react";
+import * as Location from "expo-location";
+import Geocoder from "react-native-geocoding";
 
 export default function Categories({ route }) {
   const { categoryId } = route.params;

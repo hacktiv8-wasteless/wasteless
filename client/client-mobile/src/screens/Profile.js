@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import Loader from "../components/Loader";
 import { capitalize, signOut } from "../helpers/util";
 import { COLORS } from "../constants";
+
 const Profile = () => {
   const navigation = useNavigation();
 
@@ -32,6 +33,11 @@ const Profile = () => {
     // return <Text>Error: {userDetailError}</Text>;
   }
   // console.log(userDetailData?.getProfile);
+
+  const handleLogout = async () => {
+    await signOut();
+    navigation.replace("Login");
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
@@ -122,12 +128,7 @@ const Profile = () => {
             <Text style={styles.menuItemText}>History Logs</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple
-          onPress={async () => {
-            await signOut();
-            navigation.replace("Login");
-          }}
-        >
+        <TouchableRipple onPress={handleLogout}>
           <View style={styles.menuItem}>
             <AntDesign name="logout" color="green" size={25} />
             <Text style={styles.menuItemText}>logout</Text>
