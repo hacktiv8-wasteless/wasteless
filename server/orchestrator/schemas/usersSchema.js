@@ -48,7 +48,7 @@ const typeDefs = `#graphql
 	loginUser(userPayload:userPayload):Response
 	deleteUser(userId:ID):Response
 	createInvoice(balance:Int):Invoice
-	payInvoice(InvoicePayload:InvoicePayload):Response
+	payInvoice(invoicePayload:InvoicePayload):Response
   }
 `;
 
@@ -142,13 +142,13 @@ const resolvers = {
 				console.log(error);
 			}
 		},
-		payInvoice: async (_, { invocePayload }, context) => {
+		payInvoice: async (_, { invoicePayload }, context) => {
 			// invoice payload semua
 			try {
 				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await Users.post(
-					"/users/sucess",
-					{ ...invocePayload },
+					"/users/success",
+					{ ...invoicePayload },
 					{
 						headers: {
 							access_token: context.token,

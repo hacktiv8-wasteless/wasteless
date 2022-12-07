@@ -1,4 +1,5 @@
 const App = require("../services/app");
+const Users = require("../services/users")
 const redis = require("../config/redis");
 const { verifyToken } = require("../helper/jwt");
 
@@ -16,6 +17,16 @@ const typeDefs = `#graphql
     long:String
     status:String
     }
+
+	type Appointment {
+		_id:ID
+		userId:String
+		username:String
+		email:String
+		phoneNumber:String
+		postId:String
+	}
+
   input postPayload {
     category_id:ID
     title:String
@@ -31,13 +42,15 @@ const typeDefs = `#graphql
 	getNearbyPosts(postPayload:postPayload):[Post]
     getPostByCategory(category_id:String):[Post]
     getPostById(post_id:ID):Post
+	getAppointment(post_id:ID):[Appointment]
   }
   type Mutation {
     addPost(postPayload:postPayload):Response
     editPost(postPayload:postPayload,post_id:ID):Response
     deletePost(post_id:ID):Response
-	createAppointment:Response
-	deleteAppointment:Response
+	createAppointment(post_id:ID):Response
+	chooseAppointment(taker_id:String, post_id:ID):Response
+	completePost(post_id:String, giver_id:String, totalPrice:Int):Response
    }
 `;
 
@@ -71,7 +84,7 @@ const resolvers = {
 			}
 		},
 
-		getAllPosts: async (_, { lat, long }, context) => {
+		getNearbyPosts: async (_, { lat, long }, context) => {
 			try {
 				if (!context.token) throw { error: "Invalid access" };
 				// console.log(context.token);
@@ -93,34 +106,45 @@ const resolvers = {
 
 				await redis.set("Posts", JSON.stringify(data));
 
-        return data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
 
 		getPostByCategory: async (_, { category_id }, context) => {
 			try {
 				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await App.get(`/posts?category_id=${category_id}`);
 
-        return data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
 
 		getPostById: async (_, { post_id }, context) => {
 			try {
 				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await App.get(`/posts/${post_id}`);
 
-        return data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+
+		getAppointment: async (_, {post_id}, context) => {
+			try {
+				if (!context.token) throw { error: "Invalid access" };
+				const { data } = await App.get(`/appointment/${post_id}`);
+
+				return data
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
 
 	Mutation: {
 		addPost: async (_, { postPayload }, context) => {
@@ -160,12 +184,61 @@ const resolvers = {
 
 		deletePost: async (_, { post_id }, context) => {
 			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
 				const { data } = App.delete(`/posts/${post_id}`);
 			} catch (error) {
 				console.log(error);
 			}
 		},
+
+		createAppointment: async (_, { post_id }, context) => {
+			try {
+				if (!context.token) throw { error: "Invalid access" };
+				const { id: userId } = verifyToken(context.token);
+				const {data:userData} = await Users.get(`/users/${userId}`)
+				console.log(userData)
+				const { data } = await App.post(`/appointment/${post_id}`,{...userData});
+
+				return {message: "Appointment created succesfully"}
+			} catch (error) {
+				console.log(error);
+			}
+		},
+
+		chooseAppointment: async (_, {taker_id,post_id} ,context) => {
+			try {
+				// if (!context.token) throw { error: "Invalid access" };
+				const {data:foundUser} = await Users.get(`/users/${taker_id}`)
+				if(!foundUser) throw {message: "User not found"}
+				const newPost = await App.patch(`/posts/${post_id}`,{taker_id, status:"ongoing"})
+				
+				console.log(newPost)
+
+				return {message : "Post Updated"}
+			} catch (error) {
+				console.log(error)
+			}
+		},
+
+		completePost: async (_,{post_id, giver_id, totalPrice}, context) => {
+			try {
+				if (!context.token) throw { error: "Invalid access" };
+				
+				const transaction = await Users.post(`/transaction/`,{payeeId: giver_id, totalPrice},{headers:{
+					access_token : context.token
+				}})
+
+				if(!transaction) throw {error: "transaction failed"}
+
+				const editPost = await App.patch(`/posts/${post_id}`,{status:"complete"})
+
+				console.log(editPost)
+
+				return {message : "Transaction Complete"}
+			} catch (error) {
+				console.log(error)
+			}
+		}
 	},
 };
 

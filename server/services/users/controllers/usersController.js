@@ -16,9 +16,12 @@ class Controller {
 	static async getUserById(req, res, next) {
 		const { id } = req.params;
 		try {
+			console.log(id);
 			const user = await User.findByPk(id, {
 				attributes: { excludes: ["password"] },
 			});
+
+			console.log(user);
 
 			return res.status(200).json(user);
 		} catch (error) {
@@ -61,7 +64,7 @@ class Controller {
 
 			const payload = verifyToken(access_token);
 
-			console.log(payload)
+			console.log(payload);
 
 			return res.status(200).json({ access_token, id: foundUser.id });
 		} catch (error) {
@@ -99,7 +102,8 @@ class Controller {
 
 	static async successTopUp(req, res, next) {
 		try {
-			const { external_id, amount, status } = req.body;
+			const { external_id, totalPrice: amount, status } = req.body;
+			console.log(req.body);
 			if (status == "PAID") {
 				const foundUser = await User.findOne({
 					where: {
@@ -118,7 +122,7 @@ class Controller {
 				);
 
 				res.status(201).json({ message: "Topup Success!" });
-			}
+			} else throw { name: "BAD_REQUEST" };
 		} catch (error) {
 			next(error);
 		}
