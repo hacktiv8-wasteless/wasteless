@@ -53,6 +53,11 @@ export default function Chat({ navigation }) {
       .collection("messages")
       .doc(_id)
       .set({ _id, createdAt, text, user });
+
+    await db
+      .collection("chats")
+      .doc(roomId)
+      .update({ lastMsg: text, timeStamp: new Date() });
   }, []);
 
   return (

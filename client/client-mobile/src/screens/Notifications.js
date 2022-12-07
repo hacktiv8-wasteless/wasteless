@@ -11,6 +11,7 @@ import {
   Text,
   Spacer,
 } from "native-base";
+import { db } from "../configs/firebase";
 
 export default function Notifications({ navigation }) {
   const data = [
@@ -54,13 +55,70 @@ export default function Notifications({ navigation }) {
         "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBwgu1A5zgPSvfE83nurkuzNEoXs9DMNr8Ww&usqp=CAU",
     },
   ];
+
+  const [notifications, setNotifications] = useState([]);
+
+  async function observer() {
+    const user1 = "giver";
+    const user2 = "taker";
+
+    const colls = db.collection("chats");
+    const docs = await colls.where("user1", "in", [user1, user2]);
+
+    // if (docs.empty) {
+    //   console.log("No matching documents.");
+    //   return;
+    // }
+    // let arr = [];
+
+    // docs.forEach((doc) => {
+    //   console.log(doc.id, "=>", doc.data(), "<<<<<<<<<");
+    // arr.push({
+    //   user: doc.data().user1 == user1 ? doc.data().user2 : doc.data().user1,
+    //   lastMsg: doc.data().lastMsg,
+    //   timeStamp: doc.data().timeStamp,
+    // });
+    // });
+
+    const date = new Date();
+
+    const observer = docs.onSnapshot(
+      (querySnapshot) => {
+        setNotifications(
+          querySnapshot.docs.map((doc) => ({
+            user:
+              doc.data().user1 == user1 ? doc.data().user2 : doc.data().user1,
+            lastMsg: doc.data().lastMsg,
+            timeStamp:
+              doc.data().timeStamp.toDate() > date.setDate(date.getDate() - 1)
+                ? doc.data().timeStamp.toDate().getHours() +
+                  ":" +
+                  doc.data().timeStamp.toDate().getMinutes()
+                : doc.data().timeStamp.toDate().getDate() +
+                  "/" +
+                  (doc.data().timeStamp.toDate().getMonth() + 1),
+          }))
+        );
+      },
+      (err) => {
+        console.log(`Encountered error: ${err}`);
+      }
+    );
+
+    // setNotifications(arr);
+  }
+
+  useEffect(() => {
+    observer();
+  }, []);
+
   return (
     <Box>
       <Heading fontSize="xl" p="4" pb="3">
         Inbox
       </Heading>
       <FlatList
-        data={data}
+        data={notifications}
         renderItem={({ item }) => (
           <Pressable onPress={() => navigation.navigate("Chat")}>
             <Box
@@ -77,7 +135,7 @@ export default function Notifications({ navigation }) {
                 <Avatar
                   size="48px"
                   source={{
-                    uri: item.avatarUrl,
+                    uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
                   }}
                 />
                 <VStack>
@@ -88,7 +146,7 @@ export default function Notifications({ navigation }) {
                     color="coolGray.800"
                     bold
                   >
-                    {item.fullName}
+                    {item.user}
                   </Text>
                   <Text
                     color="coolGray.600"
@@ -96,7 +154,7 @@ export default function Notifications({ navigation }) {
                       color: "warmGray.200",
                     }}
                   >
-                    {item.recentText}
+                    {item.lastMsg}
                   </Text>
                 </VStack>
                 <Spacer />
