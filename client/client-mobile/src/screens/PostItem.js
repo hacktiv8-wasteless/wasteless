@@ -1,9 +1,33 @@
-import { StyleSheet, View, Image, TouchableHighlight, StatusBar, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  TouchableHighlight,
+  StatusBar,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { VStack, Text, FormControl, Input, Button, TextArea, Slider, Box, Center, WarningOutlineIcon, Pressable, ScrollView } from "native-base";
+import {
+  VStack,
+  Text,
+  FormControl,
+  Input,
+  Button,
+  TextArea,
+  Slider,
+  Box,
+  Center,
+  WarningOutlineIcon,
+  Pressable,
+  ScrollView,
+} from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import MapView, { Marker } from "react-native-maps";
+import Geocoder from "react-native-geocoding";
+import * as Location from "expo-location";
 import { useMutation } from "@apollo/client";
 import { POST_POST } from "../query/Posts";
 import { getUserId } from "../helpers/util";
@@ -76,15 +100,16 @@ export default function PostItem({ navigation, route }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(0.5);
-  // const [lat, setLat] = useState("");
-  // const [long, setLong] = useState("");
+  const [lat, setLat] = useState("");
+  const [long, setLong] = useState("");
+  const [userLatLon, setUserLatLon] = useState(null);
+  const [userLoc, setUserLoc] = useState("");
 
   // const handleImageChange = (val) => setMainImage(val);
   const handleTitleChange = (val) => setTitle(val);
   const handleDescriptionChange = (val) => setDescription(val);
   const handleQuantityChange = (val) => setQuantity(val);
-  // const handleLatChange = (val) => setLat(val);
-  // const handleLongChange = (val) => setLong(val);
+  const handleLoc = (val) => setUserLoc(val);
 
   const onSubmit = async () => {
     try {
@@ -115,6 +140,49 @@ export default function PostItem({ navigation, route }) {
       navigation.navigate("MyListing");
       // setLat("");
       // setLong("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    (async () => {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          return;
+        } else {
+          let location = await Location.getCurrentPositionAsync();
+
+          setLat(location.coords.latitude);
+          setLong(location.coords.longitude);
+          setUserLatLon({
+            latitude: location.coords.latitude,
+            longitude: location.coords.longitude,
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
+
+  const handleMarker = (e) => {
+    setLat(e.nativeEvent.coordinate.latitude);
+    setLong(e.nativeEvent.coordinate.langitude);
+    setUserLatLon(e.nativeEvent.coordinate);
+  };
+
+  const handleInput = async () => {
+    try {
+      Geocoder.init("AIzaSyCVVWasvqI_muG_92Mdo63Ik14SZ6bLlCo", {
+        language: "id",
+      });
+      const loc = await Geocoder.from(userLoc);
+      const coords = loc.results[0].geometry.location;
+      setLat(coords.lat);
+      setLong(coords.lng);
+      setUserLatLon({ latitude: coords.lat, longitude: coords.lng });
     } catch (error) {
       console.log(error);
     }
@@ -170,12 +238,26 @@ export default function PostItem({ navigation, route }) {
           <VStack style={styles.formContainer}>
             <FormControl isRequired marginBottom={3}>
               <Text style={styles.label}>Title</Text>
-              <Input placeholder="Title" w="100%" variant="rounded" backgroundColor="white" value={title} onChangeText={handleTitleChange} />
+              <Input
+                placeholder="Title"
+                w="100%"
+                variant="rounded"
+                backgroundColor="white"
+                value={title}
+                onChangeText={handleTitleChange}
+              />
             </FormControl>
 
             <FormControl isRequired marginBottom={3}>
               <Text style={styles.label}>Description</Text>
-              <TextArea h={20} placeholder="e.g. 2kg plastic bottles" backgroundColor="white" borderRadius={15} value={description} onChangeText={handleDescriptionChange} />
+              <TextArea
+                h={20}
+                placeholder="e.g. 2kg plastic bottles"
+                backgroundColor="white"
+                borderRadius={15}
+                value={description}
+                onChangeText={handleDescriptionChange}
+              />
             </FormControl>
 
             <FormControl isRequired>
@@ -193,26 +275,53 @@ export default function PostItem({ navigation, route }) {
           </VStack>
 
           <VStack style={styles.mapsContainer}>
-            <Pressable>
-              {({ isHovered, isFocused, isPressed }) => {
-                return (
-                  <Box
-                    bg={isPressed ? "coolGray.200" : isHovered ? "coolGray.200" : "white"}
-                    // p="5"
-                    height="full"
-                    borderWidth="1"
-                    borderColor={COLORS.white}
-                    borderBottomColor={COLORS.muted}
-                    maxHeight={70}
-                  >
-                    <View style={{ padding: 20, flexDirection: "row", justifyContent: "space-between" }}>
-                      <Text style={styles.label}>Your location (approx)</Text>
-                      <Text style={styles.label}>Next</Text>
-                    </View>
-                  </Box>
-                );
-              }}
-            </Pressable>
+            <Box
+              height="full"
+              borderWidth="1"
+              borderColor="coolGray.300"
+              maxHeight={70}
+            >
+              <View
+                style={{
+                  padding: 20,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                {/* <Text>Your location (approx)</Text> */}
+                <Input
+                  placeholder="Location"
+                  w="100%"
+                  backgroundColor="white"
+                  value={userLoc}
+                  onChangeText={handleLoc}
+                  onEndEditing={handleInput}
+                />
+                {/* <Text style={styles.label}>Next</Text> */}
+              </View>
+            </Box>
+            <View style={{ height: "100%" }}>
+              <MapView
+                style={{ ...StyleSheet.absoluteFillObject }}
+                showsUserLocation={true}
+                // followUserLocation={true}
+                loadingEnabled={true}
+                region={{
+                  ...userLatLon,
+                  latitudeDelta: 0.03,
+                  longitudeDelta: 0.03,
+                }}
+              >
+                {userLatLon && (
+                  <Marker
+                    draggable
+                    coordinate={userLatLon}
+                    style={{ ...StyleSheet.absoluteFillObject }}
+                    onDragEnd={handleMarker}
+                  />
+                )}
+              </MapView>
+            </View>
           </VStack>
 
           <View style={styles.totalPrice}>

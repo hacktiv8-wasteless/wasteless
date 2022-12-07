@@ -104,6 +104,7 @@ export default function NewHome({ navigation }) {
             location.coords.latitude,
             location.coords.longitude
           );
+          console.log(loc.results[0].address_components);
 
           setUserLoc(
             loc.results[0].address_components.find(
