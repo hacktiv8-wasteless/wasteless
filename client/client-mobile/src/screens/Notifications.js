@@ -75,6 +75,7 @@ export default function Notifications({ navigation }) {
         setNotifications(
           querySnapshot.docs.map((doc) => {
             return {
+              id: doc.id,
               user:
                 doc.data().user1 == user1 ? doc.data().user2 : doc.data().user1,
               lastMsg: doc.data().lastMsg,
