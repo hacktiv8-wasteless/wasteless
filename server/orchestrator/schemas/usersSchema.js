@@ -16,6 +16,7 @@ const typeDefs = `#graphql
   type Response {
     access_token:String
 	id:Int
+	username:String
     message:String
 	error:Boolean
   }
