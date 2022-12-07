@@ -3,7 +3,7 @@ const Post = require("../models/post");
 
 class PostController {
 	static async getAllPost(req, res) {
-		const { category_id } = req.query;
+		const { category_id, lat, long } = req.query;
 		let options = {};
 		try {
 			if (category_id) {

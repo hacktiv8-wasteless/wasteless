@@ -11,7 +11,7 @@ router.post(`/register`, Controller.userRegister);
 router.use(authentication);
 
 router.post(`/topup`,Controller.balanceTopUp)
-// router.post(`/success`,Controller.successTopUp)
+router.post(`/success`,Controller.successTopUp)
 
 
 module.exports = router;
