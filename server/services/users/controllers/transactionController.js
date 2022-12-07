@@ -13,7 +13,7 @@ class Controller {
           { transaction: t }
         );
 
-        const [_, payingUser] = await User.update(
+        const [_,payingUser] = await User.update(
           {
             balance: sequelize.literal(`balance - ${totalPrice}`),
             points: sequelize.literal(`points + ${commission}`),
@@ -26,11 +26,8 @@ class Controller {
           }
         );
 
-        if (payingUser.balance < 10000)
-          throw {
-            name: "BAD_TRANSACTION_REQUEST",
-            message: "Not enough balance",
-          };
+        if (payingUser.balance < 0)
+          throw { name: "BAD_TRANSACTION_REQUEST", message: "Not enough balance" };
 
         await User.update(
           {
@@ -55,8 +52,6 @@ class Controller {
   static async getIncoming(req, res, next) {
     const { id } = req.params;
     try {
-      // console.log(id, "< ini id");
-
       const incomingPayment = await Transaction.findAll({
         where: { payeeId: id },
         include: [
@@ -76,10 +71,9 @@ class Controller {
           },
         ],
       });
-      // console.log(incomingPayment, "<= ini transaction");
+
       res.status(200).json({ incomingPayment });
     } catch (error) {
-      console.log(error);
       next(error);
     }
   }

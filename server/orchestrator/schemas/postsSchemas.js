@@ -71,9 +71,10 @@ const resolvers = {
 			}
 		},
 
-		getAllPosts: async (_, { lat, long }, context) => {
+		getNearbyPosts: async (_, { postPayload }, context) => {
 			try {
 				if (!context.token) throw { error: "Invalid access" };
+				const { lat, long } = postPayload;
 				// console.log(context.token);
 
 				redis.del("Posts");
@@ -93,34 +94,34 @@ const resolvers = {
 
 				await redis.set("Posts", JSON.stringify(data));
 
-        return data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
 
 		getPostByCategory: async (_, { category_id }, context) => {
 			try {
 				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await App.get(`/posts?category_id=${category_id}`);
 
-        return data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
 
 		getPostById: async (_, { post_id }, context) => {
 			try {
 				if (!context.token) throw { error: "Invalid access" };
 				const { data } = await App.get(`/posts/${post_id}`);
 
-        return data;
-      } catch (error) {
-        console.log(error);
-      }
-    },
-  },
+				return data;
+			} catch (error) {
+				console.log(error);
+			}
+		},
+	},
 
 	Mutation: {
 		addPost: async (_, { postPayload }, context) => {
