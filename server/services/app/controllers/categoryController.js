@@ -2,8 +2,14 @@ const Category = require("../models/category");
 
 class CategoryController {
   static async readAllCategory(req, res) {
+    const {category} = req.params
     try {
-      const result = await Category.find();
+      const options = {}
+      // if(category) options = {
+        
+      // }
+      const result = await Category.find(options);
+      console.log(result)
       res.status(200).json(result);
     } catch (error) {
       res.status(500).json(error.message);

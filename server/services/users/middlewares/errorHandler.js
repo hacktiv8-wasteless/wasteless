@@ -9,29 +9,28 @@ const errorHandler = (error, req, res, next) => {
       code = 400;
       message = error.errors.map((el) => el.message);
       break;
+    //ini belum dipake
     case `BAD_TRANSACTION_REQUEST`:
     case `BAD_PATCH_REQUEST`:
       code = 400;
       message = error.message;
       break;
-    case `JsonWebTokenError`:
     case `Unauthorized`:
       code = 401;
       message = "Invalid token";
       break;
-    case `INVALID_CREDENTIALS`:
+    case `JsonWebTokenError`:
+      code = 401;
+      message = "Invalid token";
+      break;
+    case `Invalid Email or Password`:
       code = 401;
       message = "Invalid Email or password!";
       break;
-    case `FORBIDDEN`:
-      code = 403;
-      message = "Invalid access!";
-      break;
-    case `USER_NOT_FOUND`:
-      code = 404;
-      message = `Users with id ${err.id} not Found!`;
-      break;
-
+    // case `Not Found`:
+    // code = 404;
+    // message = "Data not found";
+    // break;
     default:
       code = 500;
       message = "Internal Server Error!";
