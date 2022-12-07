@@ -4,6 +4,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { FlatList, Button, Center, Collapse, Skeleton } from "native-base";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
+import * as Location from "expo-location";
+import Geocoder from "react-native-geocoding";
+import latlngDist from "latlng-distance";
 import { useQuery } from "@apollo/client";
 import { GET_POSTS } from "../query/Posts";
 import { GET_CATEGORIES } from "../query/Categories";
@@ -76,6 +79,47 @@ export default function NewHome({ navigation }) {
 
   console.log(postsLoading);
 
+
+  const [userLoc, setUserLoc] = useState("");
+  const [userLatLon, setUserLatLon] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          return;
+        } else {
+          Geocoder.init("AIzaSyCVVWasvqI_muG_92Mdo63Ik14SZ6bLlCo", {
+            language: "id",
+          });
+          let location = await Location.getCurrentPositionAsync();
+
+          setUserLatLon({
+            lat: location.coords.latitude,
+            lon: location.coords.longitude,
+          });
+
+          const loc = await Geocoder.from(
+            location.coords.latitude,
+            location.coords.longitude
+          );
+
+          setUserLoc(
+            loc.results[0].address_components.find(
+              (el) => el.types[0] === "administrative_area_level_4"
+            ).long_name +
+              ", " +
+              loc.results[0].address_components.find(
+                (el) => el.types[0] === "administrative_area_level_1"
+              ).long_name
+          );
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    })();
+  }, []);
   return (
     <View style={{ backgroundColor: COLORS.white }}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
@@ -197,7 +241,7 @@ export default function NewHome({ navigation }) {
                         </View>
                       ))
                     : getFilteredPost()?.map((post) => {
-                        return <ItemCardSmall post={post} key={post["_id"]} postsLoading={postsLoading} />;
+                        return <ItemCardSmall post={post} key={post["_id"]} postsLoading={postsLoading} userLatLon={userLatLon} />;
                       })}
                 </View>
               </View>
@@ -208,6 +252,17 @@ export default function NewHome({ navigation }) {
     </View>
   );
 }
+
+// Rizqi punya, pindah ke card small
+{/* <Text>
+                            {Math.round(
+                              latlngDist.distanceDiffInKm(userLatLon, {
+                                lat: -6.001,
+                                lon: 107.001,
+                              }) * 100
+                            ) / 100}{" "}
+                            Km
+                          </Text> */}
 
 const styles = StyleSheet.create({
   buttonContainer: {
