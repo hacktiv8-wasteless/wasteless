@@ -6,15 +6,14 @@ import { Entypo } from "@expo/vector-icons";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useQuery } from "@apollo/client";
-import { GET_USER_DETAIL } from "../query/Users";
+import { GET_PROFILE } from "../query/Users";
 import { useNavigation } from "@react-navigation/native";
 import Loader from "../components/Loader";
-import { signOut } from "../helpers/util";
-
+import { capitalize, signOut } from "../helpers/util";
 const Profile = () => {
   const navigation = useNavigation();
 
-  const { data: userDetailData, loading: userDetailLoading, error: userDetailError } = useQuery(GET_USER_DETAIL);
+  const { data: userDetailData, loading: userDetailLoading, error: userDetailError } = useQuery(GET_PROFILE);
 
   if (userDetailLoading) return <Loader />;
   if (userDetailError) {
@@ -22,9 +21,9 @@ const Profile = () => {
     console.log(userDetailError);
     console.log("postsError -------------------------");
 
-    return <Text>Error: {userDetailError}</Text>;
+    // return <Text>Error: {userDetailError}</Text>;
   }
-
+  // console.log(userDetailData?.getProfile);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
@@ -45,9 +44,8 @@ const Profile = () => {
                 },
               ]}
             >
-              John Doe
+              {capitalize(userDetailData?.getProfile?.username)}
             </Title>
-            <Caption style={styles.caption}>@j_doe</Caption>
           </View>
         </View>
       </View>
@@ -55,15 +53,15 @@ const Profile = () => {
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
           <Entypo name="location" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>Kolkata, India</Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>{userDetailData?.getProfile?.address}</Text>
         </View>
         <View style={styles.row}>
           <Entypo name="phone" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>+91-900000009</Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>{userDetailData?.getProfile?.phoneNumber}</Text>
         </View>
         <View style={styles.row}>
           <Icon name="email" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>john_doe@email.com</Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>{userDetailData?.getProfile?.email}</Text>
         </View>
       </View>
 
@@ -77,7 +75,7 @@ const Profile = () => {
             },
           ]}
         >
-          <Title>Rp.14000</Title>
+          <Title>Rp.{userDetailData?.getProfile?.balance}</Title>
           <Caption>Wallet</Caption>
         </View>
         <View style={styles.infoBox}>

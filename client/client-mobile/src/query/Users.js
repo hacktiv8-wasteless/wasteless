@@ -34,13 +34,16 @@ export const GET_USER_DETAIL = gql`
 `;
 
 export const GET_PROFILE = gql`
-  query Query {
+  query GetAllPosts {
     getProfile {
       id
       username
       email
+      password
       phoneNumber
       address
+      balance
+      points
     }
   }
 `;
