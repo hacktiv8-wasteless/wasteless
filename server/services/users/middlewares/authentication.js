@@ -1,6 +1,6 @@
 const { verifyToken } = require("../helpers/jwt");
 
-const authentication = (req, res, next) => {
+const authentication = async (req, res, next) => {
 	try {
 		console.log(req.headers)
 		const { access_token } = req.headers;
