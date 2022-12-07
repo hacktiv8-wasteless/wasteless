@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Text, Link, HStack, Center, Heading, Switch, useColorMode, NativeBaseProvider, extendTheme, VStack, Box } from "native-base";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
 import { ApolloProvider } from "@apollo/client";
 import StackNavigator from "./src/Navigators/StackNavigator";
 import client from "./src/configs/apollo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { COLORS } from "./src/constants";
 
 export default function App() {
   const [firstLaunch, setFirstLaunch] = useState(null);
@@ -23,11 +24,19 @@ export default function App() {
     setData();
   }, []);
 
+  const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: COLORS.white,
+    },
+  };
+
   return (
     firstLaunch != null && (
       <ApolloProvider client={client}>
         <NativeBaseProvider>
-          <NavigationContainer>
+          <NavigationContainer theme={MyTheme}>
             <StackNavigator firstLaunch={firstLaunch} />
           </NavigationContainer>
         </NativeBaseProvider>

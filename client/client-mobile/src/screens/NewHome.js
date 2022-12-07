@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, TextInput, ScrollView, Image, StatusBar, TouchableOpacity, Pressable } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { FlatList, Button, Center } from "native-base";
+import { FlatList, Button, Center, Collapse, Skeleton } from "native-base";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 import { useQuery } from "@apollo/client";
@@ -19,6 +19,7 @@ import SearchBar from "../components/SearchBar";
 import { COLORS } from "../constants";
 
 export default function NewHome({ navigation }) {
+  const dummyLoader = ["a", "b", "c", "d", "e", "f", "g"];
   const clearAsyncStorage = async () => {
     await AsyncStorage.clear();
   };
@@ -71,15 +72,18 @@ export default function NewHome({ navigation }) {
     setFiltered(postsData?.getAllPosts?.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
   }, [search]);
 
-  if (postsLoading || categoryLoading || userLoading) return <Loader />;
+  // if (postsLoading || categoryLoading || userLoading) return <Loader />;
+
+  console.log(postsLoading);
 
   return (
-    <View style={{ backgroundColor: "white" }}>
-      <StatusBar barStyle="dark-content" backgroundColor="white" />
+    <View style={{ backgroundColor: COLORS.white }}>
+      <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
       <SafeAreaView>
         {/* Loader */}
+        {/* <Skeleton.Text isLoaded={!postsLoading} /> */}
 
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {/* <Button onPress={check} style={styles.test}>
             Check
           </Button>
@@ -89,14 +93,7 @@ export default function NewHome({ navigation }) {
           <Button onPress={clearAsyncStorage} style={styles.test}>
             Clear all storage
           </Button> */}
-          <View
-            style={{
-              // flex: 1,
-              paddingTop: 10,
-              paddingHorizontal: 20,
-              // alignItems: "center",
-            }}
-          >
+          <View style={{ backgroundColor: COLORS.primary, paddingTop: 20, paddingBottom: 10, paddingHorizontal: 20, borderTopRightRadius: 20, borderTopLeftRadius: 20 }}>
             <View
               style={{
                 flexDirection: "row",
@@ -105,14 +102,38 @@ export default function NewHome({ navigation }) {
               }}
             >
               <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 20, fontWeight: "600", color: COLORS.dark }}>Welcome {capitalize(userData?.getProfile?.username)} </Text>
-                <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 5, paddingRight: 10 }}>
-                  <Ionicons name="location" size={24} color={COLORS.primaryShade[400]} />
-                  <Text style={{ color: "gray", marginLeft: 10, marginRight: 10 }}>Pondok Indah, Jakarta Selatan</Text>
-                </View>
+                {userLoading ? (
+                  <Skeleton.Text isLoaded={!userLoading} lines={2} w={200} />
+                ) : (
+                  <>
+                    <Text style={{ fontSize: 20, fontWeight: "600", color: COLORS.lightGrey }}>Welcome {capitalize(userData?.getProfile?.username)}</Text>
+                    <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 5, paddingRight: 10 }}>
+                      <Ionicons name="location" size={24} color={COLORS.lightGrey} />
+                      <Text style={{ color: COLORS.lightGrey, marginLeft: 10, marginRight: 10 }}>Pondok Indah, Jakarta Selatan</Text>
+                    </View>
+                  </>
+                )}
               </View>
               <View>
-                <Button onPress={() => navigation.navigate("MyProfile")} variant="unstyled" style={{ backgroundColor: COLORS.accent, height: 50, width: 50, borderRadius: 25 }}>
+                <Button
+                  onPress={() => navigation.navigate("MyProfile")}
+                  variant="unstyled"
+                  style={{
+                    backgroundColor: COLORS.accent,
+                    height: 50,
+                    width: 50,
+                    borderRadius: 25,
+                    shadowColor: COLORS.primaryShade[500],
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    shadowOpacity: 0.1,
+                    shadowRadius: 3.84,
+
+                    elevation: 5,
+                  }}
+                >
                   <Feather name="user" size={24} color={COLORS.dark} />
                 </Button>
               </View>
@@ -120,28 +141,65 @@ export default function NewHome({ navigation }) {
 
             {/* Search Bar */}
             <SearchBar search={search} handleSearchChange={handleSearchChange} handleOnSubmit={handleOnSubmit} />
+          </View>
+          <View style={{ backgroundColor: COLORS.primary }}>
+            <View
+              style={{
+                paddingTop: 10,
+                backgroundColor: COLORS.white,
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+                // paddingHorizontal: 20,
+              }}
+            >
+              {/* <CardBanner /> */}
+              <View style={{ paddingHorizontal: 20, marginVertical: 10 }}>
+                <Carousel />
+              </View>
 
-            {/* Category Card */}
-            <View style={{ marginVertical: 10 }}>
-              <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-                <View style={{ flexDirection: "row" }}>
-                  {categoryData?.getAllCategories?.map((item) => {
-                    return <CategoryCard key={item["_id"]} item={item} categoryId={item["_id"]} />;
-                  })}
+              {/* Category Card */}
+              <View style={{ marginVertical: 10 }}>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+                  <View style={{ flexDirection: "row" }}>
+                    {categoryLoading
+                      ? dummyLoader.map((dummy) => (
+                          <View key={dummy} style={styles.categoryCard}>
+                            <Skeleton.Text isLoaded={!categoryLoading} lines={1} w={75} />
+                          </View>
+                        ))
+                      : categoryData?.getAllCategories?.map((item) => {
+                          return <CategoryCard key={item["_id"]} item={item} categoryId={item["_id"]} />;
+                        })}
+                  </View>
+                </ScrollView>
+              </View>
+
+              {/* Card */}
+              <View style={{ flex: 1, marginVertical: 20, paddingHorizontal: 20 }}>
+                <Text style={{ fontSize: 20, fontWeight: "600", marginBottom: 10 }}>Near Me</Text>
+                <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-start" }}>
+                  {postsLoading
+                    ? dummyLoader.map((dummy) => (
+                        <View key={dummy} style={styles.buttonContainer}>
+                          <TouchableOpacity>
+                            <View style={{ width: 150, height: 150, overflow: "hidden", borderRadius: 20 }}>
+                              <Skeleton isLoaded={!postsLoading} h={"full"} w={"full"} />
+                              {/* <Image source={{ uri: post.mainImage }} style={{ width: 150, height: 150 }} /> */}
+                            </View>
+                            <View style={{ marginVertical: 10, flexWrap: "wrap" }}>
+                              <Skeleton.Text isLoaded={!postsLoading} lines={2} />
+                              {/* <Text style={{ fontSize: 16, fontWeight: "700" }}>{post.title.charAt(0).toUpperCase() + post.title.slice(1)}</Text>
+                          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+                            <Ionicons name="location" size={18} color={COLORS.primaryShade[400]} />
+                          </View> */}
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      ))
+                    : getFilteredPost()?.map((post) => {
+                        return <ItemCardSmall post={post} key={post["_id"]} postsLoading={postsLoading} />;
+                      })}
                 </View>
-              </ScrollView>
-            </View>
-
-            {/* <CardBanner /> */}
-            <Carousel />
-
-            {/* Card */}
-            <View style={{ flex: 1, marginVertical: 10 }}>
-              <Text style={{ fontSize: 20, fontWeight: "600", marginBottom: 10 }}>Near Me</Text>
-              <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-start" }}>
-                {getFilteredPost()?.map((post) => {
-                  return <ItemCardSmall post={post} key={post["_id"]} />;
-                })}
               </View>
             </View>
           </View>
@@ -151,4 +209,42 @@ export default function NewHome({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  buttonContainer: {
+    backgroundColor: COLORS.white,
+    marginBottom: 20,
+    marginHorizontal: 7.5,
+    padding: 10,
+    borderRadius: 20,
+
+    shadowColor: COLORS.primaryShade[500],
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  categoryCard: {
+    justifyContent: "center",
+    alignContent: "center",
+    backgroundColor: COLORS.lightGrey,
+    marginLeft: 20,
+    padding: 10,
+    borderRadius: 15,
+    height: 40,
+    marginBottom: 10,
+    paddingHorizontal: 15,
+    shadowColor: COLORS.primaryShade[500],
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
+  },
+});

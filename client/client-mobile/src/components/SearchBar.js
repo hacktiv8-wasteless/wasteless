@@ -10,9 +10,19 @@ const SearchBar = ({ search, handleSearchChange, handleOnSubmit }) => {
         flexDirection: "row",
         marginVertical: 1,
         padding: 15,
-        borderRadius: 30,
+        borderRadius: 18,
         backgroundColor: COLORS.lightGrey,
         marginVertical: 10,
+
+        shadowColor: COLORS.primaryShade[500],
+        shadowOffset: {
+          width: 0,
+          height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 3.84,
+
+        elevation: 5,
       }}
     >
       <TextInput

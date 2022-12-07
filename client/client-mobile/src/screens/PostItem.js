@@ -11,6 +11,8 @@ import { COLORS } from "../constants";
 
 export default function PostItem({ navigation, route }) {
   const { categoryId: category_id } = route.params;
+  const { price } = route.params;
+  // console.log(price);
   const [userId, setUserId] = useState(null);
 
   const userIdGetter = async () => {
@@ -133,7 +135,7 @@ export default function PostItem({ navigation, route }) {
     <>
       {/* Status Bar */}
       {/* <StatusBar barStyle="light-content" backgroundColor="#339966" /> */}
-      <SafeAreaView>
+      <SafeAreaView style={styles.container}>
         <ScrollView>
           {/* Image handler */}
           {/* <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.image} /> */}
@@ -199,7 +201,8 @@ export default function PostItem({ navigation, route }) {
                     // p="5"
                     height="full"
                     borderWidth="1"
-                    borderColor="coolGray.300"
+                    borderColor={COLORS.white}
+                    borderBottomColor={COLORS.muted}
                     maxHeight={70}
                   >
                     <View style={{ padding: 20, flexDirection: "row", justifyContent: "space-between" }}>
@@ -212,8 +215,13 @@ export default function PostItem({ navigation, route }) {
             </Pressable>
           </VStack>
 
+          <View style={styles.totalPrice}>
+            <Text style={styles.label}>Total Price: </Text>
+            <Text style={styles.label}>Rp.{quantity * price}</Text>
+          </View>
+
           <VStack style={styles.footer}>
-            <Button isLoading={postLoading ? true : false} onPress={onSubmit} bgColor={COLORS.primaryShade[500]} width={"full"} height={75} borderTopRadius={20} borderBottomRadius={0}>
+            <Button isLoading={postLoading ? true : false} onPress={onSubmit} bgColor={COLORS.primary} width={"full"} height={75} borderTopRadius={20} borderBottomRadius={0}>
               <Text style={{ color: COLORS.accent, fontWeight: "500", fontSize: 16 }}>Submit</Text>
             </Button>
             {/* Kalo udah sambung server bisa tambah ini buat loading mutation */}
@@ -234,7 +242,7 @@ export default function PostItem({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     // flex: 1,
-    backgroundColor: "#eeeeee",
+    backgroundColor: COLORS.lightGrey,
   },
   imageContainer: {
     // height: 200,
@@ -267,6 +275,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     flex: 1,
     height: 300,
+    marginBottom: 20,
   },
   footer: {
     justifyContent: "center",
@@ -276,5 +285,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
+  },
+  totalPrice: {
+    padding: 20,
+    backgroundColor: "white",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    // marginBottom: 20,
   },
 });

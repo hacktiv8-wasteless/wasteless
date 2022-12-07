@@ -8,13 +8,15 @@ import { useQuery } from "@apollo/client";
 import { GET_CATEGORIES } from "../query/Categories";
 import CategoryCard from "../components/CategoryCard";
 import { useEffect, useState } from "react";
-import { Pressable, TextInput, Text, View } from "react-native";
+import { Pressable, TextInput, Text, View, StatusBar } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { GET_POSTS, GET_POST_BY_CATEGORY } from "../query/Posts";
 import ItemCardSmall from "../components/ItemCardSmall";
+import { COLORS } from "../constants";
 
 export default function CategoryScreen() {
   // const locations = ["Plastic", "Cardboard", "Paper", "Alumunium can", "Glass"];
+  // <StatusBar barStyle="light-content" backgroundColor={COLORS.white} />;
 
   const { loading: postCategoryLoading, error: postCategoryError, data: postCategoryData } = useQuery(GET_POST_BY_CATEGORY);
   const { loading: postsLoading, error: postsError, data: postsData } = useQuery(GET_POSTS);
@@ -57,14 +59,16 @@ export default function CategoryScreen() {
   if (postsLoading || categoryLoading || postCategoryError) return <Loader />;
   // console.log(filtered);
   return (
-    <View style={{ flex: 1, paddingHorizontal: 10, backgroundColor: "white" }}>
-      <ScrollView>
+    <View style={{ flex: 1, backgroundColor: "white" }}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <View>
           {/* Search Bar */}
-          <SearchBar search={search} handleSearchChange={handleSearchChange} handleOnSubmit={handleOnSubmit} />
+          <View style={{ paddingHorizontal: 20 }}>
+            <SearchBar search={search} handleSearchChange={handleSearchChange} handleOnSubmit={handleOnSubmit} />
+          </View>
 
           {/* Category Card */}
-          <View style={{ paddingHorizontal: 10 }}>
+          <View style={{ paddingHorizontal: 20 }}>
             <Text style={{ fontSize: 20, fontWeight: "600", marginVertical: 10 }}>All Categories</Text>
             <View style={{ marginVertical: 10, flex: 1 }}>
               <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-start" }}>

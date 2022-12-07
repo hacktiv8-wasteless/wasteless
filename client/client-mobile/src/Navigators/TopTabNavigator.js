@@ -10,7 +10,7 @@ const TopTab = createMaterialTopTabNavigator();
 
 export default function TopTabNavigator() {
   return (
-    <TopTab.Navigator initialLayout="MyListing" screenOptions={{ tabBarLabelStyle: { textTransform: "none" }, headerShadowVisible: false }}>
+    <TopTab.Navigator initialLayout="MyListing" screenOptions={{ tabBarLabelStyle: { textTransform: "none" }, headerShadowVisible: false, tabBarPressColor: COLORS.lightGrey, tabBarIndicatorStyle: { backgroundColor: COLORS.primary } }}>
       <TopTab.Screen name="MyListing" component={MyListing} options={{ title: "My Listings" }} />
       <TopTab.Screen name="Ongoing" component={OngoingOrder} options={{ title: "Ongoing" }} />
       <TopTab.Screen name="History" component={History} options={{ title: "History" }} />

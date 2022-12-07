@@ -13,7 +13,26 @@ export default function CategoryCard({ item, categoryId }) {
 
   return (
     <TouchableOpacity onPress={handleCategoryNavigate}>
-      <View style={{ borderWidth: 1, borderColor: COLORS.primaryShade["500"], marginRight: 20, padding: 10, borderRadius: 40, height: 40, marginBottom: 20 }}>
+      <View
+        style={{
+          backgroundColor: COLORS.lightGrey,
+          marginLeft: 20,
+          padding: 10,
+          borderRadius: 15,
+          height: 40,
+          marginBottom: 10,
+          paddingHorizontal: 15,
+          shadowColor: COLORS.primaryShade[500],
+          shadowOffset: {
+            width: 0,
+            height: 1,
+          },
+          shadowOpacity: 0.22,
+          shadowRadius: 2.22,
+
+          elevation: 3,
+        }}
+      >
         <Text>{item.name}</Text>
       </View>
     </TouchableOpacity>
