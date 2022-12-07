@@ -24,8 +24,8 @@ import { Feather } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import Geocoder from "react-native-geocoding";
 import latlngDist from "latlng-distance";
-import { useQuery } from "@apollo/client";
-import { GET_POSTS } from "../query/Posts";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { GET_NEARBY_POST, GET_POSTS } from "../query/Posts";
 import { GET_CATEGORIES } from "../query/Categories";
 import { GET_PROFILE, GET_USER_DETAIL } from "../query/Users";
 import CardBanner from "../components/CardBanner";
@@ -40,6 +40,9 @@ import { COLORS } from "../constants";
 
 export default function NewHome({ navigation }) {
   const dummyLoader = ["a", "b", "c", "d", "e", "f", "g"];
+
+  const [userLoc, setUserLoc] = useState("");
+  const [userLatLon, setUserLatLon] = useState(null);
   const clearAsyncStorage = async () => {
     await AsyncStorage.clear();
   };
@@ -53,12 +56,17 @@ export default function NewHome({ navigation }) {
     console.log(await getToken("userId"));
   };
 
+  // console.log(userLatLon);
   //? SERVER WIRING
-  const {
-    loading: postsLoading,
-    error: postsError,
-    data: postsData,
-  } = useQuery(GET_POSTS);
+  // const {
+  //   loading: postsLoading,
+  //   error: postsError,
+  //   data: postsData,
+  // } = useQuery(GET_POSTS);
+  const [
+    getNearby,
+    { loading: postsLoading, error: postsError, data: postsData },
+  ] = useLazyQuery(GET_NEARBY_POST);
   const {
     data: categoryData,
     loading: categoryLoading,
@@ -93,12 +101,12 @@ export default function NewHome({ navigation }) {
     if (search) {
       return filtered;
     }
-    return postsData?.getAllPosts;
+    return postsData.getNearbyPosts;
   };
 
   const handleOnSubmit = () => {
     setFiltered(
-      postsData?.getAllPosts?.filter((post) =>
+      postsData?.getNearbyPosts?.filter((post) =>
         post.title.toLowerCase().includes(search.toLowerCase())
       )
     );
@@ -106,18 +114,13 @@ export default function NewHome({ navigation }) {
 
   useEffect(() => {
     setFiltered(
-      postsData?.getAllPosts?.filter((post) =>
+      postsData?.getNearbyPosts?.filter((post) =>
         post.title.toLowerCase().includes(search.toLowerCase())
       )
     );
   }, [search]);
 
   // if (postsLoading || categoryLoading || userLoading) return <Loader />;
-
-  // console.log(postsLoading);
-
-  const [userLoc, setUserLoc] = useState("");
-  const [userLatLon, setUserLatLon] = useState({});
 
   // console.log(userLoc);
 
@@ -138,8 +141,10 @@ export default function NewHome({ navigation }) {
             lon: location.coords.longitude,
           });
 
-
-          const loc = await Geocoder.from(location.coords.latitude, location.coords.longitude);
+          const loc = await Geocoder.from(
+            location.coords.latitude,
+            location.coords.longitude
+          );
           // console.log(loc.results[0].address_components);
 
           setUserLoc(
@@ -157,6 +162,21 @@ export default function NewHome({ navigation }) {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    if (userLatLon && categoryData) {
+      getNearby({
+        variables: {
+          postPayload: {
+            long: `${userLatLon.lon}`,
+            lat: `${userLatLon.lat}`,
+          },
+        },
+      });
+    }
+  }, [userLatLon, categoryData]);
+
+  console.log(!search);
   return (
     <View style={{ backgroundColor: COLORS.white }}>
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
@@ -165,7 +185,7 @@ export default function NewHome({ navigation }) {
         {/* <Skeleton.Text isLoaded={!postsLoading} /> */}
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          {/* <Button onPress={check} style={styles.test}>
+          <Button onPress={check} style={styles.test}>
             Check
           </Button>
           <Button onPress={logout} style={styles.test}>
@@ -173,7 +193,7 @@ export default function NewHome({ navigation }) {
           </Button>
           <Button onPress={clearAsyncStorage} style={styles.test}>
             Clear all storage
-          </Button> */}
+          </Button>
           <View
             style={{
               backgroundColor: COLORS.primary,
@@ -338,7 +358,7 @@ export default function NewHome({ navigation }) {
                     justifyContent: "flex-start",
                   }}
                 >
-                  {postsLoading
+                  {!postsData
                     ? dummyLoader.map((dummy) => (
                         <View key={dummy} style={styles.buttonContainer}>
                           <TouchableOpacity>
@@ -379,6 +399,7 @@ export default function NewHome({ navigation }) {
                             key={post["_id"]}
                             postsLoading={postsLoading}
                             userLatLon={userLatLon}
+                            categoryData={categoryData.getAllCategories}
                           />
                         );
                       })}

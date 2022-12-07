@@ -21,7 +21,11 @@ import { COLORS } from "../constants";
 const Profile = () => {
   const navigation = useNavigation();
 
-  const { data: userDetailData, loading: userDetailLoading, error: userDetailError } = useQuery(GET_PROFILE);
+  const {
+    data: userDetailData,
+    loading: userDetailLoading,
+    error: userDetailError,
+  } = useQuery(GET_PROFILE);
 
   if (userDetailLoading) return <Loader />;
   if (userDetailError) {
@@ -50,7 +54,7 @@ const Profile = () => {
                 color: COLORS.dark,
               }}
             >
-              A
+              {capitalize(userDetailData?.getProfile?.username).charAt(0)}
             </Text>
           </Avatar>
           <View style={{ marginLeft: 20 }}>
@@ -72,15 +76,21 @@ const Profile = () => {
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
           <Entypo name="location" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>{userDetailData?.getProfile?.address}</Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>
+            {userDetailData?.getProfile?.address}
+          </Text>
         </View>
         <View style={styles.row}>
           <Entypo name="phone" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>{userDetailData?.getProfile?.phoneNumber}</Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>
+            {userDetailData?.getProfile?.phoneNumber}
+          </Text>
         </View>
         <View style={styles.row}>
           <Icon name="email" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>{userDetailData?.getProfile?.email}</Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>
+            {userDetailData?.getProfile?.email}
+          </Text>
         </View>
       </View>
 
