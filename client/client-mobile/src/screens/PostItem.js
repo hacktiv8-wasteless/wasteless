@@ -1,7 +1,28 @@
-import { StyleSheet, View, Image, TouchableHighlight, StatusBar, TouchableOpacity, TextInput } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  TouchableHighlight,
+  StatusBar,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { VStack, Text, FormControl, Input, Button, TextArea, Slider, Box, Center, WarningOutlineIcon, Pressable, ScrollView } from "native-base";
+import {
+  VStack,
+  Text,
+  FormControl,
+  Input,
+  Button,
+  TextArea,
+  Slider,
+  Box,
+  Center,
+  WarningOutlineIcon,
+  Pressable,
+  ScrollView,
+} from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
 import MapView, { Marker } from "react-native-maps";
@@ -73,7 +94,10 @@ export default function PostItem({ navigation, route }) {
   //? -------------------------------------------
 
   //? Server Wiring --------------------------
-  const [createPost, { data: postData, loading: postLoading, error: postError }] = useMutation(POST_POST);
+  const [
+    createPost,
+    { data: postData, loading: postLoading, error: postError },
+  ] = useMutation(POST_POST);
 
   // const [mainImage, setMainImage] = useState("");
   const [title, setTitle] = useState("");
@@ -187,7 +211,14 @@ export default function PostItem({ navigation, route }) {
           {/* Image handler */}
           {/* <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.image} /> */}
           <TouchableOpacity onPress={openImageLibrary}>
-            <View style={{ backgroundColor: "white", paddingHorizontal: 20, paddingTop: 20, paddingBottom: 10 }}>
+            <View
+              style={{
+                backgroundColor: "white",
+                paddingHorizontal: 20,
+                paddingTop: 20,
+                paddingBottom: 10,
+              }}
+            >
               <Text style={styles.label}>Upload Image:</Text>
             </View>
             <View style={styles.imageContainer2}>
@@ -195,7 +226,12 @@ export default function PostItem({ navigation, route }) {
               {profileImage ? (
                 <Image source={{ uri: profileImage }} style={styles.image} />
               ) : (
-                <Image source={{ uri: "https://uploader-assets.s3.ap-south-1.amazonaws.com/codepen-default-placeholder.png" }} style={styles.image} />
+                <Image
+                  source={{
+                    uri: "https://uploader-assets.s3.ap-south-1.amazonaws.com/codepen-default-placeholder.png",
+                  }}
+                  style={styles.image}
+                />
                 // <Text
                 //   style={{
                 //     textAlign: "center",
@@ -217,12 +253,26 @@ export default function PostItem({ navigation, route }) {
           <VStack style={styles.formContainer}>
             <FormControl isRequired marginBottom={3}>
               <Text style={styles.label}>Title</Text>
-              <Input placeholder="Title" w="100%" variant="rounded" backgroundColor="white" value={title} onChangeText={handleTitleChange} />
+              <Input
+                placeholder="Title"
+                w="100%"
+                variant="rounded"
+                backgroundColor="white"
+                value={title}
+                onChangeText={handleTitleChange}
+              />
             </FormControl>
 
             <FormControl isRequired marginBottom={3}>
               <Text style={styles.label}>Description</Text>
-              <TextArea h={20} placeholder="e.g. 2kg plastic bottles" backgroundColor="white" borderRadius={15} value={description} onChangeText={handleDescriptionChange} />
+              <TextArea
+                h={20}
+                placeholder="e.g. 2kg plastic bottles"
+                backgroundColor="white"
+                borderRadius={15}
+                value={description}
+                onChangeText={handleDescriptionChange}
+              />
             </FormControl>
 
             <FormControl isRequired>
@@ -230,9 +280,18 @@ export default function PostItem({ navigation, route }) {
                 <Text style={styles.label}>Quantity: </Text>
                 <Text>{quantity}kg</Text>
               </View>
-              <Slider onChange={handleQuantityChange} defaultValue={5} minValue={1} maxValue={10} step={1}>
+              <Slider
+                onChange={handleQuantityChange}
+                defaultValue={5}
+                minValue={1}
+                maxValue={10}
+                step={1}
+              >
                 <Slider.Track bgColor={COLORS.muted}>
-                  <Slider.FilledTrack color={"red.100"} bgColor={COLORS.primary} />
+                  <Slider.FilledTrack
+                    color={"red.100"}
+                    bgColor={COLORS.primary}
+                  />
                 </Slider.Track>
                 <Slider.Thumb bgColor={COLORS.primary} />
               </Slider>
@@ -240,16 +299,29 @@ export default function PostItem({ navigation, route }) {
           </VStack>
 
           <VStack style={styles.mapsContainer}>
-            <Box height="full" borderWidth="1" borderColor="coolGray.300" maxHeight={70}>
+            <Box
+              height="full"
+              borderWidth="1"
+              borderColor="coolGray.300"
+              maxHeight={70}
+            >
               <View
                 style={{
-                  padding: 20,
+                  padding: 14,
                   flexDirection: "row",
                   justifyContent: "space-between",
                 }}
               >
                 {/* <Text>Your location (approx)</Text> */}
-                <Input placeholder="Location" w="100%" backgroundColor="white" value={userLoc} onChangeText={handleLoc} onEndEditing={handleInput} />
+                <Input
+                  placeholder="Location"
+                  w="100%"
+                  backgroundColor="white"
+                  value={userLoc}
+                  onChangeText={handleLoc}
+                  onEndEditing={handleInput}
+                  variant="rounded"
+                />
                 {/* <Text style={styles.label}>Next</Text> */}
               </View>
             </Box>
@@ -265,7 +337,14 @@ export default function PostItem({ navigation, route }) {
                   longitudeDelta: 0.03,
                 }}
               >
-                {userLatLon && <Marker draggable coordinate={userLatLon} style={{ ...StyleSheet.absoluteFillObject }} onDragEnd={handleMarker} />}
+                {userLatLon && (
+                  <Marker
+                    draggable
+                    coordinate={userLatLon}
+                    style={{ ...StyleSheet.absoluteFillObject }}
+                    onDragEnd={handleMarker}
+                  />
+                )}
               </MapView>
             </View>
           </VStack>
@@ -276,8 +355,24 @@ export default function PostItem({ navigation, route }) {
           </View>
 
           <VStack style={styles.footer}>
-            <Button isLoading={postLoading ? true : false} onPress={onSubmit} bgColor={COLORS.primary} width={"full"} height={75} borderTopRadius={20} borderBottomRadius={0}>
-              <Text style={{ color: COLORS.accent, fontWeight: "500", fontSize: 16 }}>Submit</Text>
+            <Button
+              isLoading={postLoading ? true : false}
+              onPress={onSubmit}
+              bgColor={COLORS.primary}
+              width={"full"}
+              height={75}
+              borderTopRadius={20}
+              borderBottomRadius={0}
+            >
+              <Text
+                style={{
+                  color: COLORS.accent,
+                  fontWeight: "500",
+                  fontSize: 16,
+                }}
+              >
+                Submit
+              </Text>
             </Button>
             {/* Kalo udah sambung server bisa tambah ini buat loading mutation */}
             {/* <Button isLoading>Button</Button> */}

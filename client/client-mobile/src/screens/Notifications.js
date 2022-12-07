@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { COLORS } from "../constants";
 import {
   FlatList,
   Box,
@@ -118,18 +119,23 @@ export default function Notifications({ navigation }) {
               _dark={{
                 borderColor: "muted.50",
               }}
-              borderColor="muted.800"
+              borderColor="muted.400"
               pl={["0", "4"]}
               pr={["0", "5"]}
               py="2"
+              marginY={1}
             >
               <HStack space={[2, 3]} justifyContent="space-between">
                 <Avatar
                   size="48px"
-                  source={{
-                    uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                  }}
-                />
+                  marginLeft={4}
+                  marginRight={2}
+                  // source={{
+                  //   uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                  // }}
+                >
+                  {item.user.charAt(0).toUpperCase()}
+                </Avatar>
                 <VStack>
                   <Text
                     _dark={{
@@ -157,6 +163,8 @@ export default function Notifications({ navigation }) {
                   }}
                   color="coolGray.800"
                   alignSelf="flex-start"
+                  marginRight={3}
+                  paddingTop={1}
                 >
                   {item.timeStamp}
                 </Text>
