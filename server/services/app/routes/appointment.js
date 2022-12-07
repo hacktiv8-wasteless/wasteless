@@ -3,7 +3,7 @@ const router = express.Router();
 
 const appointmentController = require("../controllers/appointmentController");
 
-router.post("/", appointmentController.create);
+router.post("/:postId", appointmentController.create);
 router.get("/", appointmentController.all);
 
 module.exports = router;

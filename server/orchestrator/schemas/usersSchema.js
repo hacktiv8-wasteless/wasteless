@@ -1,3 +1,4 @@
+const { verifyToken } = require("../helper/jwt");
 const Users = require("../services/users");
 
 const typeDefs = `#graphql
@@ -8,6 +9,8 @@ const typeDefs = `#graphql
     password:String!
     phoneNumber:String!
     address:String!
+	balance:Int
+	points:Int
   }
   
   type Response {
@@ -16,19 +19,16 @@ const typeDefs = `#graphql
     message:String
 	error:Boolean
   }
-
   type Invoice {
     external_id:String
     totalPrice:Int
     invoice_url:String
 	}
-
 	input InvoicePayload {
 		external_id:String
    		totalPrice:Int
 		status:String
 	}
-
   input userPayload {
     username:String
     email:String
@@ -53,115 +53,115 @@ const typeDefs = `#graphql
 `;
 
 const resolvers = {
-	Query: {
-		getAllUsers: async () => {
-			try {
-				const { data } = await Users.get(`/users`);
+  Query: {
+    getAllUsers: async () => {
+      try {
+        const { data } = await Users.get(`/users`);
 
-				return data;
-			} catch (error) {
-				console.log(error);
-			}
-		},
-		getUserById: async (_, { userId }) => {
-			try {
-				const { data } = await Users.get(`/users/${userId}`);
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    getUserById: async (_, { userId }) => {
+      try {
+        const { data } = await Users.get(`/users/${userId}`);
 
-				return data;
-			} catch (error) {
-				console.log(error);
-			}
-		},
-		getProfile: async (_, __, context) => {
-			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
-				const { id: userId } = context.user;
-				const { data } = await Users.get(`/users/${userId}`);
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    getProfile: async (_, __, context) => {
+      try {
+        if (!context.token) throw { error: "Invalid access" };
+        const { id: userId } = verifyToken(context.token);
+        const { data } = await Users.get(`/users/${userId}`);
 
-				return data;
-			} catch (error) {
-				console.log(error);
-			}
-		},
-	},
-	Mutation: {
-		registerUser: async (_, { userPayload }) => {
-			try {
-				//user payload semua
-				let { username, email, password, phoneNumber, address } = userPayload;
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  Mutation: {
+    registerUser: async (_, { userPayload }) => {
+      try {
+        //user payload semua
+        let { username, email, password, phoneNumber, address } = userPayload;
 
-				const { data } = await Users.post(`/users/register`, {
-					username,
-					email,
-					password,
-					phoneNumber,
-					address,
-				});
+        const { data } = await Users.post(`/users/register`, {
+          username,
+          email,
+          password,
+          phoneNumber,
+          address,
+        });
 
-				return data;
-			} catch (error) {
-				console.log(error);
-			}
-		},
-		loginUser: async (_, { userPayload }) => {
-			//user payload cuma email dan password
-			try {
-				const { email, password } = userPayload;
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    loginUser: async (_, { userPayload }) => {
+      //user payload cuma email dan password
+      try {
+        const { email, password } = userPayload;
 
-				const { data } = await Users.post(`/users/login`, { email, password });
+        const { data } = await Users.post(`/users/login`, { email, password });
 
-				return { access_token: data.access_token, id: data.id };
-			} catch (error) {
-				console.log(error);
-			}
-		},
-		deleteUser: async (_, { userId }) => {
-			try {
-				const { data } = await Users.delete(`/users/${userId}`);
+        return { access_token: data.access_token, id: data.id };
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    deleteUser: async (_, { userId }) => {
+      try {
+        const { data } = await Users.delete(`/users/${userId}`);
 
-				return { message: "User Deleted successfully" };
-			} catch (error) {
-				console.log(error);
-			}
-		},
-		createInvoice: async (_, { balance }, context) => {
-			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
-				const { data } = await Users.post(
-					"/users/topup",
-					{ balance },
-					{
-						headers: {
-							access_token: context.token,
-						},
-					}
-				);
+        return { message: "User Deleted successfully" };
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    createInvoice: async (_, { balance }, context) => {
+      try {
+        if (!context.token) throw { error: "Invalid access" };
+        const { data } = await Users.post(
+          "/users/topup",
+          { balance },
+          {
+            headers: {
+              access_token: context.token,
+            },
+          }
+        );
 
-				return data;
-			} catch (error) {
-				console.log(error);
-			}
-		},
-		payInvoice: async (_, { invocePayload }, context) => {
-			// invoice payload semua
-			try {
-				if (!context.user || !context.token) throw { error: "Invalid access" };
-				const { data } = await Users.post(
-					"/users/sucess",
-					{ ...invocePayload },
-					{
-						headers: {
-							access_token: context.token,
-						},
-					}
-				);
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    payInvoice: async (_, { invocePayload }, context) => {
+      // invoice payload semua
+      try {
+        if (!context.token) throw { error: "Invalid access" };
+        const { data } = await Users.post(
+          "/users/sucess",
+          { ...invocePayload },
+          {
+            headers: {
+              access_token: context.token,
+            },
+          }
+        );
 
-				return data;
-			} catch (error) {
-				console.log(error);
-			}
-		},
-	},
+        return data;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
 };
 
 module.exports = { typeDefs, resolvers };

@@ -30,7 +30,7 @@ export default function Login({ navigation }) {
           </View>
 
           <View style={{ justifyContent: "flex-end", flexDirection: "row" }}>
-            <Pressable onPress={() => navigation.navigate("Tab")}>
+            <Pressable onPress={() => navigation.replace("Tab")}>
               <Text style={styles.button}>Backdoor Home</Text>
             </Pressable>
           </View>

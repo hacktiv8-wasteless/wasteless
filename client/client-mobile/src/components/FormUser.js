@@ -7,6 +7,7 @@ import { POST_REGISTER, POST_LOGIN } from "../query/Users";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { COLORS } from "../constants";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getToken, signIn } from "../helpers/util";
 // -------------------------------------------------------------------
 
 const { height, width } = Dimensions.get("screen");
@@ -26,56 +27,83 @@ export default function FormUser({ page, navigation }) {
   const handlePhoneNumberChange = (val) => setPhoneNumber(val);
   const handleAddressChange = (val) => setAddress(val);
 
-  const [register, { data, loading, error }] = useMutation(POST_REGISTER);
-  const [login, { data: loginData, loginLoading, loginError }] = useMutation(POST_LOGIN);
+  const [register, { data: registerData, loading: registerLoading, error: registerError }] = useMutation(POST_REGISTER);
+  const [login, { data: loginData, loading: loginLoading, error: loginError }] = useMutation(POST_LOGIN);
 
-  if (loading || loginLoading) return <Text>Loading....</Text>;
-  if (error || loginError) return <Text>Error: {error}</Text>;
+  // if (registerLoading || loginLoading) return <Text>Loading....</Text>;
+  if (registerError || loginError) {
+    console.log("registerError ------------------------");
+    console.log(registerError);
+    console.log("registerError ------------------------");
+    console.log();
+    console.log("loginError ---------------------------");
+    console.log(loginError);
+    console.log("loginError ---------------------------");
+    // return <Text>Error: {registerError ? registerError : loginError}</Text>;
+  }
 
   const handleSubmitLogin = async () => {
-    const userPayload = {
-      email,
-      password,
-    };
-    // console.log(userPayload);
-    await login({
-      variables: { userPayload },
-    });
-    // console.log(loginData, "<<<<<<");
-    const access_token = loginData?.loginUser?.access_token;
-    // console.log(access_token);
-    await AsyncStorage.setItem("access_token", access_token);
-    //! pindah ke helpers ntar
-    navigation.navigate("Home");
-    //! navigate ke halaman home
-    // setEmail("");
-    // setPassword("");
+    try {
+      const userPayload = {
+        email,
+        password,
+      };
+
+      console.log(userPayload);
+
+      await login({
+        variables: { userPayload },
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleSubmitRegister = async () => {
-    const userPayload = {
-      email,
-      password,
-      username,
-      phoneNumber,
-      address,
-    };
-    await register({
-      variables: { userPayload },
-    });
-    console.log(data);
-    //! navigate ke halaman login atau langsung ke home (kalo ada access_token)
-    // console.log(userPayload);
-    setEmail("");
-    setPassword("");
-    setUsername("");
-    setPhoneNumber("");
-    setAddress("");
+    try {
+      const userPayload = {
+        email,
+        password,
+        username,
+        phoneNumber,
+        address,
+      };
+      // console.log(userPayload);
+      await register({
+        variables: { userPayload },
+      });
+
+      navigation.navigate("Login");
+
+      // Reset form
+      setEmail("");
+      setPassword("");
+      setUsername("");
+      setPhoneNumber("");
+      setAddress("");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handlerShowPassword = () => {
     show ? setShow(false) : setShow(true);
   };
+
+  const handleLogin = async () => {
+    const access_token = loginData?.loginUser?.access_token;
+    const userId = loginData?.loginUser?.id;
+    // // console.log(access_token);
+
+    await signIn(access_token, userId);
+    navigation.navigate("Tab");
+  };
+
+  useEffect(() => {
+    if (loginData) {
+      handleLogin();
+    }
+  }, [loginData]);
 
   return (
     <>
@@ -107,7 +135,7 @@ export default function FormUser({ page, navigation }) {
                   </Pressable>
                 }
               />
-              <Button colorScheme="indigo" onPress={handleSubmitLogin} style={styles.button}>
+              <Button isLoading={loginLoading ? true : false} isLoadingText={loginLoading ? "Signing in" : ""} colorScheme="indigo" onPress={handleSubmitLogin} style={styles.button}>
                 Sign in
               </Button>
             </Stack>
@@ -146,7 +174,7 @@ export default function FormUser({ page, navigation }) {
 
               <TextArea type="text" placeholder="Enter your address here" onChangeText={handleAddressChange} value={address} size="lg" borderRadius={12} variant="filled" InputRightElement={<Icon as={<MaterialIcons name="location-pin" />} size={8} mr="3" color={COLORS.primaryShade[100]} />} />
 
-              <Button colorScheme="indigo" onPress={handleSubmitLogin} style={styles.button}>
+              <Button isLoading={registerLoading ? true : false} isLoadingText={registerLoading ? "Signing in" : ""} onPress={handleSubmitRegister} style={styles.button}>
                 Sign up
               </Button>
             </Stack>
@@ -158,11 +186,6 @@ export default function FormUser({ page, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  // container: {
-  //   // alignItems: "center",
-  //   // justifyContent: "center",
-  //   // flex: 1,
-  // },
   card: {
     marginTop: 40,
     // height: width * 0.8,

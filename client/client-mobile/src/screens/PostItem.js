@@ -1,28 +1,32 @@
 import { StyleSheet, View, Image, TouchableHighlight, StatusBar, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { VStack, Text, FormControl, Input, Button, TextArea, Slider, Box, Center, WarningOutlineIcon, Pressable, ScrollView } from "native-base";
 import * as ImagePicker from "expo-image-picker";
 import axios from "axios";
+import { useMutation } from "@apollo/client";
+import { POST_POST } from "../query/Posts";
+import { getUserId } from "../helpers/util";
 
 export default function PostItem({ navigation, route }) {
-  const { category } = route.params;
-  // const giver_id = //! id dari jwt
-  // const status //! ini harusnya otomatis dari server jadi pending
+  const { categoryId: category_id } = route.params;
+  const [userId, setUserId] = useState(null);
 
-  //? Image picker
+  const userIdGetter = async () => {
+    const data = await getUserId();
+    setUserId(Number(data));
+  };
+
+  //? Image picker --------------------------
   const [profileImage, setProfileImage] = useState("");
   const [progress, setProgress] = useState(0);
   // const { token } = props.route.params;
-  const url = "https://f1f7-139-228-111-125.ap.ngrok.io/";
+  const url = "https://wasteless-services-upload.up.railway.app/";
 
   const openImageLibrary = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    // console.log(await ImagePicker.requestMediaLibraryPermissionsAsync());
-    // // {"canAskAgain": true, "expires": "never", "granted": true, "status": "granted"}
-    // console.log(status);
-    // // granted
+    console.log(await ImagePicker.requestMediaLibraryPermissionsAsync());
 
     if (status !== "granted") {
       alert("Sorry, we need camera roll permissions to make this work!");
@@ -33,26 +37,6 @@ export default function PostItem({ navigation, route }) {
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
       });
-      console.log("-------------------------");
-      console.log(response);
-      // {
-      //   assets: [
-      //     {
-      //       assetId: null,
-      //       base64: null,
-      //       duration: null,
-      //       exif: null,
-      //       height: 410,
-      //       rotation: null,
-      //       type: "image",
-      //       uri: "file:///data/user/0/host.exp.exponent/cache/ExperienceData/%2540leonardhw%252FAwesomeProject/ImagePicker/fb6cc59d-f1f5-4fce-98a2-d5841c887615.png",
-      //       width: 410,
-      //     },
-      //   ],
-      //   canceled: false,
-      //   cancelled: false,
-      // };
-      console.log("-------------------------");
 
       if (!response.cancelled) {
         setProfileImage(response.uri);
@@ -67,27 +51,16 @@ export default function PostItem({ navigation, route }) {
       uri: profileImage,
       type: "image/jpg",
     });
-    console.log("FORM DATA ----------------------------");
-    console.log(formData["_parts"]);
-    console.log("FORM DATA ----------------------------");
 
     try {
-      // const res = await client.post("/upload-profile", formData, {
-      const res = await axios.post(url, formData, {
+      const { data } = await axios.post(url, formData, {
         headers: {
           Accept: "application/json",
           "Content-Type": "multipart/form-data",
-          // authorization: `JWT ${token}`,
         },
       });
-      console.log("aawdawdadawd");
-      console.log(res);
-      // if (res.data.success) {
-      //   props.navigation.dispatch(StackActions.replace("UserProfile"));
-      // }
-      console.log("---------------");
-      console.log(res);
-      console.log("---------------");
+
+      return data.url;
     } catch (error) {
       console.log("gggggggggg");
       console.log(error);
@@ -97,43 +70,69 @@ export default function PostItem({ navigation, route }) {
 
   //? -------------------------------------------
 
-  const [errors, setErrors] = React.useState({});
+  // const [errors, setErrors] = React.useState({});
 
-  const [mainImage, setMainImage] = useState("");
+  //? Server Wiring --------------------------
+  const [createPost, { data: postData, loading: postLoading, error: postError }] = useMutation(POST_POST);
+
+  // const [mainImage, setMainImage] = useState("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(0.5);
-  const [lat, setLat] = useState("");
-  const [long, setLong] = useState("");
+  // const [lat, setLat] = useState("");
+  // const [long, setLong] = useState("");
 
-  const handleImageChange = (val) => setMainImage(val);
+  // const handleImageChange = (val) => setMainImage(val);
   const handleTitleChange = (val) => setTitle(val);
   const handleDescriptionChange = (val) => setDescription(val);
   const handleQuantityChange = (val) => setQuantity(val);
-  const handleLatChange = (val) => setLat(val);
-  const handleLongChange = (val) => setLong(val);
+  // const handleLatChange = (val) => setLat(val);
+  // const handleLongChange = (val) => setLong(val);
 
-  const onSubmit = () => {
-    //! ganti nama payload sesuai dg graphql
-    const payload = {
-      mainImage,
-      title,
-      description,
-      quantity,
-      lat,
-      long,
-    };
-    console.log(payload);
-    navigation.navigate("Home");
+  const onSubmit = async () => {
+    try {
+      const mainImage = await uploadProfileImage();
 
-    // Clear form
-    setMainImage("");
-    setTitle("");
-    setDescription("");
-    setQuantity("");
-    setLat("");
-    setLong("");
+      const postPayload = {
+        category_id,
+        mainImage,
+        title,
+        description,
+        quantity,
+        // RIZZZZQIII NANTI DISINI YAA
+        lat: "30",
+        long: "30",
+      };
+      // console.log(postPayload);
+
+      await createPost({
+        variables: { postPayload },
+      });
+
+      // Clear form
+      // setMainImage("");
+      setTitle("");
+      setDescription("");
+      setQuantity("");
+
+      navigation.navigate("MyListing");
+      // setLat("");
+      // setLong("");
+    } catch (error) {
+      console.log(error);
+    }
   };
+
+  // if (postLoading) return <Text>Loading......</Text>;
+
+  if (postError) {
+    console.log(postError);
+    // return <Text>Error: {postError}</Text>;
+  }
+
+  useEffect(() => {
+    userIdGetter();
+  }, []);
 
   return (
     <>
@@ -235,7 +234,7 @@ export default function PostItem({ navigation, route }) {
           </VStack>
 
           <VStack style={styles.footer}>
-            <Button onPress={onSubmit} bgColor={"#339966"} width={"full"} height={75} borderRadius={0}>
+            <Button isLoading={postLoading ? true : false} onPress={onSubmit} bgColor={"#339966"} width={"full"} height={75} borderRadius={0}>
               Submit
             </Button>
             {/* Kalo udah sambung server bisa tambah ini buat loading mutation */}

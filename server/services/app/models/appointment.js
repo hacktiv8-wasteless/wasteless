@@ -7,7 +7,6 @@ const appointmentSchema = mongoose.Schema({
   },
   username: {
     type: String,
-    required: [true, "username is required"],
   },
   email: {
     type: String,
@@ -19,6 +18,10 @@ const appointmentSchema = mongoose.Schema({
   },
   slots: {
     type: ObjectId,
+  },
+  postId: {
+    type: String,
+    require: [true, "postId is required"],
   },
   created_at: {
     type: Date,

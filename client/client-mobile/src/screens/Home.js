@@ -24,12 +24,15 @@ export default function Home({ navigation }) {
     console.log(await AsyncStorage.getItem("access_token"));
     console.log(await AsyncStorage.getItem("appLaunched"));
   };
+  const fetchCategory = () => {};
 
   useEffect(() => {
     AsyncStorage.getItem("access_token").then((token) => console.log(">>>>>>", token));
   }, []);
+
   return (
     <SafeAreaView>
+      {/* <Button onPress={}>Cek category</Button> */}
       <StatusBar barStyle="dark-content" backgroundColor={COLORS.white} />
       <ScrollView>
         <SearchBar />

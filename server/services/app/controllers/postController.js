@@ -4,15 +4,15 @@ const Post = require("../models/post");
 class PostController {
   static async getAllPost(req, res) {
     const { category_id } = req.query;
-    const options = {};
+    let options = {};
     try {
-      // if (category_id) {
-      //   options = {
-      //     category_id: ObjectId(category_id),
-      //   };
-      // }
-      // console.log("masuk sini")
-      const result = await Post.find();
+      if (category_id) {
+        options = {
+          category_id,
+        };
+      }
+      console.log("masuk sini");
+      const result = await Post.find(options);
       console.log(result);
       res.status(200).json(result);
     } catch (error) {
@@ -34,13 +34,33 @@ class PostController {
   }
   static async createPost(req, res) {
     try {
-      const { title, description, mainImage, quantity, status } = req.body;
+      const {
+        giver_id,
+        category_id,
+        title,
+        description,
+        mainImage,
+        quantity,
+        lat,
+        long,
+        status,
+      } = req.body;
       console.log(req.body);
       if (!title || !mainImage || !description || !quantity || !status) {
         return res.status(404).json({ message: "Invalid input" });
       }
 
-      const postInput = { title, description, mainImage, quantity, status };
+      const postInput = {
+        giver_id,
+        category_id,
+        title,
+        description,
+        mainImage,
+        quantity,
+        lat,
+        long,
+        status,
+      };
       const result = await Post.create(postInput);
       console.log(result);
       res.status(201).json({ message: "Success create post" });

@@ -1,5 +1,5 @@
 const { comparePassword } = require("../helpers/bcrypt");
-const { signToken } = require("../helpers/jwt");
+const { signToken, verifyToken } = require("../helpers/jwt");
 const { User, sequelize } = require("../models");
 const XenditInvoice = require(`../config/xendit`);
 class Controller {
@@ -12,7 +12,6 @@ class Controller {
       next(error);
     }
   }
-
   static async getUserById(req, res, next) {
     const { id } = req.params;
     try {
@@ -68,31 +67,31 @@ class Controller {
     }
   }
 
-  // static async successTopUp(req, res, next) {
-  //   try {
-  //     const { external_id, amount, status } = req.body;
-  //     if (status == "PAID") {
-  //       const findWallet = await Balance.findOne({
-  //         where: {
-  //           UserId: external_id,
-  //         },
-  //       });
-  //       await Balance.update(
-  //         {
-  //           balance: +findWallet.balance + +amount,
-  //         },
-  //         {
-  //           where: {
-  //             UserId: external_id,
-  //           },
-  //         }
-  //       );
-  //       res.status(201).json({ message: "topup success" });
-  //     }
-  //   } catch (error) {
-  //     next(error);
-  //   }
-  // }
+  static async successTopUp(req, res, next) {
+    try {
+      const { external_id, amount, status } = req.body;
+      if (status == "PAID") {
+        const findWallet = await Balance.findOne({
+          where: {
+            UserId: external_id,
+          },
+        });
+        await Balance.update(
+          {
+            balance: +findWallet.balance + +amount,
+          },
+          {
+            where: {
+              UserId: external_id,
+            },
+          }
+        );
+        res.status(201).json({ message: "topup success" });
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
 
   static async balanceTopUp(req, res, next) {
     const { balance } = req.body;

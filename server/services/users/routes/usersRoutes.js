@@ -11,6 +11,6 @@ router.get(`/:id`, Controller.getUserById);
 router.use(authentication);
 
 router.post(`/topup`, Controller.balanceTopUp);
-// router.post(`/success`, Controller.successTopUp);
+router.post(`/success`, Controller.successTopUp);
 
 module.exports = router;

@@ -37,7 +37,6 @@ const mongoConnect = async (env) => {
       console.log("bukan test");
       await client.connect();
     }
-
     const database = client.db("Wasteless");
     const posts = database.collection("Posts");
     const categories = database.collection("Category");

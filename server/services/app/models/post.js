@@ -5,6 +5,17 @@ const postSchema = mongoose.Schema({
     type: String,
     required: [true, "title is required"],
   },
+  giver_id: {
+    type: String,
+    required: [true, "description is required"],
+  },
+  taker_id: {
+    type: String
+  },
+  category_id: {
+    type: String,
+    required: [true, "description is required"],
+  },
   description: {
     type: String,
     required: [true, "description is required"],
@@ -16,6 +27,14 @@ const postSchema = mongoose.Schema({
   quantity: {
     type: Number,
     required: [true, "quantity is required"],
+  },
+  lat: {
+    type: String,
+    required: [true, "lattitude is required"],
+  },
+  long: {
+    type: String,
+    required: [true, "longitude is required"],
   },
   status: {
     type: String,

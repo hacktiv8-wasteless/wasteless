@@ -1,29 +1,88 @@
-import { StyleSheet, Text, View, TextInput, ScrollView, Image, StatusBar, TouchableOpacity } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, TextInput, ScrollView, Image, StatusBar, TouchableOpacity, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { FlatList, Button, Center } from "native-base";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
+import { useQuery } from "@apollo/client";
+import { GET_POSTS } from "../query/Posts";
+import { GET_CATEGORIES } from "../query/Categories";
+import { GET_PROFILE, GET_USER_DETAIL } from "../query/Users";
+import CardBanner from "../components/CardBanner";
+import ItemCardSmall from "../components/ItemCardSmall";
+import CategoryCard from "../components/CategoryCard";
+import Loader from "../components/Loader";
+import Carousel from "../components/Carousel";
+import { capitalize, getToken, getUserId, signOut } from "../helpers/util";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function NewHome({ navigation }) {
-  const locations = ["Plastic", "Cardboard", "Paper", "Alumunium can", "Glass"];
-  const posts = [
-    { id: 1, title: "Botol Aqua bekas" },
-    { id: 2, title: "Botol sabun" },
-    { id: 3, title: "Kardus makanan" },
-    { id: 4, title: "Kaleng minuman bekas" },
-    { id: 5, title: "Kertas bekas skripsi" },
-    { id: 6, title: "Kumpulan botol minuman bekas" },
-    { id: 7, title: "Kucing liar" },
-    { id: 8, title: "Tisu bekas" },
-    { id: 9, title: "Kardus belanja olshop" },
-    { id: 10, title: "Kaleng fanta" },
-  ];
+  const clearAsyncStorage = async () => {
+    await AsyncStorage.clear();
+  };
+  const logout = async () => {
+    console.log("before", AsyncStorage.getItem("access_token"));
+    await signOut("access_token");
+    console.log("after", AsyncStorage.getItem("access_token"));
+  };
+  const check = async () => {
+    console.log(await getToken("access_token"));
+    console.log(await getToken("userId"));
+  };
+
+  //? SERVER WIRING
+  const { loading: postsLoading, error: postsError, data: postsData } = useQuery(GET_POSTS);
+  const { data: categoryData, loading: categoryLoading, error: categoryError } = useQuery(GET_CATEGORIES);
+  const { data: userData, loading: userLoading, error: userError } = useQuery(GET_PROFILE);
+
+  if (postsError || categoryError || userError) {
+    console.log("postsError -------------------------");
+    console.log(postsError);
+    console.log("postsError -------------------------");
+
+    console.log("categoryError -----------------------");
+    console.log(categoryError);
+    console.log("categoryError -----------------------");
+
+    console.log("userData -----------------------");
+    console.log(userError);
+    console.log("userData -----------------------");
+  }
+
+  const [filtered, setFiltered] = useState([]);
+  const [search, setSearch] = useState("");
+
+  const handleSearchChange = (val) => setSearch(val);
+
+  const getFilteredPost = () => {
+    if (search) {
+      return filtered;
+    }
+    return postsData?.getAllPosts;
+  };
+
+  const handleOnSubmit = () => {
+    setFiltered(postsData?.getAllPosts.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
+  };
+
+  if (postsLoading || categoryLoading || userLoading) return <Loader />;
+
   return (
     <View style={{ backgroundColor: "white" }}>
       <StatusBar barStyle="dark-content" backgroundColor="white" />
       <SafeAreaView>
+        {/* Loader */}
+
         <ScrollView>
+          <Button onPress={check} style={styles.test}>
+            Check
+          </Button>
+          <Button onPress={logout} style={styles.test}>
+            Logout
+          </Button>
+          <Button onPress={clearAsyncStorage} style={styles.test}>
+            Clear all storage
+          </Button>
           <View
             style={{
               // flex: 1,
@@ -40,7 +99,7 @@ export default function NewHome({ navigation }) {
               }}
             >
               <View style={{ flex: 1 }}>
-                <Text style={{ fontSize: 20, fontWeight: "bold" }}>Welcome Adryan</Text>
+                <Text style={{ fontSize: 20, fontWeight: "bold" }}>Welcome {userData?.getProfile?.username} </Text>
                 <View style={{ flexDirection: "row", alignItems: "center", marginVertical: 5 }}>
                   <Ionicons name="location" size={24} color="gray" />
                   <Text style={{ color: "gray", marginLeft: 10 }}>Pondok Indah, South Jakarta</Text>
@@ -63,60 +122,43 @@ export default function NewHome({ navigation }) {
                 marginVertical: 10,
               }}
             >
-              <Ionicons name="search" size={20} color="gray" />
               <TextInput
                 style={{
                   paddingHorizontal: 10,
                   flex: 1,
                 }}
+                value={search}
+                onChangeText={handleSearchChange}
+                on
                 placeholder="Search Reuseable Materials"
               />
-              <Ionicons name="filter" size={20} color="gray" />
+              <Pressable onPress={handleOnSubmit}>
+                <Ionicons name="search" size={25} color="gray" style={{ marginRight: 10 }} />
+              </Pressable>
             </View>
 
+            {/* Category Card */}
             <View style={{ marginVertical: 10 }}>
               <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                 <View style={{ flexDirection: "row" }}>
-                  {locations.map((item) => (
-                    <View key={item} style={{ borderWidth: 0.5, borderColor: "gray", marginRight: 20, padding: 10, borderRadius: 40 }}>
-                      <Text>{item}</Text>
-                    </View>
-                  ))}
+                  {categoryData?.getAllCategories?.map((item) => {
+                    return <CategoryCard key={item["_id"]} item={item} />;
+                  })}
                 </View>
               </ScrollView>
             </View>
 
-            {/* Banner */}
-            <Center style={{ marginVertical: 10 }}>
-              <View style={{ width: "100%", height: 150, overflow: "hidden", borderRadius: 20 }}>
-                <Image source={{ uri: "http://placekitten.com/500/200" }} style={{ flex: 1 }} resizeMode="cover" />
-              </View>
-            </Center>
+            {/* <CardBanner /> */}
+            <Carousel />
 
             {/* Card */}
             <View style={{ flex: 1, marginVertical: 10 }}>
               <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>Near Me</Text>
-              <FlatList
-                data={posts}
-                keyExtractor={(item) => item.id}
-                numColumns={2}
-                renderItem={({ item }) => (
-                  <View style={{ marginVertical: 2.5, flex: 1 }}>
-                    <TouchableOpacity onPress={() => navigation.navigate("PostDetail")}>
-                      <View style={{ width: 150, height: 150, overflow: "hidden", borderRadius: 20 }}>
-                        <Image source={{ uri: "http://placekitten.com/200/200" }} style={{ width: 150, height: 150 }} />
-                      </View>
-                      <View style={{ marginVertical: 10 }}>
-                        <Text style={{ fontSize: 16, fontWeight: "700" }}>Post Title</Text>
-                        <View style={{ flexDirection: "row" }}>
-                          <Ionicons name="location" size={24} color="gray" />
-                          <Text>6.5 km</Text>
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                )}
-              />
+              <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "center" }}>
+                {getFilteredPost().map((post) => {
+                  return <ItemCardSmall post={post} key={post["_id"]} />;
+                })}
+              </View>
             </View>
           </View>
         </ScrollView>

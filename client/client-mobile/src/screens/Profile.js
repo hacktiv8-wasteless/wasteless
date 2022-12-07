@@ -1,18 +1,27 @@
 import React from "react";
 import { View, SafeAreaView, StyleSheet } from "react-native";
-import {
-  Avatar,
-  Title,
-  Caption,
-  Text,
-  TouchableRipple,
-} from "react-native-paper";
+import { Avatar, Title, Caption, Text, TouchableRipple } from "react-native-paper";
 import { AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { useQuery } from "@apollo/client";
+import { GET_USER_DETAIL } from "../query/Users";
+import { useNavigation } from "@react-navigation/native";
 
 const Profile = () => {
+  const navigation = useNavigation();
+
+  const { data: userDetailData, loading: userDetailLoading, error: userDetailError } = useQuery(GET_USER_DETAIL);
+  if (userDetailLoading) return <Text>Loading....</Text>;
+  if (userDetailError) {
+    console.log("postsError -------------------------");
+    console.log(userDetailError);
+    console.log("postsError -------------------------");
+
+    return <Text>Error: {userDetailError}</Text>;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.userInfoSection}>
@@ -43,21 +52,15 @@ const Profile = () => {
       <View style={styles.userInfoSection}>
         <View style={styles.row}>
           <Entypo name="location" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>
-            Kolkata, India
-          </Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>Kolkata, India</Text>
         </View>
         <View style={styles.row}>
           <Entypo name="phone" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>
-            +91-900000009
-          </Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>+91-900000009</Text>
         </View>
         <View style={styles.row}>
           <Icon name="email" color="#777777" size={20} />
-          <Text style={{ color: "#777777", marginLeft: 20 }}>
-            john_doe@email.com
-          </Text>
+          <Text style={{ color: "#777777", marginLeft: 20 }}>john_doe@email.com</Text>
         </View>
       </View>
 
@@ -83,26 +86,32 @@ const Profile = () => {
       <View style={styles.menuWrapper}>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <Icon name="heart-outline" color="#FF6347" size={25} />
+            <Icon name="heart-outline" color="green" size={25} />
             <Text style={styles.menuItemText}>Your Favorites</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
+        <TouchableRipple onPress={() => navigation.navigate("Payment")}>
           <View style={styles.menuItem}>
-            <AntDesign name="wallet" color="#FF6347" size={25} />
-            <Text style={styles.menuItemText}>Wallet</Text>
+            <AntDesign name="wallet" color="green" size={25} />
+            <Text style={styles.menuItemText}>TopUp</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => {}}>
+        <TouchableRipple onPress={() => navigation.navigate("HistoryLogs")}>
           <View style={styles.menuItem}>
-            <Icon name="history" color="#FF6347" size={25} />
+            <Icon name="history" color="green" size={25} />
             <Text style={styles.menuItemText}>History Logs</Text>
           </View>
         </TouchableRipple>
         <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
-            <AntDesign name="logout" color="#FF6347" size={25} />
+            <AntDesign name="logout" color="green" size={25} />
             <Text style={styles.menuItemText}>logout</Text>
+          </View>
+        </TouchableRipple>
+        <TouchableRipple onPress={() => navigation.navigate("ScanQR")}>
+          <View style={styles.menuItem}>
+            <AntDesign name="scan1" color="green" size={25} />
+            <Text style={styles.menuItemText}>Scan Here</Text>
           </View>
         </TouchableRipple>
       </View>

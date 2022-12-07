@@ -11,6 +11,10 @@ const inputPost = () => {
     description: "botol plastik ",
     quantity: 10,
     status: "available",
+    lat: "-6",
+    long: "130",
+    category_id: "638ebdd4e1e660e420e4d1d9",
+    giver_id: "1",
   };
 };
 

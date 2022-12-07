@@ -1,5 +1,4 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Home from "../screens/Home";
 import SearchAllCategory from "../screens/SearchAllCategory";
 import { Feather } from "@expo/vector-icons";
 import PostCategory from "../screens/PostCategory";
@@ -8,23 +7,36 @@ import Notifications from "../screens/Notifications";
 import TopTabNavigator from "./TopTabNavigator";
 import { COLORS } from "../constants";
 import { StyleSheet } from "react-native";
-import NewHome from "../screens/NewHome";
+import HomeNavigator from "./HomeNavigator";
+import { useQuery } from "@apollo/client";
+import { GET_CATEGORIES } from "../query/Categories";
+import Loader from "../components/Loader";
 
 const Tab = createBottomTabNavigator();
 
 const TabNavigator = ({ navigation }) => {
   const { isOpen, onOpen, onClose } = useDisclose();
 
+  const { data: categoryData, loading: categoryLoading, error: categoryError } = useQuery(GET_CATEGORIES);
+
+  if (categoryLoading) return <Loader />;
+  if (categoryError) {
+    console.log("categoryError di tab -----------------------");
+    console.log(categoryError);
+    console.log("categoryError di tab -----------------------");
+  }
+  // console.log(categoryData.getAllCategories);
+
   return (
     <>
       <Tab.Navigator
-        initialRouteName="Home"
+        initialRouteName="HomeStack"
         screenOptions={({ route }) => {
           return {
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
               color = COLORS.primaryShade[500];
-              if (route.name === "Home") {
+              if (route.name === "HomeStack") {
                 iconName = focused ? "home" : "home";
                 color = focused ? COLORS.primary : COLORS.primaryShade[500];
               } else if (route.name === "MyListing") {
@@ -50,7 +62,6 @@ const TabNavigator = ({ navigation }) => {
             headerStyle: {
               backgroundColor: COLORS.white,
             },
-            // headerShown: false,
             headerTitleStyle: {
               color: COLORS.primaryShade[500],
             },
@@ -63,8 +74,8 @@ const TabNavigator = ({ navigation }) => {
         }}
       >
         <Tab.Screen
-          name="Home"
-          component={NewHome}
+          name="HomeStack"
+          component={HomeNavigator}
           options={{
             headerShown: false,
             headerRight: () => (
@@ -92,16 +103,7 @@ const TabNavigator = ({ navigation }) => {
           }}
         />
         <Tab.Screen name="Notifications" component={Notifications} />
-        {/* <Tab.Screen name="MyProfile" component={MyProfile} /> */}
         <Tab.Screen name="MyListing" component={TopTabNavigator} options={{ title: "My Listing" }} />
-        {/* <Tab.Screen
-        name="Categories"
-        component={Categories}
-        options={{
-          headerShown: false,
-        }}
-      /> */}
-        {/* <Tab.Screen name="Profile" component={ProfileScreen} /> */}
       </Tab.Navigator>
 
       {/* Slider */}
@@ -119,67 +121,20 @@ const TabNavigator = ({ navigation }) => {
                 Pick a Category
               </Text>
             </Box>
-            {/* Ini ntar flatlist dari category, sekarang HARDCODE DULU */}
-            <Actionsheet.Item
-              onPress={() => {
-                navigation.navigate("Post", {
-                  //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                  // category: item?.category,
-                  category: "plastic",
-                });
-                onClose();
-              }}
-            >
-              Plastic Packaging
-            </Actionsheet.Item>
-            <Actionsheet.Item
-              onPress={() => {
-                navigation.navigate("Post", {
-                  //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                  // category: item?.category,
-                  category: "carton",
-                });
-                onClose();
-              }}
-            >
-              Carton Packaging
-            </Actionsheet.Item>
-            <Actionsheet.Item
-              onPress={() => {
-                navigation.navigate("Post", {
-                  //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                  // category: item?.category,
-                  category: "glass",
-                });
-                onClose();
-              }}
-            >
-              Glass Packaging
-            </Actionsheet.Item>
-            <Actionsheet.Item
-              onPress={() => {
-                navigation.navigate("Post", {
-                  //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                  // category: item?.category,
-                  category: "cans",
-                });
-                onClose();
-              }}
-            >
-              Aluminum Cans
-            </Actionsheet.Item>
-            <Actionsheet.Item
-              onPress={() => {
-                navigation.navigate("Post", {
-                  //! NANTI DIGANTI DARI ITEM FLATLIST YA
-                  // category: item?.category,
-                  category: "paper",
-                });
-                onClose();
-              }}
-            >
-              Paper/Cardboard
-            </Actionsheet.Item>
+            {categoryData?.getAllCategories?.map((category) => (
+              <Actionsheet.Item
+                onPress={() => {
+                  navigation.navigate("Post", {
+                    //! NANTI DIGANTI DARI ITEM FLATLIST YA
+                    category: category.name,
+                    categoryId: category._id,
+                  });
+                  onClose();
+                }}
+              >
+                {category.name}
+              </Actionsheet.Item>
+            ))}
           </Actionsheet.Content>
         </Actionsheet>
       </Center>

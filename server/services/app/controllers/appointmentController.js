@@ -1,36 +1,45 @@
-const { Appointment, Slot } = require("../models");
-const nodemailer = require("../helpers/nodemailer");
+const Appointment = require("../models/appointment");
+const Slot = require("../models/slot");
+const SendEmail = require("../helpers/nodemailer");
 
 class appointmentController {
-  static create(req, res) {
-    const { slot_time, slot_date, name, email, phone } = req.body;
+  static async create(req, res) {
+    const { postId } = req.params;
+    const { slot_time, slot_date, username, email, phoneNumber } = req.body;
 
     const newslot = new Slot({
       slot_time,
       slot_date,
       created_at: Date.now(),
     });
-    newslot.save();
+    // console.log(newslot, "<<< ini newslot");
+    await newslot.save();
 
     const newappointment = new Appointment({
-      name,
+      username,
       email,
-      phone,
+      phoneNumber,
       slots: newslot._id,
+      postId,
+      created_at: Date.now(),
     });
-    nodemailer(name, email, slot_date);
+    // (err, saved) => {
+    //   console.log(saved, "<< coba ini save");
+    //   Appointment.find({ _id: saved._id }, (err, appointment) =>
+    //     res.json(appointment)
+    //   ).populate("slots");
+    // };
+    // console.log(newappointment, "<<< ini appointment");
+    SendEmail(email, username);
 
-    newappointment.save((err, saved) => {
-      // Returns the saved appointment
-      // after a successful save
-      Appointment.find({ _id: saved._id }, (err, appointment) =>
-        res.json(appointment)
-      ).populate("slots");
-    });
+    await newappointment.save();
+    const newAppoinment = await Appointment.find().populate();
+    const createNew = newAppoinment.forEach((el) => el._id);
+    res.status(200).json({ createNew, message: "success add appoinment" });
   }
-  static all(req, res) {
+  static async all(req, res) {
     // Returns all appointments
-    Appointment.find({}, (err, appointments) =>
+    await Appointment.find({}, (err, appointments) =>
       res.status(200).json(appointments)
     );
   }
