@@ -124,9 +124,8 @@ export default function PostItem({ navigation, route }) {
         title,
         description,
         quantity: +quantity,
-        // RIZZZZQIII NANTI DISINI YAA
-        lat: "30",
-        long: "30",
+        lat: lat.toString(),
+        long: long.toString(),
       };
 
       await createPost({
@@ -172,7 +171,7 @@ export default function PostItem({ navigation, route }) {
 
   const handleMarker = (e) => {
     setLat(e.nativeEvent.coordinate.latitude);
-    setLong(e.nativeEvent.coordinate.langitude);
+    setLong(e.nativeEvent.coordinate.longitude);
     setUserLatLon(e.nativeEvent.coordinate);
   };
 
