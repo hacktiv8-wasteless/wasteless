@@ -68,7 +68,7 @@ export default function Chat({ navigation }) {
       renderSend={renderSend}
       alwaysShowSend
       messages={messages}
-      showAvatarForEveryMessage={true}
+      // showAvatarForEveryMessage={false}
       onSend={(messages) => onSend(messages)}
       renderBubble={(props) => {
         return (
@@ -78,7 +78,7 @@ export default function Chat({ navigation }) {
               right: {
                 backgroundColor: "#339966",
               },
-              left: {},
+              left: { marginLeft: -47 },
             }}
           />
         );

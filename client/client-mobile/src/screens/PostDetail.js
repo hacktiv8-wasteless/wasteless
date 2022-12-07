@@ -139,17 +139,17 @@ export default function PostDetail({ navigation, route }) {
                 followUserLocation={true}
                 loadingEnabled={true}
                 region={{
-                  latitude: +postDetailData?.getPostById?.lat,
-                  longitude: +postDetailData?.getPostById?.long,
-                  latitudeDelta: 0.00003,
-                  longitudeDelta: 0.00003,
+                  latitude: ~~postDetailData?.getPostById?.lat,
+                  longitude: ~~postDetailData?.getPostById?.long,
+                  latitudeDelta: 0.053,
+                  longitudeDelta: 0.053,
                 }}
               >
                 {postDetailData && (
                   <Marker
                     coordinate={{
-                      latitude: +postDetailData?.getPostById?.lat,
-                      longitude: +postDetailData?.getPostById?.long,
+                      latitude: ~~postDetailData?.getPostById?.lat,
+                      longitude: ~~postDetailData?.getPostById?.long,
                     }}
                     style={{ ...StyleSheet.absoluteFillObject }}
                     image={{ uri: MARKER_APPROXIMATE }}

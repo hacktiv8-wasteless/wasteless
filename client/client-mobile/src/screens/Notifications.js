@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { COLORS } from "../constants";
 import {
   FlatList,
   Box,
@@ -129,10 +130,12 @@ export default function Notifications({ navigation }) {
                   size="48px"
                   marginLeft={4}
                   marginRight={2}
-                  source={{
-                    uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
-                  }}
-                />
+                  // source={{
+                  //   uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+                  // }}
+                >
+                  {item.user.charAt(0).toUpperCase()}
+                </Avatar>
                 <VStack>
                   <Text
                     _dark={{
