@@ -50,7 +50,7 @@ export default function HomeNavigator() {
         }}
       />
 
-      <Stack.Screen name="MyProfile" component={Profile} />
+      <Stack.Screen name="MyProfile" component={Profile} options={{ title: "My profile" }} />
       <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
       <Stack.Screen name="MapDirection" component={MapDirection} options={{ headerShown: true }} />
       <Stack.Screen name="Maps" component={Maps} options={{ headerShown: true }} />
