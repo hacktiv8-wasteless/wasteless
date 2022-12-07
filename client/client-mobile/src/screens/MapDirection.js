@@ -43,6 +43,9 @@ export default function MapDirection() {
           origin={mapRegion}
           destination={{ latitude: -6.2492354, longitude: 106.8247462 }}
           apikey={GOOGLE_MAPS_APIKEY}
+          mode="DRIVING"
+          strokeColor="#339966"
+          strokeWidth={4}
         />
         <Marker
           coordinate={{ latitude: -6.2492354, longitude: 106.8247462 }}
@@ -56,9 +59,5 @@ export default function MapDirection() {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    borderRadius: 16,
-    margin: 30,
   },
 });

@@ -88,9 +88,5 @@ export default function Maps() {
 const styles = StyleSheet.create({
   container: {
     ...StyleSheet.absoluteFillObject,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    borderRadius: 16,
-    margin: 30,
   },
 });
