@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", (req, res) => {
-  res.send("This is a microservices server for users");
+  // res.send("This is a microservices server for users");
 });
 
 app.use(router);

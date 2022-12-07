@@ -4,7 +4,7 @@ const { sequelize, User } = require("../models");
 const { signToken } = require("../helpers/jwt");
 const { queryInterface } = sequelize;
 
-jest.setTimeout(10000);
+jest.setTimeout(5000);
 
 let user_access_token = null;
 
@@ -42,7 +42,7 @@ describe("User Routes Test", () => {
           email: "annaaja@gmail.com",
           password: "karin123",
           address: "jakarta",
-          phoneNumber: "0812348322343",
+          phoneNumber: "081321324354",
         })
         .end((error, res) => {
           if (error) return done(error);
@@ -136,7 +136,7 @@ describe("User Routes Test", () => {
         .post("/users/register")
         .send({
           username: "kareenwijaya",
-          email: "karen_wijaya@gmail.com",
+          email: "annaaja@gmail.com",
           password: "karin123",
           address: "jakarta",
           phoneNumber: "081234832132",
@@ -197,7 +197,7 @@ describe("User Routes Test", () => {
           email: "karen_wijaya@gmail.com",
           password: "karin123",
           address: "jakarta",
-          phoneNumber: "081234832132",
+          phoneNumber: "081321324354",
         })
         .end((err, res) => {
           if (err) return done(err);
@@ -342,17 +342,14 @@ describe("User Routes Test", () => {
         request(app)
           .post("/users/login")
           .send({
-            email: "hello@mail.com",
+            email: "karen_wijaya@gmail.com",
           })
           .end((err, res) => {
             if (err) return done(err);
             const { body, status } = res;
 
-            expect(status).toBe(401);
-            expect(body).toHaveProperty(
-              "message",
-              "Invalid Email or password!"
-            );
+            expect(status).toBe(500);
+            expect(body).toHaveProperty("message", "Internal Server Error!");
             return done();
           });
       });
@@ -427,6 +424,7 @@ describe("User Routes Test", () => {
           });
       });
     });
+
     describe("POST / balance top up by user", () => {
       test("201 success top up, return array", (done) => {
         request(app)
@@ -445,7 +443,6 @@ describe("User Routes Test", () => {
             done(err);
           });
       });
-      // });
       test("401 if cant get users access_token", (done) => {
         request(app)
           .post("/users/topup")
@@ -473,40 +470,79 @@ describe("User Routes Test", () => {
           return done();
         });
     });
+    test("401 if access_token is empty", (done) => {
+      request(app)
+        .post("/users/topup")
+        .send({ balance: 50000 })
+        // .set("access_token", null)
+        .then((response) => {
+          const { body, status } = response;
+          // console.log(response, "<< ini response");
+          expect(status).toBe(401);
+          expect(response.body).toHaveProperty("message", "Invalid token");
+          return done();
+        });
+    });
   });
-  test("401 if access_token is empty", (done) => {
-    request(app)
-      .post("/users/topup")
-      .send({ balance: 50000 })
-      // .set("access_token", null)
-      .then((response) => {
-        const { body, status } = response;
-        // console.log(response, "<< ini response");
-        expect(status).toBe(401);
-        expect(response.body).toHaveProperty("message", "Invalid token");
-        return done();
-      });
+  describe("POST / balance top up by user", () => {
+    test("200 success top up, return array", (done) => {
+      request(app)
+        .post("/users/success")
+        .send({
+          external_id: "1-1670412085185",
+          totalPrice: 50000,
+          status: "PAID",
+        })
+        .set("access_token", user_access_token)
+        .then((response) => {
+          const { body, status } = response;
+          // console.log(response, "<< ini response");
+          expect(status).toBe(201);
+          expect(body).toBeInstanceOf(Object);
+          return done();
+        })
+        .catch((err) => {
+          done(err);
+        });
+    });
+    test("401 if cant get users access_token", (done) => {
+      request(app)
+        .post("/users/topup")
+        .send({ balance: 50000 })
+        .set("access_token", "ini invalid token")
+        .then((response) => {
+          const { body, status } = response;
+          console.log(response, "<< ini response");
+          expect(status).toBe(401);
+          expect(response.body).toHaveProperty("message", "Invalid token");
+          return done();
+        });
+    });
+    test("401 if access_token is empty", (done) => {
+      request(app)
+        .post("/users/success")
+        .send({ external_id: 1, amount: 50000, status: "paid" })
+        // .set("access_token", null)
+        .then((response) => {
+          const { body, status } = response;
+          // console.log(response, "<< ini response");
+          expect(status).toBe(401);
+          expect(response.body).toHaveProperty("message", "Invalid token");
+          return done();
+        });
+    });
+    test("401 if access_token is null", (done) => {
+      request(app)
+        .post("/users/success")
+        .send({ external_id: 1, amount: 50000, status: "paid" })
+        .set("access_token", null)
+        .then((response) => {
+          const { body, status } = response;
+          // console.log(response, "<< ini response");
+          expect(status).toBe(401);
+          expect(response.body).toHaveProperty("message", "Invalid token");
+          return done();
+        });
+    });
   });
 });
-// describe("POST / balance top up by user", () => {
-//   test.only("200 success top up, return array", (done) => {
-//     request(app)
-//       .post("/users/success")
-//       .send({
-//         external_id: 1,
-//         amount: 50000,
-//         status: "paid",
-//       })
-//       .set("access_token", user_access_token)
-//       .then((response) => {
-//         const { body, status } = response;
-//         console.log(response, "<< ini response");
-//         expect(status).toBe(201);
-//         expect(body).toBeInstanceOf(Object);
-//         return done();
-//       })
-//       .catch((err) => {
-//         done(err);
-//       });
-//   });
-// });

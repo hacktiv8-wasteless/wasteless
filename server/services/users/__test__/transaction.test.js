@@ -16,6 +16,8 @@ beforeAll(async () => {
       password: "karin123",
       address: "jakarta",
       phoneNumber: "081234832132",
+      payerId: 1,
+      payeeId: 1,
     });
     user_access_token = signToken({ id: user.id });
   } catch (error) {
@@ -40,7 +42,7 @@ describe("Transaction Routes Test", () => {
           payeeId: 1,
         })
         .set({ access_token: user_access_token });
-      // console.log(response.body, "<-- ini response");
+      console.log(response.body, "<-- ini response");
       const { body, status } = response;
       expect(status).toBe(200);
       expect(body).toBeInstanceOf(Object);
@@ -93,10 +95,11 @@ describe("Transaction Routes Test", () => {
   describe("GET /transaction - read transaction by id", () => {
     test("Succes get TransactionById , status code 200", (done) => {
       request(app)
-        .get("/transaction/incoming/1")
+        .get(`/transaction/incoming/1`)
         .set({ access_token: user_access_token })
         .then((response) => {
           const { body, status } = response;
+          console.log(response.body, "<<<");
           expect(status).toBe(200);
           expect(body).toEqual(expect.any(Object));
           expect(response.body.incomingPayment[0]).toHaveProperty(
