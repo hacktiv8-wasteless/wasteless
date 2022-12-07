@@ -1,6 +1,22 @@
 import { StyleSheet, TextInput, View, Dimensions } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Box, FormControl, Icon, Input, Pressable, Stack, WarningOutlineIcon, Button, Center, Heading, VStack, Link, HStack, Text, TextArea } from "native-base";
+import {
+  Box,
+  FormControl,
+  Icon,
+  Input,
+  Pressable,
+  Stack,
+  WarningOutlineIcon,
+  Button,
+  Center,
+  Heading,
+  VStack,
+  Link,
+  HStack,
+  Text,
+  TextArea,
+} from "native-base";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useMutation } from "@apollo/client";
 import { POST_REGISTER, POST_LOGIN } from "../query/Users";
@@ -27,8 +43,12 @@ export default function FormUser({ page, navigation }) {
   const handlePhoneNumberChange = (val) => setPhoneNumber(val);
   const handleAddressChange = (val) => setAddress(val);
 
-  const [register, { data: registerData, loading: registerLoading, error: registerError }] = useMutation(POST_REGISTER);
-  const [login, { data: loginData, loading: loginLoading, error: loginError }] = useMutation(POST_LOGIN);
+  const [
+    register,
+    { data: registerData, loading: registerLoading, error: registerError },
+  ] = useMutation(POST_REGISTER);
+  const [login, { data: loginData, loading: loginLoading, error: loginError }] =
+    useMutation(POST_LOGIN);
 
   // if (registerLoading || loginLoading) return <Text>Loading....</Text>;
   if (registerError || loginError) {
@@ -93,9 +113,10 @@ export default function FormUser({ page, navigation }) {
   const handleLogin = async () => {
     const access_token = loginData?.loginUser?.access_token;
     const userId = loginData?.loginUser?.id;
-    // // console.log(access_token);
+    const username = loginData?.loginUser?.username;
+    // console.log(access_token);
 
-    await signIn(access_token, userId);
+    await signIn(access_token, userId, username);
     navigation.navigate("Tab");
   };
 
@@ -111,12 +132,34 @@ export default function FormUser({ page, navigation }) {
       {page === "Login" && (
         <View>
           <Box style={styles.card}>
-            <Stack space={10} w={width * 0.7} mx="auto" style={{ alignItems: "center" }}>
+            <Stack
+              space={10}
+              w={width * 0.7}
+              mx="auto"
+              style={{ alignItems: "center" }}
+            >
               {/* <Text bold fontSize="lg">
                 Enter your login details to continue
               </Text> */}
 
-              <Input type="email" placeholder="Enter your email here" onChangeText={handleEmailChange} value={email} size="lg" borderRadius={12} height={75} variant="filled" InputRightElement={<Icon as={<MaterialIcons name="email" />} size={8} mr="3" color={COLORS.primaryShade[100]} />} />
+              <Input
+                type="email"
+                placeholder="Enter your email here"
+                onChangeText={handleEmailChange}
+                value={email}
+                size="lg"
+                borderRadius={12}
+                height={75}
+                variant="filled"
+                InputRightElement={
+                  <Icon
+                    as={<MaterialIcons name="email" />}
+                    size={8}
+                    mr="3"
+                    color={COLORS.primaryShade[100]}
+                  />
+                }
+              />
 
               <Input
                 type={show ? "text" : "password"}
@@ -131,11 +174,26 @@ export default function FormUser({ page, navigation }) {
                 backgroundColor={COLORS.lightGrey}
                 InputRightElement={
                   <Pressable onPress={handlerShowPassword}>
-                    <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={8} mr="3" color={COLORS.primaryShade[100]} />
+                    <Icon
+                      as={
+                        <MaterialIcons
+                          name={show ? "visibility" : "visibility-off"}
+                        />
+                      }
+                      size={8}
+                      mr="3"
+                      color={COLORS.primaryShade[100]}
+                    />
                   </Pressable>
                 }
               />
-              <Button isLoading={loginLoading ? true : false} isLoadingText={loginLoading ? "Signing in" : ""} colorScheme="indigo" onPress={handleSubmitLogin} style={styles.button}>
+              <Button
+                isLoading={loginLoading ? true : false}
+                isLoadingText={loginLoading ? "Signing in" : ""}
+                colorScheme="indigo"
+                onPress={handleSubmitLogin}
+                style={styles.button}
+              >
                 Sign in
               </Button>
             </Stack>
@@ -147,10 +205,50 @@ export default function FormUser({ page, navigation }) {
       {page === "Register" && (
         <View>
           <Box style={styles.card2}>
-            <Stack space={10} w={width * 0.7} maxW="500px" mx="auto" style={{ alignItems: "center", paddingVertical: 25 }}>
-              <Input type="text" placeholder="Enter your username here" onChangeText={handleUsernameChange} value={username} size="lg" borderRadius={12} height={75} variant="filled" InputRightElement={<Icon as={<MaterialIcons name="person" />} size={8} mr="3" color={COLORS.primaryShade[100]} />} />
+            <Stack
+              space={10}
+              w={width * 0.7}
+              maxW="500px"
+              mx="auto"
+              style={{ alignItems: "center", paddingVertical: 25 }}
+            >
+              <Input
+                type="text"
+                placeholder="Enter your username here"
+                onChangeText={handleUsernameChange}
+                value={username}
+                size="lg"
+                borderRadius={12}
+                height={75}
+                variant="filled"
+                InputRightElement={
+                  <Icon
+                    as={<MaterialIcons name="person" />}
+                    size={8}
+                    mr="3"
+                    color={COLORS.primaryShade[100]}
+                  />
+                }
+              />
 
-              <Input type="email" placeholder="Enter your email here" onChangeText={handleEmailChange} value={email} size="lg" borderRadius={12} height={75} variant="filled" InputRightElement={<Icon as={<MaterialIcons name="email" />} size={8} mr="3" color={COLORS.primaryShade[100]} />} />
+              <Input
+                type="email"
+                placeholder="Enter your email here"
+                onChangeText={handleEmailChange}
+                value={email}
+                size="lg"
+                borderRadius={12}
+                height={75}
+                variant="filled"
+                InputRightElement={
+                  <Icon
+                    as={<MaterialIcons name="email" />}
+                    size={8}
+                    mr="3"
+                    color={COLORS.primaryShade[100]}
+                  />
+                }
+              />
 
               <Input
                 type={show ? "text" : "password"}
@@ -165,16 +263,63 @@ export default function FormUser({ page, navigation }) {
                 backgroundColor={COLORS.lightGrey}
                 InputRightElement={
                   <Pressable onPress={handlerShowPassword}>
-                    <Icon as={<MaterialIcons name={show ? "visibility" : "visibility-off"} />} size={8} mr="3" color={COLORS.primaryShade[100]} />
+                    <Icon
+                      as={
+                        <MaterialIcons
+                          name={show ? "visibility" : "visibility-off"}
+                        />
+                      }
+                      size={8}
+                      mr="3"
+                      color={COLORS.primaryShade[100]}
+                    />
                   </Pressable>
                 }
               />
 
-              <Input type="text" placeholder="Enter your phoneNumber here" onChangeText={handlePhoneNumberChange} value={phoneNumber} size="lg" borderRadius={12} height={75} variant="filled" InputRightElement={<Icon as={<MaterialIcons name="phone" />} size={8} mr="3" color={COLORS.primaryShade[100]} />} />
+              <Input
+                type="text"
+                placeholder="Enter your phoneNumber here"
+                onChangeText={handlePhoneNumberChange}
+                value={phoneNumber}
+                size="lg"
+                borderRadius={12}
+                height={75}
+                variant="filled"
+                InputRightElement={
+                  <Icon
+                    as={<MaterialIcons name="phone" />}
+                    size={8}
+                    mr="3"
+                    color={COLORS.primaryShade[100]}
+                  />
+                }
+              />
 
-              <TextArea type="text" placeholder="Enter your address here" onChangeText={handleAddressChange} value={address} size="lg" borderRadius={12} variant="filled" InputRightElement={<Icon as={<MaterialIcons name="location-pin" />} size={8} mr="3" color={COLORS.primaryShade[100]} />} />
+              <TextArea
+                type="text"
+                placeholder="Enter your address here"
+                onChangeText={handleAddressChange}
+                value={address}
+                size="lg"
+                borderRadius={12}
+                variant="filled"
+                InputRightElement={
+                  <Icon
+                    as={<MaterialIcons name="location-pin" />}
+                    size={8}
+                    mr="3"
+                    color={COLORS.primaryShade[100]}
+                  />
+                }
+              />
 
-              <Button isLoading={registerLoading ? true : false} isLoadingText={registerLoading ? "Signing in" : ""} onPress={handleSubmitRegister} style={styles.button}>
+              <Button
+                isLoading={registerLoading ? true : false}
+                isLoadingText={registerLoading ? "Signing in" : ""}
+                onPress={handleSubmitRegister}
+                style={styles.button}
+              >
                 Sign up
               </Button>
             </Stack>

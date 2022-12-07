@@ -13,11 +13,15 @@ export const getToken = async (token) => {
 export const getUserId = async () => {
   return await AsyncStorage.getItem("userId");
 };
+export const getUsername = async () => {
+  return await AsyncStorage.getItem("username");
+};
 
-export const signIn = async (newToken, userId) => {
+export const signIn = async (newToken, userId, username) => {
   console.log(newToken, "?????????????");
   await AsyncStorage.setItem("access_token", newToken);
   await AsyncStorage.setItem("userId", userId.toString());
+  await AsyncStorage.setItem("username", username);
 };
 
 // export const register = async () => {
