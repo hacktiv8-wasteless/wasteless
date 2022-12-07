@@ -6,6 +6,7 @@ import { useQuery } from "@apollo/client";
 import { GET_POSTS } from "../query/Posts";
 import { useEffect } from "react";
 import { getUserId } from "../helpers/util";
+import Loader from "../components/Loader";
 
 export default function History() {
   const [userId, setUserId] = useState(null);
@@ -48,7 +49,6 @@ export default function History() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",

@@ -8,6 +8,7 @@ import { useQuery } from "@apollo/client";
 import { GET_POSTS } from "../query/Posts";
 import { useEffect } from "react";
 import { getUserId } from "../helpers/util";
+import Loader from "../components/Loader";
 
 export default function OngoingOrder() {
   const [userId, setUserId] = useState(null);
@@ -33,7 +34,6 @@ export default function OngoingOrder() {
   useEffect(() => {
     userIdGetter();
   }, []);
-
   return (
     <View>
       <ScrollView showsVerticalScrollIndicator={false}>
