@@ -1,16 +1,24 @@
 const request = require("supertest");
 const mongoose = require("mongoose");
 const app = require("../app");
-const Post = require("../models/post");
+const Appointment = require("../models/appointment");
 
-const inputPost = () => {
+const inputSlot = () => {
   return {
-    title: "Botol",
-    mainImage:
-      "https://i0.wp.com/gunungmaja.co.id/wp-content/uploads/2020/11/jual-botol-minuman-500ml.jpg?fit=536%2C800&ssl=1",
-    description: "botol plastik ",
-    quantity: 10,
-    status: "available",
+    slot_time: " 7 desember 2022",
+    slot_date: "7 desember 2022",
+    created_at: Date.now(),
+  };
+};
+
+const inputAppoinmnet = () => {
+  return {
+    username: "tanjung",
+    email: "tanjungaa84@gmail.com",
+    phoneNumber: "081234987654",
+    slots: "63900b0d6015d7502743c4d8",
+    postId: 1,
+    created_at: Date.now(),
   };
 };
 
@@ -37,8 +45,8 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-describe("test for endpoint post", () => {
-  describe("get /post", () => {
+describe("test for endpoint appointment", () => {
+  describe("create post /appointment/:postid", () => {
     test("get data post", async () => {
       const post = await Post.create(inputPost());
       const response = await request(app).get("/posts");
@@ -48,64 +56,70 @@ describe("test for endpoint post", () => {
     });
     test("test for failed data", async () => {
       jest
-        .spyOn(Post, "find")
+        .spyOn(Appointment, "find")
         .mockRejectedValue(new Error("failed to get data"));
       const response = await request(app).get("/posts");
       expect(response.statusCode).toEqual(500);
       expect(response.body).toEqual("failed to get data");
     });
   });
-  describe("POST /posts", () => {
-    test("success add new news", async () => {
-      const mockPosts = inputPost();
-      const response = await request(app).post("/posts").send(mockPosts);
-      expect(response.statusCode).toEqual(201);
-      expect(response.body.message).toBe("Success create post");
+  describe("create post /appointment/:postid", () => {
+    test("create data post", async () => {
+      const appointment = await Appointment.create(inputAppoinmnet());
+      const response = await request(app).post(
+        `/appointment/${appointment._id}`
+      );
+      // console.log(response, "<<< ini di test");
+      expect(response.statusCode).toEqual(200);
+      expect(response.body.message).toEqual("success add appoinment");
     });
-    test("error empty field title", async () => {
-      const mockPosts = inputPost();
-      const res = await request(app).post("/posts").send({
-        description: mockPosts.description,
-        mainImage: mockPosts.mainImage,
-        quantity: mockPosts.quantity,
-        status: mockPosts.status,
+    test("error empty field username", async () => {
+      const mockPosts = inputAppoinmnet();
+      const res = await request(app).post("/appointment/1").send({
+        email: mockPosts.email,
+        phoneNumber: mockPosts.phoneNumber,
+        slots: mockPosts.slots,
+        postId: mockPosts.postId,
       });
-      console.log(res.body, "<><>");
+      // console.log(res.body, "<><>");
+      expect(res.statusCode).toEqual(404);
+      expect(res.body).toEqual({});
+    });
+    test("error empty field email", async () => {
+      const mockPosts = inputAppoinmnet();
+      const res = await request(app).post("/appointment/1").send({
+        username: mockPosts.username,
+        phoneNumber: mockPosts.phoneNumber,
+        slots: mockPosts.slots,
+        postId: mockPosts.postId,
+      });
+      // console.log(res.body, "<<<<");
+      expect(res.statusCode).toEqual(404);
+      expect(res.body).toEqual({});
+    });
+    test.only("error empty field phone number", async () => {
+      const mockPosts = inputAppoinmnet();
+      const res = await request(app).post("/appointment/1").send({
+        username: mockPosts.username,
+        email: mockPosts.email,
+        slots: mockPosts.slots,
+        postId: mockPosts.postId,
+      });
+      console.log(res.body, "<<<<");
       expect(res.statusCode).toEqual(404);
       expect(res.body).toHaveProperty("message");
     });
-    test("error empty field description", async () => {
-      const mockPosts = inputPost();
-      const res = await request(app).post("/posts").send({
-        title: mockPosts.title,
-        mainImage: mockPosts.mainImage,
-        quantity: mockPosts.quantity,
-        status: mockPosts.status,
+    test("error empty field slot", async () => {
+      const mockPosts = inputAppoinmnet();
+      const res = await request(app).post("/appointment").send({
+        username: mockPosts.username,
+        email: mockPosts.email,
+        phoneNumber: mockPosts.phoneNumber,
+        postId: mockPosts.postId,
       });
+      // console.log(res.body, "<<<<");
       expect(res.statusCode).toEqual(404);
-      expect(res.body).toHaveProperty("message");
-    });
-    test("error empty field mainImage", async () => {
-      const mockPosts = inputPost();
-      const res = await request(app).post("/posts").send({
-        description: mockPosts.description,
-        title: mockPosts.title,
-        quantity: mockPosts.quantity,
-        status: mockPosts.status,
-      });
-      expect(res.statusCode).toEqual(404);
-      expect(res.body).toHaveProperty("message");
-    });
-    test("error empty field quantity", async () => {
-      const mockPosts = inputPost();
-      const res = await request(app).post("/posts").send({
-        description: mockPosts.description,
-        mainImage: mockPosts.mainImage,
-        title: mockPosts.title,
-        status: mockPosts.status,
-      });
-      expect(res.statusCode).toEqual(404);
-      expect(res.body).toHaveProperty("message");
+      expect(res.body).toEqual({});
     });
     test("error empty field status", async () => {
       const mockPosts = inputPost();
