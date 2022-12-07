@@ -32,7 +32,7 @@ class appointmentController {
 			created_at: Date.now(),
 		});
 
-		// SendEmail(email, username);
+		SendEmail(email, username);
 
 		await newappointment.save();
 		const newAppoinment = await Appointment.find().populate();
