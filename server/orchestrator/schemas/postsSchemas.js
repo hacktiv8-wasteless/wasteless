@@ -196,7 +196,7 @@ const resolvers = {
 				if (!context.token) throw { error: "Invalid access" };
 				const { id: userId } = verifyToken(context.token);
 				const {data:userData} = await Users.get(`/users/${userId}`)
-				console.log(userData)
+				console.log(userData)	
 				const { data } = await App.post(`/appointment/${post_id}`,{...userData});
 
 				return {message: "Appointment created succesfully"}
