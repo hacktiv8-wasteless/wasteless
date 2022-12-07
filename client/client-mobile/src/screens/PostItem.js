@@ -29,7 +29,7 @@ import MapView, { Marker } from "react-native-maps";
 import Geocoder from "react-native-geocoding";
 import * as Location from "expo-location";
 import { useMutation } from "@apollo/client";
-import { POST_POST } from "../query/Posts";
+import { GET_POSTS, POST_POST } from "../query/Posts";
 import { getUserId } from "../helpers/util";
 import { COLORS } from "../constants";
 
@@ -94,10 +94,7 @@ export default function PostItem({ navigation, route }) {
   //? -------------------------------------------
 
   //? Server Wiring --------------------------
-  const [
-    createPost,
-    { data: postData, loading: postLoading, error: postError },
-  ] = useMutation(POST_POST);
+  const [createPost, { data: postData, loading: postLoading, error: postError }] = useMutation(POST_POST, { refetchQueries: [{ query: GET_POSTS }] });
 
   // const [mainImage, setMainImage] = useState("");
   const [title, setTitle] = useState("");
@@ -125,13 +122,14 @@ export default function PostItem({ navigation, route }) {
         description,
         quantity: +quantity,
         // RIZZZZQIII NANTI DISINI YAA
-        lat: "30",
-        long: "30",
+        lat: lat.toString(),
+        long: long.toString(),
       };
 
       await createPost({
         variables: { postPayload },
       });
+      console.log("postData", postData);
 
       // Clear form
       // setMainImage("");
@@ -172,7 +170,7 @@ export default function PostItem({ navigation, route }) {
 
   const handleMarker = (e) => {
     setLat(e.nativeEvent.coordinate.latitude);
-    setLong(e.nativeEvent.coordinate.langitude);
+    setLong(e.nativeEvent.coordinate.longitude);
     setUserLatLon(e.nativeEvent.coordinate);
   };
 
@@ -210,57 +208,54 @@ export default function PostItem({ navigation, route }) {
         <ScrollView>
           {/* Image handler */}
           {/* <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.image} /> */}
-          <TouchableOpacity onPress={openImageLibrary}>
-            <View
-              style={{
-                backgroundColor: "white",
-                paddingHorizontal: 20,
-                paddingTop: 20,
-                paddingBottom: 10,
-              }}
-            >
-              <Text style={styles.label}>Upload Image:</Text>
-            </View>
-            <View style={styles.imageContainer2}>
-              {/* <Text>Add Image here</Text> */}
-              {profileImage ? (
-                <Image source={{ uri: profileImage }} style={styles.image} />
-              ) : (
-                <Image
-                  source={{
-                    uri: "https://uploader-assets.s3.ap-south-1.amazonaws.com/codepen-default-placeholder.png",
-                  }}
-                  style={styles.image}
-                />
-                // <Text
-                //   style={{
-                //     textAlign: "center",
-                //     fontSize: 20,
-                //     opacity: 0.3,
-                //     fontWeight: "bold",
-                //   }}
-                // >
-                //   Upload Imagesss
-                // </Text>
-              )}
-            </View>
-          </TouchableOpacity>
-          <View style={styles.imageContainer}>
-            {/* <Pressable>
-              <Image source={{ uri: "http://placekitten.com/150/150" }} style={styles.imagePlaceholder} resizeMode="cover" />
-            </Pressable> */}
+          <View
+            style={{
+              marginHorizontal: 20,
+              marginTop: 20,
+              marginBottom: 20,
+              borderRadius: 20,
+              overflow: "hidden",
+              backgroundColor: COLORS.white,
+              shadowColor: COLORS.primaryShade[500],
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.1,
+              shadowRadius: 3.84,
+
+              elevation: 5,
+            }}
+          >
+            <TouchableOpacity onPress={openImageLibrary}>
+              <View style={{ backgroundColor: "white", paddingHorizontal: 20, paddingTop: 20, paddingBottom: 10 }}>
+                <Text style={styles.label}>Upload Image:</Text>
+              </View>
+              <View style={styles.imageContainer2}>
+                {/* <Text>Add Image here</Text> */}
+                {profileImage ? (
+                  <Image source={{ uri: profileImage }} style={styles.image} />
+                ) : (
+                  <Image source={{ uri: "https://uploader-assets.s3.ap-south-1.amazonaws.com/codepen-default-placeholder.png" }} style={styles.image} />
+                  // <Text
+                  //   style={{
+                  //     textAlign: "center",
+                  //     fontSize: 20,
+                  //     opacity: 0.3,
+                  //     fontWeight: "bold",
+                  //   }}
+                  // >
+                  //   Upload Imagesss
+                  // </Text>
+                )}
+              </View>
+            </TouchableOpacity>
           </View>
+
           <VStack style={styles.formContainer}>
             <FormControl isRequired marginBottom={3}>
               <Text style={styles.label}>Title</Text>
-              <Input
-                placeholder="Title"
-                w="100%"
-                variant="rounded"
-                backgroundColor="white"
-                value={title}
-                onChangeText={handleTitleChange}
-              />
+              <Input placeholder="Title" w="100%" borderRadius={14} backgroundColor="white" value={title} onChangeText={handleTitleChange} />
             </FormControl>
 
             <FormControl isRequired marginBottom={3}>
@@ -298,91 +293,76 @@ export default function PostItem({ navigation, route }) {
             </FormControl>
           </VStack>
 
-          <VStack style={styles.mapsContainer}>
-            <Box
-              height="full"
-              borderWidth="1"
-              borderColor="coolGray.300"
-              maxHeight={70}
-            >
+          <View
+            style={{
+              backgroundColor: "white",
+              marginHorizontal: 20,
+              marginBottom: 20,
+              borderRadius: 20,
+              shadowColor: COLORS.primaryShade[500],
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.1,
+              shadowRadius: 3.84,
+
+              elevation: 5,
+            }}
+          >
+            <View>
               <View
                 style={{
-                  padding: 14,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+                  padding: 20,
                 }}
               >
-                {/* <Text>Your location (approx)</Text> */}
-                <Input
-                  placeholder="Location"
-                  w="100%"
-                  backgroundColor="white"
-                  value={userLoc}
-                  onChangeText={handleLoc}
-                  onEndEditing={handleInput}
-                  variant="rounded"
-                />
-                {/* <Text style={styles.label}>Next</Text> */}
+                <Text style={styles.label}>Location</Text>
+                <Input placeholder="Location" w="100%" backgroundColor="white" borderRadius={14} value={userLoc} onChangeText={handleLoc} onEndEditing={handleInput} />
               </View>
-            </Box>
-            <View style={{ height: "100%" }}>
-              <MapView
-                style={{ ...StyleSheet.absoluteFillObject }}
-                showsUserLocation={true}
-                // followUserLocation={true}
-                loadingEnabled={true}
-                region={{
-                  ...userLatLon,
-                  latitudeDelta: 0.03,
-                  longitudeDelta: 0.03,
-                }}
-              >
-                {userLatLon && (
-                  <Marker
-                    draggable
-                    coordinate={userLatLon}
-                    style={{ ...StyleSheet.absoluteFillObject }}
-                    onDragEnd={handleMarker}
-                  />
-                )}
-              </MapView>
             </View>
-          </VStack>
+            <View style={styles.mapsContainer}>
+              <View style={{ height: "100%" }}>
+                <MapView
+                  style={{ ...StyleSheet.absoluteFillObject }}
+                  showsUserLocation={true}
+                  // followUserLocation={true}
+                  loadingEnabled={true}
+                  region={{
+                    ...userLatLon,
+                    latitudeDelta: 0.03,
+                    longitudeDelta: 0.03,
+                  }}
+                >
+                  {userLatLon && <Marker draggable coordinate={userLatLon} style={{ ...StyleSheet.absoluteFillObject }} onDragEnd={handleMarker} />}
+                </MapView>
+              </View>
+            </View>
+          </View>
 
           <View style={styles.totalPrice}>
             <Text style={styles.label}>Total Price: </Text>
             <Text style={styles.label}>Rp.{quantity * price}</Text>
           </View>
 
-          <VStack style={styles.footer}>
-            <Button
-              isLoading={postLoading ? true : false}
-              onPress={onSubmit}
-              bgColor={COLORS.primary}
-              width={"full"}
-              height={75}
-              borderTopRadius={20}
-              borderBottomRadius={0}
-            >
-              <Text
-                style={{
-                  color: COLORS.accent,
-                  fontWeight: "500",
-                  fontSize: 16,
-                }}
-              >
-                Submit
-              </Text>
-            </Button>
-            {/* Kalo udah sambung server bisa tambah ini buat loading mutation */}
-            {/* <Button isLoading>Button</Button> */}
+          <View
+            style={{
+              marginBottom: 20,
+              marginHorizontal: 20,
+              shadowColor: COLORS.primaryShade[500],
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.1,
+              shadowRadius: 3.84,
 
-            {/* <TouchableHighlight onPress={onSubmit}>
-          <View style={{ alignItems: "center", backgroundColor: "#339966", height: 100 }}>
-          <Text style={{ color: "white" }}>Submit</Text>
+              elevation: 5,
+            }}
+          >
+            <Button isLoading={postLoading ? true : false} onPress={onSubmit} height={75} borderRadius={20} bgColor={COLORS.primary}>
+              <Text style={styles.button}>Submit</Text>
+            </Button>
           </View>
-        </TouchableHighlight> */}
-          </VStack>
         </ScrollView>
       </SafeAreaView>
     </>
@@ -416,16 +396,32 @@ const styles = StyleSheet.create({
     width: 150,
   },
   formContainer: {
+    marginBottom: 20,
+    marginHorizontal: 20,
+    borderRadius: 20,
     paddingVertical: 20,
     padding: 20,
     backgroundColor: "white",
     marginBottom: 20,
+
+    shadowColor: COLORS.primaryShade[500],
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   mapsContainer: {
     backgroundColor: "white",
-    flex: 1,
+    // flex: 1,
     height: 300,
     marginBottom: 20,
+    marginHorizontal: 20,
+    borderRadius: 20,
+    overflow: "hidden",
   },
   footer: {
     justifyContent: "center",
@@ -438,9 +434,36 @@ const styles = StyleSheet.create({
   },
   totalPrice: {
     padding: 20,
+    borderRadius: 20,
+    marginBottom: 20,
+    marginHorizontal: 20,
     backgroundColor: "white",
     flexDirection: "row",
     justifyContent: "space-between",
-    // marginBottom: 20,
+    marginBottom: 20,
+
+    shadowColor: COLORS.primaryShade[500],
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  button: {
+    color: COLORS.accent,
+    fontWeight: "500",
+    fontSize: 16,
+    shadowColor: COLORS.primaryShade[500],
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
 });

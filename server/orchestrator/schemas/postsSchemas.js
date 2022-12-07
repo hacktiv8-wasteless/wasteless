@@ -196,7 +196,7 @@ const resolvers = {
 				if (!context.token) throw { error: "Invalid access" };
 				const { id: userId } = verifyToken(context.token);
 				const {data:userData} = await Users.get(`/users/${userId}`)
-				console.log(userData)
+				console.log(userData)	
 				const { data } = await App.post(`/appointment/${post_id}`,{...userData});
 
 				return {message: "Appointment created succesfully"}
@@ -207,7 +207,7 @@ const resolvers = {
 
 		chooseAppointment: async (_, {taker_id,post_id} ,context) => {
 			try {
-				// if (!context.token) throw { error: "Invalid access" };
+				if (!context.token) throw { error: "Invalid access" };
 				const {data:foundUser} = await Users.get(`/users/${taker_id}`)
 				if(!foundUser) throw {message: "User not found"}
 				const newPost = await App.patch(`/posts/${post_id}`,{taker_id, status:"ongoing"})

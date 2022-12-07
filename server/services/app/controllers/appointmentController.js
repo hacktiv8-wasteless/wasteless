@@ -8,6 +8,9 @@ class appointmentController {
 		const { postId } = req.params;
 		const { id: userId, username, email, phoneNumber } = req.body;
 
+		console.log(postId)
+		console.log(req.body,"ini body")
+
 		let slot_time = new Date().getHours();
 		let slot_date = new Date().getDate();
 
