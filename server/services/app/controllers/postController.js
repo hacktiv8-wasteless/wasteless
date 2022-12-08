@@ -87,7 +87,7 @@ class PostController {
 	static async updatePost(req, res) {
 		try {
 			const { postId } = req.params;
-			// const { title, decription, mainImage, quantity, string } = req.body;
+			const { title, decription, mainImage, quantity, string } = req.body;
 			const post = await Post.findById(postId);
 			const updatedPost = {
 				...req.body,
