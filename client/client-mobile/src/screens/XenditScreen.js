@@ -4,23 +4,52 @@ import { Button } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { useMutation } from "@apollo/client";
 import { TopUp } from "../query/TopUp";
+import { useEffect } from "react";
+import { GET_INVOICE } from "../query/Transaction";
+import { GET_PROFILE } from "../query/Users";
 
-export default function XenditPayment({}) {
-  //   const { token, invoiceId } = route.params;
+export default function XenditPayment({ route, navigation: { navigate } }) {
+  const { paymentData, balanceInput } = route.params;
+  console.log(balanceInput);
 
-  //   const [createInvoice, { loading, error, data }] = useMutation(TopUp);
+  const [invoice, { data: invoiceData, loading: invoiceLoading, error: invoiceError }] = useMutation(GET_INVOICE, { refetchQueries: [{ query: GET_PROFILE }] });
 
-  //   const uri = `https://checkout-staging.xendit.co/web/638edd5c1cea5504be4d2826`;
-  const navigation = useNavigation();
+  const handleTopUp = async () => {
+    const paid = "PAID";
+    try {
+      let invoicePayload = {
+        external_id: paymentData?.createInvoice?.external_id,
+        status: paid,
+        totalPrice: +balanceInput,
+      };
+      invoice({
+        variables: {
+          invoicePayload,
+        },
+      })
+        .then(({ data }) => console.log(data))
+        .catch((err) => console.log(err));
+    } catch (errors) {
+      console.log(invoiceError, "wkwkwkwk");
+      console.log(errors, "<<<<<<<<");
+    }
+  };
+
+  useEffect(() => {
+    if (invoiceData?.payInvoice?.message === "Topup Success!") navigate("MyProfile");
+    console.log(invoiceData, "<<<>>><<>>");
+  }, [invoiceData]);
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <WebView
         source={{
-          uri: "https://checkout-staging.xendit.co/web/638edd5c1cea5504be4d2826",
+          uri: `${paymentData?.createInvoice?.invoice_url}`,
         }}
       />
-      <Button onPress={() => navigation.navigate("MyProfile")}>
-        Top Up Now
+
+      <Button isLoading={invoiceLoading} onPress={() => handleTopUp()}>
+        Back to profile
       </Button>
     </SafeAreaView>
   );

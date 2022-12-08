@@ -13,7 +13,14 @@ export default function ItemCardSmall({ post, postsLoading, userLatLon }) {
   return (
     <View style={styles.buttonContainer}>
       <TouchableOpacity onPress={() => navigation.navigate("PostDetail", { id: post["_id"] })}>
-        <View style={{ width: 150, height: 150, overflow: "hidden", borderRadius: 20 }}>
+        <View
+          style={{
+            width: 150,
+            height: 150,
+            overflow: "hidden",
+            borderRadius: 20,
+          }}
+        >
           <Skeleton isLoaded={!postsLoading} h={"full"} w={"full"} />
           <Image source={{ uri: post.mainImage }} style={{ width: 150, height: 150 }} />
         </View>

@@ -12,9 +12,34 @@ import {
 } from "native-base";
 import { useNavigation } from "@react-navigation/native";
 import { TouchableRipple } from "react-native-paper";
+import { useMutation } from "@apollo/client";
+import { POST_INVOICE } from "../query/Transaction";
+import { useEffect } from "react";
+import { useState } from "react";
 
-const Payment = () => {
-  const navigation = useNavigation();
+const Payment = ({ navigation: { navigate } }) => {
+  // const navigation = useNavigation();
+  const [
+    payment,
+    { data: paymentData, loading: paymentLoading, error: paymentError },
+  ] = useMutation(POST_INVOICE);
+
+  const [balanceInput, setBalanceInput] = useState(0);
+  const handleBalance = (val) => setBalanceInput(val);
+
+  const handleSubmit = async () => {
+    try {
+      await payment({ variables: { balance: +balanceInput } });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (paymentData) navigate("Xendit", { paymentData, balanceInput });
+    console.log(paymentData);
+  }, [paymentData]);
+
   return (
     <Center w="100%">
       <Box safeArea p="2" py="8" w="90%" maxW="290">
@@ -43,14 +68,15 @@ const Payment = () => {
         <VStack space={3} mt="5">
           <FormControl>
             <FormControl.Label>Amount</FormControl.Label>
-            <Input type="number" placeholder="Enter your Amount here" />
+            <Input
+              onChangeText={handleBalance}
+              value={balanceInput}
+              type="number"
+              placeholder="Enter your Amount here"
+            />
           </FormControl>
 
-          <Button
-            mt="2"
-            colorScheme="green"
-            onPress={() => navigation.navigate("Xendit")}
-          >
+          <Button mt="2" colorScheme="green" onPress={() => handleSubmit()}>
             Submit
           </Button>
           <HStack mt="6" justifyContent="center"></HStack>
