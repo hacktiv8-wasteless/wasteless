@@ -1,9 +1,7 @@
 const { MongoClient, ServerApiVersion } = require("mongodb");
-const uri =
-  process.env.MONGO_URL ||
-  "mongodb+srv://ionnotion:Huehuebrbr1992+@ionnotion.36yjwex.mongodb.net/?retryWrites=true&w=majority";
-// "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
-
+const localhost =
+	"mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
+const uri = process.env.MONGO_URL || localhost;
 let options;
 
 if (process.env.NODE_ENV !== "test") {
@@ -14,14 +12,12 @@ if (process.env.NODE_ENV !== "test") {
 		serverApi: ServerApiVersion.v1,
 	};
 } else {
-	console.log("masuk sini")
+	console.log("masuk sini");
 	options = {};
 }
 
 const client = new MongoClient(uri, options);
-const testClient = new MongoClient(
-  "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false"
-);
+const testClient = new MongoClient(localhost);
 
 let db = null;
 let postCollection = null;
@@ -29,50 +25,50 @@ let categoryCollection = null;
 let appointmentCollection = null;
 
 const mongoConnect = async (env) => {
-  try {
-    if (env === "test") {
-      console.log("test");
-      await testClient.connect();
-    } else {
-      console.log("bukan test");
-      await client.connect();
-    }
-    const database = client.db("Wasteless");
-    const posts = database.collection("Posts");
-    const categories = database.collection("Category");
-    const appointment = database.collection("Appointment");
+	try {
+		if (env === "test") {
+			console.log("test");
+			await testClient.connect();
+		} else {
+			console.log("bukan test");
+			await client.connect();
+		}
+		const database = client.db("Wasteless");
+		const posts = database.collection("Posts");
+		const categories = database.collection("Category");
+		const appointment = database.collection("Appointment");
 
-    db = database;
-    postCollection = posts;
-    categoryCollection = categories;
-    appointmentCollection = appointment;
+		db = database;
+		postCollection = posts;
+		categoryCollection = categories;
+		appointmentCollection = appointment;
 
-    return database;
-  } catch (error) {
-    console.log(error);
-  }
+		return database;
+	} catch (error) {
+		console.log(error);
+	}
 };
 
 const getDatabase = () => {
-  return db;
+	return db;
 };
 
 const getPosts = () => {
-  return postCollection;
+	return postCollection;
 };
 
 const getCategories = () => {
-  return categoryCollection;
+	return categoryCollection;
 };
 
 const getAppointment = () => {
-  return appointmentCollection;
+	return appointmentCollection;
 };
 
 module.exports = {
-  mongoConnect,
-  getDatabase,
-  getPosts,
-  getCategories,
-  getAppointment,
+	mongoConnect,
+	getDatabase,
+	getPosts,
+	getCategories,
+	getAppointment,
 };

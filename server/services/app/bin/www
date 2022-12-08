@@ -1,10 +1,9 @@
 const mongoose = require("mongoose");
 const { ServerApiVersion } = require("mongodb");
-
+const localhost =
+	"mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
 const port = process.env.PORT || 4001;
-const uri =
-	"mongodb+srv://ionnotion:Huehuebrbr1992+@ionnotion.36yjwex.mongodb.net/?retryWrites=true&w=majority";
-// "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&directConnection=true&ssl=false";
+const uri = process.env.MONGO_URL || localhost;
 const app = require("../app");
 
 let options = {
@@ -14,13 +13,11 @@ let options = {
 	serverApi: ServerApiVersion.v1,
 };
 
-mongoose
-	.connect(uri, options)
-	.then(() => {
-		if (process.env.NODE_ENV !== "test") {
-			app.listen(port, () => {
-				console.log("this is not test")
-				console.log("this app is running on port", port);
-			});
-		}
-	});
+mongoose.connect(uri, options).then(() => {
+	if (process.env.NODE_ENV !== "test") {
+		app.listen(port, () => {
+			console.log("this is not test");
+			console.log("this app is running on port", port);
+		});
+	}
+});
