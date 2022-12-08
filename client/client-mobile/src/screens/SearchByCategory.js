@@ -51,7 +51,7 @@ export default function Categories({ route }) {
     console.log(postByCategoryError);
     console.log("postByCategoryError ---------------------");
   }
-  if (postsByCategoryLoading) return <Loader />;
+  // if (postsByCategoryLoading) return <Loader />;
 
   // console.log(postsByCategoryData?.getPostByCategory);
 
@@ -60,9 +60,12 @@ export default function Categories({ route }) {
       <SafeAreaView>
         {/* <Text>INI HOME!</Text> */}
         {/* <CategorySearch /> */}
+
         <ScrollView>
           <View style={{ flex: 1, paddingHorizontal: 10 }}>
             <Text style={{ fontSize: 20, fontWeight: "bold", marginBottom: 10 }}>Category Filter:</Text>
+            {postsByCategoryLoading && <Loader />}
+
             <View style={{ flexDirection: "row", flexWrap: "wrap", justifyContent: "flex-start" }}>
               {postsByCategoryData?.getPostByCategory?.map((post) => (
                 <ItemCardSmall post={post} key={post["_id"]} userLatLon={userLatLon} />

@@ -17,6 +17,7 @@ export const POST_LOGIN = gql`
       error
       id
       message
+      username
     }
   }
 `;
@@ -39,7 +40,6 @@ export const GET_PROFILE = gql`
       id
       username
       email
-      password
       phoneNumber
       address
       balance
@@ -47,4 +47,3 @@ export const GET_PROFILE = gql`
     }
   }
 `;
-

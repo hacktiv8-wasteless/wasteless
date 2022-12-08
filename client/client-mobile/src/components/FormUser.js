@@ -51,9 +51,24 @@ export default function FormUser({ page, navigation }) {
 
       console.log(userPayload);
 
-      await login({
+      login({
         variables: { userPayload },
+      }).then(({ data }) => {
+        console.log(data);
+        if (data.loginUser !== null) {
+          const access_token = data.loginUser.access_token;
+          const userId = data.loginUser.id;
+          // console.log();
+          signIn(access_token, userId).then((res) => navigation.navigate("Tab"));
+
+          setEmail("");
+          setPassword("");
+        }
       });
+
+      // await login({
+      //   variables: { userPayload },
+      // });
     } catch (error) {
       console.log(error);
     }
@@ -69,18 +84,22 @@ export default function FormUser({ page, navigation }) {
         address,
       };
       // console.log(userPayload);
-      await register({
+      register({
         variables: { userPayload },
+      }).then(({ data }) => {
+        console.log(data);
+        if (data.registerUser !== null) {
+          navigation.navigate("Login");
+
+          setEmail("");
+          setPassword("");
+          setUsername("");
+          setPhoneNumber("");
+          setAddress("");
+        }
       });
 
-      navigation.navigate("Login");
-
       // Reset form
-      setEmail("");
-      setPassword("");
-      setUsername("");
-      setPhoneNumber("");
-      setAddress("");
     } catch (error) {
       console.log(error);
     }
@@ -91,24 +110,18 @@ export default function FormUser({ page, navigation }) {
   };
 
   const handleLogin = async () => {
-    try {
-      const access_token = loginData?.loginUser?.access_token;
-      const userId = loginData?.loginUser?.id;
-      // // console.log(access_token);
+    const access_token = loginData?.loginUser?.access_token;
+    const userId = loginData?.loginUser?.id;
+    // // console.log(access_token);
 
-      await signIn(access_token, userId);
-      navigation.navigate("Tab");
-    } catch (error) {
-      console.log();
-    }
+    signIn(access_token, userId).then((res) => navigation.navigate("Tab"));
   };
 
-  useEffect(() => {
-    if (loginData) {
-      handleLogin();
-      console.log(loginData);
-    }
-  }, [loginData]);
+  // useEffect(() => {
+  //   if (loginData) {
+  //     handleLogin();
+  //   }
+  // }, [loginData]);
 
   return (
     <>

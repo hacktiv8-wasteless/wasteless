@@ -19,7 +19,9 @@ export default function ItemCardSmall({ post, postsLoading, userLatLon }) {
         </View>
         <View style={{ marginVertical: 10, flexWrap: "wrap" }}>
           <Skeleton.Text isLoaded={!postsLoading} />
-          <Text style={{ fontSize: 16, fontWeight: "700" }}>{post.title.charAt(0).toUpperCase() + post.title.slice(1)}</Text>
+          <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
+            <Text style={{ fontSize: 16, fontWeight: "700" }}>{post.title.charAt(0).toUpperCase() + post.title.slice(1)}</Text>
+          </View>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
             <Ionicons name="location" size={18} color={COLORS.primaryShade[400]} />
             <Text>
@@ -48,6 +50,8 @@ const styles = StyleSheet.create({
     marginHorizontal: 7.5,
     padding: 10,
     borderRadius: 20,
+    flexWrap: "wrap",
+    width: 170,
 
     shadowColor: COLORS.primaryShade[500],
     shadowOffset: {

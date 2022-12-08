@@ -35,8 +35,7 @@ const Profile = () => {
   // console.log(userDetailData?.getProfile);
 
   const handleLogout = async () => {
-    await signOut();
-    navigation.replace("Login");
+    signOut().then((res) => navigation.replace("Login"));
   };
   return (
     <SafeAreaView style={styles.container}>

@@ -1,14 +1,14 @@
 import { Image, Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, Divider, HStack, Icon, ScrollView, VStack, Text, Center } from "native-base";
+import { Button, Divider, HStack, Icon, ScrollView, VStack, Text, Center, Skeleton } from "native-base";
 import mapPlaceHolder from "../../assets/placeHolder/mapPlaceHolder.png";
 import approximateLoc from "../../assets/approximateLoc.png";
 import { Feather } from "@expo/vector-icons";
 import MapView, { Marker } from "react-native-maps";
 import * as Location from "expo-location";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_POST_DETAIL, POST_COMPLETE_POST } from "../query/Posts";
+import { GET_POST_DETAIL, POST_COMPLETE_POST, GET_POSTS } from "../query/Posts";
 import { GET_CATEGORY_ID } from "../query/Categories";
 import { capitalize, getUserId } from "../helpers/util";
 import Loader from "../components/Loader";
@@ -47,6 +47,25 @@ export default function PostDetail({ navigation, route }) {
     })();
   }, []);
 
+  //   useEffect(()=> {
+  // if (categoryDetailData) {
+
+  // }
+  //   }, [categoryDetailData])
+
+  const { id: postId } = route.params;
+
+  const { data: postDetailData, loading: postDetailLoading, error: postDetailError } = useQuery(GET_POST_DETAIL, { variables: { postId } });
+  const { data: categoryDetailData, loading: categoryDetailLoading, error: categoryDetailError, refetch } = useQuery(GET_CATEGORY_ID, { variables: { categoryId } });
+  const { data: userData, loading: userLoading, error: userError } = useQuery(GET_PROFILE);
+  const [appointment, { data: appointmentData, loading: appoinmentLoading, error: appointmentError }] = useMutation(POST_APPOINTMENT, { refetchQueries: [{ query: GET_POSTS }] });
+  const { data: fetchAppointmentData, loading: fetchAppointmentLoading, error: fetchAppointmentError } = useQuery(GET_APPOINTMENT, { variables: { postId } });
+  const [chooseAppointment, { data: chooseAppointmentData, loading: chooseAppointmentLoading, error: chooseAppointmentError }] = useMutation(CHOOSE_APPOINTMENT, { refetchQueries: [{ query: GET_POSTS }] });
+  const [completePost, { data: completePostData, loading: completePostLoading, error: completePostError }] = useMutation(POST_COMPLETE_POST, { refetchQueries: [{ query: GET_POSTS }, { query: GET_PROFILE }] });
+
+  const userId = userData?.getProfile?.id;
+  let categoryId = postDetailData?.getPostById?.category_id;
+
   useEffect(() => {
     if (postDetailData) {
       // let { giver_id, taker_id, status, category_id } = postDetailData?.getPostById;
@@ -57,24 +76,6 @@ export default function PostDetail({ navigation, route }) {
       refetch({ categoryId: postDetailData?.getPostById?.category_id });
     }
   }, [postDetailData]);
-
-  //   useEffect(()=> {
-  // if (categoryDetailData) {
-
-  // }
-  //   }, [categoryDetailData])
-
-  const { id: postId } = route.params;
-
-  const { data: postDetailData, loading: postDetailLoading, error: postDetailError } = useQuery(GET_POST_DETAIL, { variables: { postId } });
-  const { data: categoryDetailData, loading: categoryDetailLoading, error: categoryDetailError, refetch } = useQuery(GET_CATEGORY_ID, { variables: null });
-  const { data: userData, loading: userLoading, error: userError } = useQuery(GET_PROFILE);
-  const [appointment, { data: appointmentData, loading: appoinmentLoading, error: appointmentError }] = useMutation(POST_APPOINTMENT);
-  const { data: fetchAppointmentData, loading: fetchAppointmentLoading, error: fetchAppointmentError } = useQuery(GET_APPOINTMENT, { variables: { postId } });
-  const [chooseAppointment, { data: chooseAppointmentData, loading: chooseAppointmentLoading, error: chooseAppointmentError }] = useMutation(CHOOSE_APPOINTMENT);
-  const [completePost, { data: completePostData, loading: completePostLoading, error: completePostError }] = useMutation(POST_COMPLETE_POST);
-
-  const userId = userData?.getProfile?.id;
 
   let giver_id, taker_id, status, category_id;
   // console.log(fetchAppointmentData?.getAppointment);
@@ -246,10 +247,19 @@ export default function PostDetail({ navigation, route }) {
           )}
 
           {userId === postDetailData?.getPostById?.taker_id && postDetailData?.getPostById?.status === "ongoing" && (
-            <View style={[styles.postDetail, { justifyContent: "center", alignItems: "center" }]}>
-              <Text style={styles.label}>Ongoing taker</Text>
-              <Button onPress={handleCompletePosts}>Pay</Button>
-            </View>
+            <>
+              {/* <View style={[styles.postDetail, { justifyContent: "center", alignItems: "center" }]}>
+                <Text style={styles.label}>Ongoing taker</Text>
+                <Button onPress={handleCompletePosts}>Pay</Button>
+              </View> */}
+
+              <View style={{ marginBottom: 20, marginHorizontal: 20 }}>
+                {/* <Text style={styles.label}>Ongoing taker</Text> */}
+                <Button isLoading={completePostLoading} onPress={handleCompletePosts} height={75} borderRadius={20} bgColor={COLORS.primary}>
+                  <Text style={styles.button}>Buy</Text>
+                </Button>
+              </View>
+            </>
           )}
 
           {userId === postDetailData?.getPostById?.taker_id && postDetailData?.getPostById?.status === "complete" && (

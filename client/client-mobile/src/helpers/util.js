@@ -7,30 +7,17 @@ const ACCESS_TOKEN = "access_token";
 // const [userId, setUserId] = useState(null);
 
 export const getToken = async (token) => {
-  try {
-    return await AsyncStorage.getItem(token);
-  } catch (error) {
-    console.log(error);
-  }
+  return await AsyncStorage.getItem(token);
 };
 
 export const getUserId = async () => {
-  try {
-    return await AsyncStorage.getItem("userId");
-  } catch (error) {
-    console.log(error);
-  }
+  return await AsyncStorage.getItem("userId");
 };
 
 export const signIn = async (newToken, userId) => {
-  try {
-    console.log(newToken, "?????????????");
-    console.log(userId, "!!!!!!!");
-    await AsyncStorage.setItem("access_token", newToken);
-    await AsyncStorage.setItem("userId", userId.toString());
-  } catch (error) {
-    console.log(error);
-  }
+  console.log(newToken, "?????????????");
+  await AsyncStorage.setItem("access_token", newToken);
+  await AsyncStorage.setItem("userId", userId.toString());
 };
 
 // export const register = async () => {
@@ -38,12 +25,7 @@ export const signIn = async (newToken, userId) => {
 // };
 
 export const signOut = async () => {
-  try {
-    await AsyncStorage.clear();
-    return await AsyncStorage.removeItem("access_token");
-  } catch (error) {
-    console.log(error);
-  }
+  await AsyncStorage.removeItem(ACCESS_TOKEN);
 };
 
 export const capitalize = (string) => {

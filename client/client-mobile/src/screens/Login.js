@@ -15,9 +15,9 @@ export default function Login({ navigation }) {
   return (
     <View style={styles.container}>
       <SafeAreaView>
-        <Button onPress={check} style={styles.test}>
+        {/* <Button onPress={check} style={styles.test}>
           Check
-        </Button>
+        </Button> */}
         {/* Status Bar */}
         <StatusBar barStyle="light-content" backgroundColor="#339966" />
 
@@ -39,9 +39,9 @@ export default function Login({ navigation }) {
           </View>
 
           <View style={{ justifyContent: "flex-end", flexDirection: "row" }}>
-            <Pressable onPress={() => navigation.replace("Tab")}>
+            {/* <Pressable onPress={() => navigation.replace("Tab")}>
               <Text style={styles.button}>Backdoor Home</Text>
-            </Pressable>
+            </Pressable> */}
           </View>
         </ScrollView>
       </SafeAreaView>

@@ -1,7 +1,7 @@
 import { StyleSheet, View, Image, TouchableHighlight, Dimensions } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Box, FormControl, Icon, Input, Pressable, Stack, WarningOutlineIcon, Button, Center, Heading, VStack, Link, HStack, Text, TextArea, AspectRatio } from "native-base";
+import { Box, FormControl, Icon, Input, Pressable, Stack, WarningOutlineIcon, Button, Center, Heading, VStack, Link, HStack, Text, TextArea, AspectRatio, Skeleton } from "native-base";
 import { COLORS } from "../constants";
 import { useNavigation } from "@react-navigation/native";
 
@@ -34,7 +34,8 @@ export default function ListingCard({ post }) {
           {post.title}
         </Box>
         <Box style={styles.imageContainer}>
-          <Image source={{ uri: post?.mainImage }} style={styles.image} resizeMode="cover" />
+          {post?.mainImage ? <Image source={{ uri: post?.mainImage }} style={styles.image} resizeMode="cover" /> : <Skeleton style={styles.image} />}
+
           {/* <Center
             bg={COLORS.accent}
             _text={{
@@ -64,7 +65,7 @@ const styles = StyleSheet.create({
   // },
   imageContainer: {
     overflow: "hidden",
-    backgroundColor: "yellow",
+    backgroundColor: "white",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 15,

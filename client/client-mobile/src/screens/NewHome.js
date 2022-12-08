@@ -120,7 +120,7 @@ export default function NewHome({ navigation }) {
         {/* <Skeleton.Text isLoaded={!postsLoading} /> */}
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          <Button onPress={check} style={styles.test}>
+          {/* <Button onPress={check} style={styles.test}>
             Check
           </Button>
           <Button onPress={logout} style={styles.test}>
@@ -128,7 +128,7 @@ export default function NewHome({ navigation }) {
           </Button>
           <Button onPress={clearAsyncStorage} style={styles.test}>
             Clear all storage
-          </Button>
+          </Button> */}
           <View
             style={{
               backgroundColor: COLORS.primary,
