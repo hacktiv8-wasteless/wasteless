@@ -1,10 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_INVOICE = gql`
-  mutation Mutation($invoicePayload: InvoicePayload) {
-    payInvoice(InvoicePayload: $invoicePayload) {
-      access_token
-      error
+  mutation PayInvoice($invoicePayload: InvoicePayload) {
+    payInvoice(invoicePayload: $invoicePayload) {
       message
     }
   }

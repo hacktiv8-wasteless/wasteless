@@ -7,12 +7,13 @@ import {
   Text,
   TouchableRipple,
 } from "react-native-paper";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { Avatar } from "native-base";
-
+import { Avatar, HStack, VStack } from "native-base";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useQuery } from "@apollo/client";
+import { Feather } from "@expo/vector-icons";
+
 import { GET_USER_DETAIL } from "../query/Users";
 import { useNavigation } from "@react-navigation/native";
 import Loader from "../components/Loader";
@@ -106,12 +107,13 @@ const Profile = () => {
             },
           ]}
         >
-          <Title>Rp.14000</Title>
-          <Caption>Wallet</Caption>
-        </View>
-        <View style={styles.infoBox}>
-          <Title>12</Title>
-          <Caption>Orders</Caption>
+          <HStack>
+            <Entypo name="wallet" color="Green" size={35} />
+            <VStack>
+              <Text> Your Wallet</Text>
+              <Title> Rp.14000</Title>
+            </VStack>
+          </HStack>
         </View>
       </View>
 
@@ -179,15 +181,15 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   infoBoxWrapper: {
-    borderBottomColor: "#dddddd",
-    borderBottomWidth: 1,
-    borderTopColor: "#dddddd",
-    borderTopWidth: 1,
+    borderBottomColor: "green",
+    borderBottomWidth: 2,
+    borderTopColor: "green",
+    borderTopWidth: 2,
     flexDirection: "row",
     height: 100,
   },
   infoBox: {
-    width: "50%",
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
   },

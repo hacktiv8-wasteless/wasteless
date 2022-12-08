@@ -12,16 +12,35 @@ export default function ItemCardSmall({ post, postsLoading, userLatLon }) {
   // console.log(post["_id"]);
   return (
     <View style={styles.buttonContainer}>
-      <TouchableOpacity onPress={() => navigation.navigate("PostDetail", { id: post["_id"] })}>
-        <View style={{ width: 150, height: 150, overflow: "hidden", borderRadius: 20 }}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("PostDetail", { id: post["_id"] })}
+      >
+        <View
+          style={{
+            width: 150,
+            height: 150,
+            overflow: "hidden",
+            borderRadius: 20,
+          }}
+        >
           <Skeleton isLoaded={!postsLoading} h={"full"} w={"full"} />
-          <Image source={{ uri: post.mainImage }} style={{ width: 150, height: 150 }} />
+          <Image
+            source={{ uri: post.mainImage }}
+            style={{ width: 150, height: 150 }}
+          />
         </View>
         <View style={{ marginVertical: 10, flexWrap: "wrap" }}>
           <Skeleton.Text isLoaded={!postsLoading} />
-          <Text style={{ fontSize: 16, fontWeight: "700" }}>{post.title.charAt(0).toUpperCase() + post.title.slice(1)}</Text>
+          <Text style={{ fontSize: 16, fontWeight: "700" }}>
+            {post.title.charAt(0).toUpperCase() + post.title.slice(1)}
+          </Text>
+          <Text>Harga : {post.price}</Text>
           <View style={{ flexDirection: "row", flexWrap: "wrap" }}>
-            <Ionicons name="location" size={18} color={COLORS.primaryShade[400]} />
+            <Ionicons
+              name="location"
+              size={18}
+              color={COLORS.primaryShade[400]}
+            />
             <Text>
               {Math.round(
                 latlngDist.distanceDiffInKm(userLatLon, {

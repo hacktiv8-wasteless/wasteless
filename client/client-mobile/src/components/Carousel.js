@@ -1,11 +1,22 @@
 import { useState } from "react";
-import { Text, View, ScrollView, Image, Dimensions, StyleSheet } from "react-native";
+import {
+  Text,
+  View,
+  ScrollView,
+  Image,
+  Dimensions,
+  StyleSheet,
+} from "react-native";
 import { COLORS } from "../constants";
 
 const { width } = Dimensions.get("window");
 const height = width * 0.5;
 
-const images = ["https://news.miami.edu/life/_assets/images/images-stories/2019/11/recycling-greenu-940x529.jpg", "https://api.watsons.co.id/api/v2/wtcid/blog/wp-content/uploads/0533-Main-Banner-3.png", "https://bessemercity.com/wp-content/uploads/2020/05/GlobalRecyclingDay-2019.jpg"];
+const images = [
+  "https://ik.imagekit.io/kafax3vfm/Carousel1_m3_eZM1M0?ik-sdk-version=javascript-1.4.3&updatedAt=1670396803756",
+  "https://ik.imagekit.io/kafax3vfm/carousel_3VJDXk2Sr?ik-sdk-version=javascript-1.4.3&updatedAt=1670398235040",
+  "https://ik.imagekit.io/kafax3vfm/Carousel_SPgQIpClL?ik-sdk-version=javascript-1.4.3&updatedAt=1670399206657",
+];
 
 export default function Carousel() {
   const [img, setImg] = useState({
@@ -13,7 +24,9 @@ export default function Carousel() {
   });
 
   function changeSlide({ nativeEvent }) {
-    const slide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
+    const slide = Math.ceil(
+      nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
+    );
     if (slide !== img.active) {
       setImg({ active: slide });
     }
@@ -22,15 +35,26 @@ export default function Carousel() {
   return (
     <>
       <View style={style.container}>
-        <ScrollView pagingEnabled horizontal onScroll={changeSlide} showsHorizontalScrollIndicator={false} style={style.scroll}>
+        <ScrollView
+          pagingEnabled
+          horizontal
+          onScroll={changeSlide}
+          showsHorizontalScrollIndicator={false}
+          style={style.scroll}
+        >
           {images.map((image, index) => {
-            return <Image key={index} source={{ uri: image }} style={style.image} />;
+            return (
+              <Image key={index} source={{ uri: image }} style={style.image} />
+            );
           })}
         </ScrollView>
         <View style={style.pagination}>
           {images.map((i, k) => {
             return (
-              <Text key={k} style={k === img.active ? style.activePagination : style.text}>
+              <Text
+                key={k}
+                style={k === img.active ? style.activePagination : style.text}
+              >
                 ⬤
               </Text>
             );
@@ -72,5 +96,9 @@ const style = StyleSheet.create({
     alignSelf: "center",
   },
   text: { fontSize: width / 30, color: "white", margin: 3 },
-  activePagination: { fontSize: width / 30, color: COLORS.primaryShade[400], margin: 3 },
+  activePagination: {
+    fontSize: width / 30,
+    color: COLORS.primaryShade[400],
+    margin: 3,
+  },
 });
