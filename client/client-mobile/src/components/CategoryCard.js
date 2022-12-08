@@ -12,7 +12,7 @@ export default function CategoryCard({ item, categoryId }) {
   };
 
   return (
-    <TouchableOpacity onPress={handleCategoryNavigate}>
+    <TouchableOpacity onPress={handleCategoryNavigate} activeOpacity={0.85}>
       <View
         style={{
           backgroundColor: COLORS.lightGrey,

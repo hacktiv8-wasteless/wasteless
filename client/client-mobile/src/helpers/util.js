@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useState } from "react";
+const convertRupiah = require("rupiah-format");
 
 const ACCESS_TOKEN = "access_token";
 
@@ -34,3 +35,5 @@ export const capitalize = (string) => {
   }
   return "";
 };
+
+export const idr = (price) => convertRupiah.convert(price);

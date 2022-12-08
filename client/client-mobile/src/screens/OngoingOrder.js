@@ -54,7 +54,7 @@ export default function OngoingOrder() {
                   <ListingCard post={post} />
                   <VStack>
                     <UserAvatar />
-                    <QR />
+                    {/* <QR /> */}
                   </VStack>
                 </View>
               );

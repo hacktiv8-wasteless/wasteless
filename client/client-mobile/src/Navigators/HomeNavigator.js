@@ -36,7 +36,7 @@ export default function HomeNavigator() {
       {/* <Stack.Navigator > */}
       <Stack.Screen name="Home" component={NewHome} options={{ headerShown: false }} />
 
-      <Stack.Screen name="PostDetail" component={PostDetail} options={{ headerShown: true }} />
+      <Stack.Screen name="PostDetail" component={PostDetail} options={{ headerShown: true, title: 'Post Detail' }} />
       <Stack.Screen name="Post" component={PostItem} options={({ route }) => ({ title: route.params.category, headerShown: true })} />
       <Stack.Screen
         name="SearchByCategory"
@@ -52,7 +52,7 @@ export default function HomeNavigator() {
 
       <Stack.Screen name="MyProfile" component={Profile} options={{ title: "My profile" }} />
       <Stack.Screen name="Chat" component={Chat} options={{ headerShown: false }} />
-      <Stack.Screen name="MapDirection" component={MapDirection} options={{ headerShown: true }} />
+      <Stack.Screen name="MapDirection" component={MapDirection} options={{ headerShown: true, title: "Direction" }} />
       <Stack.Screen name="Maps" component={Maps} options={{ headerShown: true }} />
 
       <Stack.Screen name="ScanQR" component={ScannerQR} />

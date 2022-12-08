@@ -3,27 +3,21 @@ import React, { useCallback, useState, useEffect } from "react";
 import { Bubble, GiftedChat } from "react-native-gifted-chat";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../configs/firebase";
-import {
-  renderActions,
-  renderComposer,
-  renderInputToolbar,
-  renderSend,
-} from "../components/InputToolbar";
+import { renderActions, renderComposer, renderInputToolbar, renderSend } from "../components/InputToolbar";
 
 export default function Chat({ navigation }) {
-  const user1 = "giver";
-  const user2 = "taker";
+  // const user1 = "giver";
+  // const user2 = "taker";
+  const user1 = "Budi";
+  const user2 = "Susi";
 
-  let roomId = user1 < user2 ? user1 + user2 : user2 + user1;
+  // let roomId = user1 < user2 ? user1 + user2 : user2 + user1;
+  let roomId = "jkq9BoyrGGbHFiNvN8Qh";
 
   const [messages, setMessages] = useState([]);
 
   async function observer() {
-    const docs = db
-      .collection("chats")
-      .doc(roomId)
-      .collection("messages")
-      .orderBy("createdAt", "desc");
+    const docs = db.collection("chats").doc(roomId).collection("messages").orderBy("createdAt", "desc");
     const observer = docs.onSnapshot(
       (querySnapshot) => {
         setMessages(
@@ -47,17 +41,9 @@ export default function Chat({ navigation }) {
 
   const onSend = useCallback(async (messages) => {
     const { _id, createdAt, text, user } = messages[0];
-    await db
-      .collection("chats")
-      .doc(roomId)
-      .collection("messages")
-      .doc(_id)
-      .set({ _id, createdAt, text, user });
+    await db.collection("chats").doc(roomId).collection("messages").doc(_id).set({ _id, createdAt, text, user });
 
-    await db
-      .collection("chats")
-      .doc(roomId)
-      .update({ lastMsg: text, timeStamp: new Date() });
+    await db.collection("chats").doc(roomId).update({ lastMsg: text, timeStamp: new Date() });
   }, []);
 
   return (
@@ -86,8 +72,7 @@ export default function Chat({ navigation }) {
       user={{
         _id: user1,
         name: "tes",
-        avatar:
-          "https://i.pinimg.com/originals/dc/71/5b/dc715b37f20c4e478d5bec142c2aca6a.jpg",
+        avatar: "https://i.pinimg.com/originals/dc/71/5b/dc715b37f20c4e478d5bec142c2aca6a.jpg",
       }}
     />
   );

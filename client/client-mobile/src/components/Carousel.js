@@ -1,22 +1,12 @@
 import { useState } from "react";
-import {
-  Text,
-  View,
-  ScrollView,
-  Image,
-  Dimensions,
-  StyleSheet,
-} from "react-native";
+import { Text, View, ScrollView, Image, Dimensions, StyleSheet } from "react-native";
 import { COLORS } from "../constants";
 
 const { width } = Dimensions.get("window");
 const height = width * 0.5;
 
-const images = [
-  "https://ik.imagekit.io/kafax3vfm/Carousel1_m3_eZM1M0?ik-sdk-version=javascript-1.4.3&updatedAt=1670396803756",
-  "https://ik.imagekit.io/kafax3vfm/carousel_3VJDXk2Sr?ik-sdk-version=javascript-1.4.3&updatedAt=1670398235040",
-  "https://ik.imagekit.io/kafax3vfm/Carousel_SPgQIpClL?ik-sdk-version=javascript-1.4.3&updatedAt=1670399206657",
-];
+const images = ["https://ik.imagekit.io/jtgwyz8u9/6020179.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1670487011853", "https://ik.imagekit.io/jtgwyz8u9/waste-management-banner-post-design-template_23-2149111690__1_.png?ik-sdk-version=javascript-1.4.3&updatedAt=1670487011741", "https://ik.imagekit.io/kafax3vfm/Carousel1_m3_eZM1M0?ik-sdk-version=javascript-1.4.3&updatedAt=1670396803756", "https://ik.imagekit.io/kafax3vfm/carousel_3VJDXk2Sr?ik-sdk-version=javascript-1.4.3&updatedAt=1670398235040"];
+// const images = ["https://ik.imagekit.io/jtgwyz8u9/6020179.jpg?ik-sdk-version=javascript-1.4.3&updatedAt=1670487011853", "https://ik.imagekit.io/jtgwyz8u9/waste-management-banner-post-design-template_23-2149111690__1_.png?ik-sdk-version=javascript-1.4.3&updatedAt=1670487011741", "https://ik.imagekit.io/kafax3vfm/Carousel1_m3_eZM1M0?ik-sdk-version=javascript-1.4.3&updatedAt=1670396803756", "https://ik.imagekit.io/kafax3vfm/carousel_3VJDXk2Sr?ik-sdk-version=javascript-1.4.3&updatedAt=1670398235040", "https://ik.imagekit.io/kafax3vfm/Carousel_SPgQIpClL?ik-sdk-version=javascript-1.4.3&updatedAt=1670399206657"];
 
 export default function Carousel() {
   const [img, setImg] = useState({
@@ -24,9 +14,7 @@ export default function Carousel() {
   });
 
   function changeSlide({ nativeEvent }) {
-    const slide = Math.ceil(
-      nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width
-    );
+    const slide = Math.ceil(nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width);
     if (slide !== img.active) {
       setImg({ active: slide });
     }
@@ -35,26 +23,15 @@ export default function Carousel() {
   return (
     <>
       <View style={style.container}>
-        <ScrollView
-          pagingEnabled
-          horizontal
-          onScroll={changeSlide}
-          showsHorizontalScrollIndicator={false}
-          style={style.scroll}
-        >
+        <ScrollView pagingEnabled horizontal onScroll={changeSlide} showsHorizontalScrollIndicator={false} style={style.scroll}>
           {images.map((image, index) => {
-            return (
-              <Image key={index} source={{ uri: image }} style={style.image} />
-            );
+            return <Image key={index} source={{ uri: image }} style={style.image} />;
           })}
         </ScrollView>
         <View style={style.pagination}>
           {images.map((i, k) => {
             return (
-              <Text
-                key={k}
-                style={k === img.active ? style.activePagination : style.text}
-              >
+              <Text key={k} style={k === img.active ? style.activePagination : style.text}>
                 ⬤
               </Text>
             );

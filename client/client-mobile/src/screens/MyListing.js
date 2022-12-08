@@ -51,7 +51,7 @@ export default function MyListing() {
               return (
                 <View key={post["_id"]} style={styles.viewContainer}>
                   <ListingCard post={post} />
-                  <QR />
+                  {/* <QR /> */}
                 </View>
               );
             })

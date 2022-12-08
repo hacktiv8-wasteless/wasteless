@@ -3,14 +3,21 @@ import React from "react";
 import { Box, Button } from "native-base";
 import { Feather } from "@expo/vector-icons";
 import { COLORS } from "../constants";
+import { useNavigation } from "@react-navigation/native";
 
 export default function UserAvatar() {
-  const handleQrRoute = (id) => {
+  const navigation = useNavigation();
+
+  const handleChatRoute = (id) => {
     // console.log(id);
+    navigation.navigate(
+      "Chat"
+      // { id: post["_id"] }
+    );
   };
   return (
     <Box style={styles.qrContainer}>
-      <Button style={styles.button}>
+      <Button style={styles.button} onPress={handleChatRoute}>
         <Feather name="user" size={24} color="black" />
       </Button>
     </Box>
@@ -36,7 +43,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   button: {
-    backgroundColor: COLORS.accent,
+    backgroundColor: COLORS.white,
     // borderRadius: 10,
 
     shadowColor: "#000",

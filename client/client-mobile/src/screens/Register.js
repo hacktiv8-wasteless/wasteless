@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, StatusBar } from "react-native";
+import { StyleSheet, Text, View, StatusBar, Image } from "react-native";
 import React from "react";
 import FormUser from "../components/FormUser";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,6 +14,7 @@ export default function Register({ navigation }) {
 
         <ScrollView showsVerticalScrollIndicator={false}>
           <View>
+            <Image style={{ width: 100, height: 100, marginBottom: 20, marginTop: 40 }} source={{ uri: "https://ik.imagekit.io/jtgwyz8u9/logo_circle_white.png?ik-sdk-version=javascript-1.4.3&updatedAt=1670490293166" }} />
             <Text style={styles.title}>Hi, we are</Text>
             <Text style={styles.title}>Wasteless</Text>
             <Text style={styles.welcomeText}>We are here to help you build a recycling habit!</Text>

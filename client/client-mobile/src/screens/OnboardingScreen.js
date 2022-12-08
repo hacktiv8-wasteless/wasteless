@@ -33,7 +33,7 @@ export default function OnboardingScreenr({ navigation }) {
           backgroundColor: "#55C68E",
           image: <Image source={require("../../assets/png/photo.png")} style={styles.image} />,
           title: "Permission storage",
-          subtitle: "W are using your storage permission to upload photos",
+          subtitle: "We are using your storage permission to upload photos",
         },
         {
           backgroundColor: "#339966",

@@ -14,6 +14,7 @@ export default function History() {
   const [userId, setUserId] = useState(null);
   const [completedPosts, setCompletedPosts] = useState([]);
   console.log(userId);
+  
   useEffect(() => {
     let newFilter = postsData?.getAllPosts.filter((el) => el.taker_id == userId && el.status == "complete");
     setCompletedPosts(newFilter);

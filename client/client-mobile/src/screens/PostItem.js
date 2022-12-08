@@ -137,8 +137,10 @@ export default function PostItem({ navigation, route }) {
           setLat(location.coords.latitude);
           setLong(location.coords.longitude);
           setUserLatLon({
-            latitude: location.coords.latitude,
-            longitude: location.coords.longitude,
+            latitude: -6.26019677367,
+            longitude: 106.781236393,
+            // latitude: location.coords.latitude,
+            // longitude: location.coords.longitude,
           });
         }
       } catch (error) {

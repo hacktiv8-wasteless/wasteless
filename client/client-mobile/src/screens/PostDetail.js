@@ -82,21 +82,21 @@ export default function PostDetail({ navigation, route }) {
   // console.log("userId: ", userId, "giver_id: ", giver_id);
 
   const handleAppointment = async () => {
-    await appointment({
+    appointment({
       variables: { postId },
-    });
+    }).then(({ data }) => navigation.navigate("Chat"));
     console.log("Jalaaaan appointment");
     console.log(appointmentData);
   };
 
   const handleChooseAppointment = async (takerId) => {
     // console.log(takerId);
-    await chooseAppointment({
+    chooseAppointment({
       variables: {
         takerId,
         postId,
       },
-    });
+    }).then(({ data }) => console.log(data));
     console.log("Jalan chooseAppointment");
     console.log(chooseAppointmentData);
   };
@@ -163,16 +163,14 @@ export default function PostDetail({ navigation, route }) {
             </View>
 
             <View>
-              {/* <Text>Placeholder biar gampang:</Text> */}
-              <Text>Total price: {postDetailData?.getPostById?.quantity * categoryDetailData?.getCategoryById?.price}</Text>
-              {/* <Text>Poster: {postDetailData?.getPostById}</Text> */}
-              {/* <Text>Lat: {postDetailData?.getPostById?.lat}</Text>
-              <Text>Long: {postDetailData?.getPostById?.long}</Text>
-              <Text>Giver_id: {postDetailData?.getPostById?.giver_id}</Text>
-              <Text>Status: {postDetailData?.getPostById?.status}</Text> */}
+              {/* <Text>Total price: {postDetailData?.getPostById?.quantity * categoryDetailData?.getCategoryById?.price}</Text> */}
               <Text>{postDetailData ? capitalize(postDetailData?.getPostById?.description) : ""}</Text>
             </View>
             {/* <Text style={styles.subTitle}>Photos</Text> */}
+          </View>
+          <View style={styles.totalPrice}>
+            <Text style={styles.label}>Total Price: </Text>
+            <Text style={styles.label}>Rp.{categoryDetailData ? postDetailData?.getPostById?.quantity * categoryDetailData?.getCategoryById?.price : ""}</Text>
           </View>
           <View style={styles.mapDetail}>
             <View style={styles.mapContainer}>
@@ -405,5 +403,30 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
 
     elevation: 5,
+  },
+  totalPrice: {
+    padding: 20,
+    borderRadius: 20,
+    marginBottom: 20,
+    marginHorizontal: 20,
+    backgroundColor: "white",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+
+    shadowColor: COLORS.primaryShade[500],
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+
+    elevation: 5,
+  },
+  label: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 5,
   },
 });

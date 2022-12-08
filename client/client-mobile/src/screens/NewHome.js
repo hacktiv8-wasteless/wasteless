@@ -7,9 +7,9 @@ import { Feather } from "@expo/vector-icons";
 import * as Location from "expo-location";
 import Geocoder from "react-native-geocoding";
 import latlngDist from "latlng-distance";
-import { useQuery } from "@apollo/client";
-import { GET_POSTS } from "../query/Posts";
-import { GET_CATEGORIES } from "../query/Categories";
+import { useLazyQuery, useQuery } from "@apollo/client";
+import { GET_NEARBY_POST, GET_POSTS } from "../query/Posts";
+import { GET_CATEGORIES, GET_CATEGORY_ID } from "../query/Categories";
 import { GET_PROFILE, GET_USER_DETAIL } from "../query/Users";
 import CardBanner from "../components/CardBanner";
 import ItemCardSmall from "../components/ItemCardSmall";
@@ -37,9 +37,32 @@ export default function NewHome({ navigation }) {
   };
 
   //? SERVER WIRING
-  const { loading: postsLoading, error: postsError, data: postsData } = useQuery(GET_POSTS);
+  const { loading: allPostsLoading, error: allPostsError, data: allPostsData } = useQuery(GET_POSTS);
   const { data: categoryData, loading: categoryLoading, error: categoryError } = useQuery(GET_CATEGORIES);
   const { data: userData, loading: userLoading, error: userError } = useQuery(GET_PROFILE);
+  const [getNearby, { loading: postsLoading, error: postsError, data: postsData }] = useLazyQuery(GET_NEARBY_POST);
+  // const { data: categoryDetailData, loading: categoryDetailLoading, error: categoryDetailError, refetch } = useQuery(GET_CATEGORY_ID, { variables: { categoryId } });
+
+  // console.log(postsData);
+
+  const fetchNearby = async () => {
+    await getNearby({
+      variables: {
+        postPayload: {
+          long: `${userLatLon.lon}`,
+          lat: `${userLatLon.lat}`,
+        },
+      },
+    });
+  };
+
+  // console.log(allPostsData?.getAllPosts);
+
+  useEffect(() => {
+    if (userLatLon && categoryData) {
+      fetchNearby();
+    }
+  }, [userLatLon, categoryData]);
 
   if (postsError || categoryError || userError) {
     console.log("postsError -------------------------");
@@ -64,53 +87,59 @@ export default function NewHome({ navigation }) {
     if (search) {
       return filtered;
     }
-    return postsData?.getAllPosts;
+    return postsData?.getNearbyPosts;
   };
 
   const handleOnSubmit = () => {
-    setFiltered(postsData?.getAllPosts?.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
+    setFiltered(postsData?.getNearbyPosts?.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
   };
 
   useEffect(() => {
-    setFiltered(postsData?.getAllPosts?.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
+    setFiltered(postsData?.getNearbyPosts?.filter((post) => post.title.toLowerCase().includes(search.toLowerCase())));
   }, [search]);
+
+  // console.log(postsData?.getNearbyPosts);
 
   // if (postsLoading || categoryLoading || userLoading) return <Loader />;
 
-  // console.log(postsLoading);
+  // console.log(postsLoading?.getNearbyPosts[0]);
 
   const [userLoc, setUserLoc] = useState("");
   const [userLatLon, setUserLatLon] = useState({});
 
+  console.log("userLatLon: ", userLatLon);
+
   // console.log(userLoc);
 
-  // useEffect(() => {
-  //   (async () => {
-  //     try {
-  //       let { status } = await Location.requestForegroundPermissionsAsync();
-  //       if (status !== "granted") {
-  //         return;
-  //       } else {
-  //         Geocoder.init("AIzaSyCVVWasvqI_muG_92Mdo63Ik14SZ6bLlCo", {
-  //           language: "id",
-  //         });
-  //         let location = await Location.getCurrentPositionAsync();
+  useEffect(() => {
+    (async () => {
+      try {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== "granted") {
+          return;
+        } else {
+          Geocoder.init("AIzaSyCVVWasvqI_muG_92Mdo63Ik14SZ6bLlCo", {
+            language: "id",
+          });
+          let location = await Location.getCurrentPositionAsync();
 
-  //         setUserLatLon({
-  //           lat: location.coords.latitude,
-  //           lon: location.coords.longitude,
-  //         });
+          setUserLatLon({
+            lat: -6.26019677367,
+            lon: 106.781236393,
+          });
 
-  //         const loc = await Geocoder.from(location.coords.latitude, location.coords.longitude);
-  //         // console.log(loc.results[0].address_components);
+          // const loc = await Geocoder.from(location.coords.latitude, location.coords.longitude);
+          const loc = await Geocoder.from(-6.26019677367, 106.781236393);
+          // console.log(loc.results[0].address_components);
 
-  //         setUserLoc(loc.results[0].address_components.find((el) => el.types[0] === "administrative_area_level_4").long_name + ", " + loc.results[0].address_components.find((el) => el.types[0] === "administrative_area_level_1").long_name);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   })();
-  // }, []);
+          setUserLoc(loc.results[0].address_components.find((el) => el.types[0] === "administrative_area_level_4").long_name + ", " + loc.results[0].address_components.find((el) => el.types[0] === "administrative_area_level_1").long_name);
+        }
+      } catch (error) {
+        console.log("location error");
+        console.log(error);
+      }
+    })();
+  }, []);
 
   return (
     <View style={{ backgroundColor: COLORS.white }}>
@@ -125,8 +154,8 @@ export default function NewHome({ navigation }) {
           </Button>
           <Button onPress={logout} style={styles.test}>
             Logout
-          </Button>
-          <Button onPress={clearAsyncStorage} style={styles.test}>
+          </Button> */}
+          {/* <Button onPress={clearAsyncStorage} style={styles.test}>
             Clear all storage
           </Button> */}
           <View
@@ -222,7 +251,41 @@ export default function NewHome({ navigation }) {
             </View>
 
             {/* Search Bar */}
-            <SearchBar search={search} handleSearchChange={handleSearchChange} handleOnSubmit={handleOnSubmit} />
+            <View
+              style={{
+                flexDirection: "row",
+                marginVertical: 1,
+                padding: 15,
+                borderRadius: 18,
+                backgroundColor: COLORS.lightGrey,
+                marginVertical: 10,
+
+                shadowColor: COLORS.primaryShade[500],
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.1,
+                shadowRadius: 3.84,
+
+                elevation: 5,
+              }}
+            >
+              <TextInput
+                onPressOut={() => navigation.navigate("Search")}
+                style={{
+                  paddingHorizontal: 10,
+                  flex: 1,
+                }}
+                value={search}
+                onChangeText={handleSearchChange}
+                placeholder="Search Reuseable Materials"
+              />
+              <Pressable onPress={handleOnSubmit}>
+                <Ionicons name="search" size={24} color={COLORS.primaryShade[500]} style={{ marginRight: 10 }} />
+              </Pressable>
+            </View>
+            {/* <SearchBar search={search} handleSearchChange={handleSearchChange} handleOnSubmit={handleOnSubmit}  /> */}
           </View>
           <View style={{ backgroundColor: COLORS.primary }}>
             <View

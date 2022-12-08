@@ -17,8 +17,9 @@ import { Feather } from "@expo/vector-icons";
 import { GET_PROFILE } from "../query/Users";
 import { useNavigation } from "@react-navigation/native";
 import Loader from "../components/Loader";
-import { capitalize, signOut } from "../helpers/util";
+import { capitalize, idr, signOut } from "../helpers/util";
 import { COLORS } from "../constants";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -36,6 +37,7 @@ const Profile = () => {
   // console.log(userDetailData?.getProfile);
 
   const handleLogout = async () => {
+    AsyncStorage.clear().then();
     signOut().then((res) => navigation.replace("Login"));
   };
   return (
@@ -56,7 +58,7 @@ const Profile = () => {
                 color: COLORS.dark,
               }}
             >
-              A
+              {capitalize(userDetailData?.getProfile?.username).charAt(0)}
             </Text>
           </Avatar>
           <View style={{ marginLeft: 20 }}>
@@ -104,19 +106,19 @@ const Profile = () => {
             <Entypo name="wallet" color="Green" size={35} />
             <VStack>
               <Text> Your Wallet</Text>
-              <Title> Rp.{userDetailData?.getProfile?.balance}</Title>
+              <Title> {idr(userDetailData?.getProfile?.balance).split(",")[0]}</Title>
             </VStack>
           </HStack>
         </View>
       </View>
 
       <View style={styles.menuWrapper}>
-        <TouchableRipple onPress={() => {}}>
+        {/* <TouchableRipple onPress={() => {}}>
           <View style={styles.menuItem}>
             <Icon name="heart-outline" color="green" size={25} />
             <Text style={styles.menuItemText}>Your Favorites</Text>
           </View>
-        </TouchableRipple>
+        </TouchableRipple> */}
         <TouchableRipple onPress={() => navigation.navigate("Payment")}>
           <View style={styles.menuItem}>
             <AntDesign name="wallet" color="green" size={25} />
@@ -135,12 +137,12 @@ const Profile = () => {
             <Text style={styles.menuItemText}>logout</Text>
           </View>
         </TouchableRipple>
-        <TouchableRipple onPress={() => navigation.navigate("ScanQR")}>
+        {/* <TouchableRipple onPress={() => navigation.navigate("ScanQR")}>
           <View style={styles.menuItem}>
             <AntDesign name="scan1" color="green" size={25} />
             <Text style={styles.menuItemText}>Scan Here</Text>
           </View>
-        </TouchableRipple>
+        </TouchableRipple> */}
       </View>
     </SafeAreaView>
   );

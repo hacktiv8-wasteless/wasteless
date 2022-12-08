@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, StatusBar } from "react-native";
+import { StyleSheet, Text, View, StatusBar, Image } from "react-native";
 import React from "react";
 import FormUser from "../components/FormUser";
 import { Button, Pressable, ScrollView } from "native-base";
@@ -23,6 +23,7 @@ export default function Login({ navigation }) {
 
         <ScrollView showsVerticalScrollIndicator={false} style={{ marginTop: 40 }}>
           <View>
+            <Image style={{ width: 100, height: 100, marginBottom: 20 }} source={{ uri: "https://ik.imagekit.io/jtgwyz8u9/logo_circle_white.png?ik-sdk-version=javascript-1.4.3&updatedAt=1670490293166" }} />
             <Text style={styles.title}>Hello Again</Text>
             <Text style={styles.title}>Welcome Back</Text>
             <Text style={styles.welcomeText}>We are here to help you</Text>
