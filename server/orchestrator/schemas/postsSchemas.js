@@ -61,12 +61,12 @@ const resolvers = {
 				if (!context.token) throw { error: "Invalid access" };
 				// console.log(context.token);
 
-				redis.del("Posts");
-				const cacheData = await redis.get("Posts");
+				// redis.del("Posts");
+				// const cacheData = await redis.get("Posts");
 
-				if (cacheData) {
-					return JSON.parse(cacheData);
-				}
+				// if (cacheData) {
+				// 	return JSON.parse(cacheData);
+				// }
 
 				const { data } = await App.get("/posts", {
 					headers: {
@@ -90,12 +90,12 @@ const resolvers = {
 				const { lat, long } = postPayload;
 				// console.log(context.token);
 
-				redis.del("Posts");
-				const cacheData = await redis.get("Posts");
+				// redis.del("Posts");
+				// const cacheData = await redis.get("Posts");
 
-				if (cacheData) {
-					return JSON.parse(cacheData);
-				}
+				// if (cacheData) {
+				// 	return JSON.parse(cacheData);
+				// }
 
 				const { data } = await App.get(`/posts?lat=${lat}&long=${long}`, {
 					headers: {
